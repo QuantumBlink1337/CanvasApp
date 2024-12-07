@@ -10,4 +10,5 @@ import Foundation
 
 protocol PageRepresentable : ItemRepresentable {
     var body: String {get}
+    var attributedText: NSAttributedString? {get}
 }

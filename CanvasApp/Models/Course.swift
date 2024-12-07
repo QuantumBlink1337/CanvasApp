@@ -23,9 +23,22 @@ struct Course: Decodable, Encodable, Identifiable {
     var image_download_url: String?
     var term: Term?
     var color: String = "#000000"
-    var pages: [SpecificPage: Page] = [:]
+    var pages: [Page] = []
     var modules: [Module] = []
     var announcements: [DiscussionTopic] = []
+    
+    
+    var frontPage: Page? {
+        let possibleFront = pages.filter{$0.frontPage}
+        if !(possibleFront).isEmpty {
+            return possibleFront[0]
+        }
+        else {
+            return nil
+        }
+    }
+    
+    
     
     init(name: String? = nil, courseCode: String, id: Int, image_download_url: String? = nil, term: Term? = nil, color: String) {
         self.name = name

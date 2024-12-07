@@ -43,10 +43,7 @@ struct ModuleView: View {
     @State private var isExpanded: Set<String>
     init(courseWrapper: CourseWrapper) {
         self.courseWrapper = courseWrapper
-        
         _isExpanded = State(initialValue: Set(courseWrapper.course.modules.map{$0.name}))
-        
-        print(String(describing: courseWrapper.course.modules[0].items))
     }
     var body: some View {
         VStack {
@@ -89,6 +86,7 @@ struct ModuleView: View {
 }
 
 struct AnnouncementView : View {
+    
     var courseWrapper: CourseWrapper
     let loadAuthorData: Bool
     
@@ -96,55 +94,60 @@ struct AnnouncementView : View {
     let avatarHeight: CGFloat = 25
     init(courseWrapper: CourseWrapper) {
         self.courseWrapper = courseWrapper
-       
-        
         loadAuthorData = courseWrapper.course.announcements[0].author != nil
-        print(String(describing: courseWrapper.course.announcements[0].author))
     }
-    
-    
+        
     var body: some View {
         List(courseWrapper.course.announcements) { announcement in
-            HStack {
-                if let urlString = announcement.author?.avatarURL, let url = URL(string: urlString) {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                                .frame(width: avatarWidth, height: avatarHeight)
-                        case .success(let image):
-                            ZStack {
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: avatarWidth , height: avatarHeight)
-                                    .clipShape(Rectangle())
-                                Rectangle()
+            DisclosureGroup {
+                PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
+                
+            } label: {
+                HStack {
+                    if let urlString = announcement.author?.avatarURL, let url = URL(string: urlString) {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
                                     .frame(width: avatarWidth, height: avatarHeight)
+                            case .success(let image):
+                                ZStack {
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: avatarWidth , height: avatarHeight)
+                                        .clipShape(Rectangle())
+                                    Rectangle()
+                                        .frame(width: avatarWidth, height: avatarHeight)
+                                }
+                                
+                            case .failure:
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .frame(width: avatarWidth, height: avatarHeight)
+                            @unknown default:
+                                EmptyView()
                             }
-                            
-                        case .failure:
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .frame(width: avatarWidth, height: avatarHeight)
-                        @unknown default:
-                            EmptyView()
                         }
+                        
+                    } else {
+                        Circle()
+                            .frame(width: avatarWidth, height: avatarHeight)
                     }
-                    
-                } else {
-                    Circle()
-                        .frame(width: avatarWidth, height: avatarHeight)
-                }
-                VStack {
-                    Text(announcement.title)
-                        .font(.headline)
-                    if (loadAuthorData) {
-                        Text("Author: " + (announcement.author?.displayName)!)
-                        .font(.footnote)
+                    VStack {
+                        Text(announcement.title)
+                            .font(.headline)
+                        if (loadAuthorData) {
+                            Text("Author: " + (announcement.author?.displayName)!)
+                            .font(.footnote)
+                        }
+                        
                     }
-                    
                 }
             }
+            
+            
+            
+            
             
             
         }
@@ -158,11 +161,7 @@ struct CourseView: View {
     var image_width: CGFloat = 200
     var image_height: CGFloat = 200
     let pageClient: PageClient
-    init(courseWrapper: CourseWrapper) {
-        self.courseWrapper = courseWrapper
-        color = HexToColor(courseWrapper.course.color) ?? .accentColor
-        pageClient = PageClient()
-    }
+    
     @State private var frontPageLoaded = false
     
     @State private var pageLoadFailed = false
@@ -171,6 +170,14 @@ struct CourseView: View {
     @State private var navigateToPageView = false
     @State private var navigateToModuleView = false
     @State private var navigateToAnnouncementView = false
+    
+    init(courseWrapper: CourseWrapper) {
+        self.courseWrapper = courseWrapper
+        color = HexToColor(courseWrapper.course.color) ?? .accentColor
+        pageClient = PageClient()
+    
+    }
+   
 
     var body: some View {
         NavigationStack {
@@ -228,7 +235,7 @@ struct CourseView: View {
                     }
                     
                     Button(action:  {
-                        if (courseWrapper.course.pages.keys.contains(SpecificPage.FRONT_PAGE)) {
+                        if  (frontPageLoaded) {
                             navigateToPageView = true
                         }
                         else if (!courseWrapper.course.modules.isEmpty) {
@@ -244,7 +251,7 @@ struct CourseView: View {
                                     .font(.headline)
                                     .fontWeight(.heavy)
                                     .padding(/*@START_MENU_TOKEN@*/.trailing, 40.0/*@END_MENU_TOKEN@*/)
-                                let page = if (courseWrapper.course.pages.keys.contains(SpecificPage.FRONT_PAGE)) {
+                                let page = if (frontPageLoaded) {
                                     "Welcome Page"
                                 }
                                 else {
@@ -271,12 +278,13 @@ struct CourseView: View {
                     }
                     .navigationDestination(isPresented: $navigateToPageView) {
                         if (frontPageLoaded) {
-                            if let page = courseWrapper.course.pages[SpecificPage.FRONT_PAGE] {
-                                PageView(page: page)
-                            }
-                            else {
-                                Text("Page not available")
-                            }
+//                            if let page = courseWrapper.course.pages[SpecificPage.FRONT_PAGE] {
+//                                //PageView(attributedContent: HTMLRenderer.makeAttributedString(from: page.body))
+//                            }
+//                            else {
+//                                Text("Page not available")
+//                            }
+                            PageView(attributedContent: courseWrapper.course.frontPage!.attributedText!)
                         }
                         
                     }
@@ -308,26 +316,15 @@ struct CourseView: View {
                         AnnouncementView(courseWrapper: courseWrapper)
                     }
                 }
-                    
+                .task {
+                    if (courseWrapper.course.frontPage != nil) {
+                        frontPageLoaded = true
+                    }
+                }
     
 
             }
 
-        }
-        .task {
-            do {
-                if (!courseWrapper.course.pages.keys.contains(SpecificPage.FRONT_PAGE)) {
-                    let page = try await pageClient.retrievePage(course_id: courseWrapper.course.id, page: SpecificPage.FRONT_PAGE)
-                    courseWrapper.course.pages.updateValue(page, forKey: SpecificPage.FRONT_PAGE)
-                    frontPageLoaded = true
-                }
-            }
-            catch {
-                print("Failed to load page \(error)")
-                pageLoadFailed = true
-            }
-            
-           
         }
     }
 }

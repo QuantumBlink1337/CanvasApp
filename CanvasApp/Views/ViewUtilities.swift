@@ -41,30 +41,41 @@ func colorToHex(_ color: SwiftUI.Color) -> String? {
 }
 
 
-struct HTMLTextView: UIViewRepresentable {
-    func updateUIView(_ uiView: UITextView, context: Context) {
-        
-    }
-    
-    var htmlContent: String
-    
-    func makeUIView(context: Context) -> UITextView {
-        let textView = UITextView()
-        textView.isEditable = false  // Disable editing
-        textView.isScrollEnabled = true  // Enable scrolling for long content
-        textView.dataDetectorTypes = .all // Automatically detect links, phone numbers, etc.
-        
-        // Apply the HTML content
-        if let data = htmlContent.data(using: .utf8) {
+class HTMLRenderer {
+    static func makeAttributedString(from html: String) -> NSAttributedString {
+        if let data = html.data(using: .utf8) {
             let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
                 .documentType: NSAttributedString.DocumentType.html,
                 .characterEncoding: String.Encoding.utf8.rawValue
             ]
-            if let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil) {
-                textView.attributedText = attributedString
+            
+            
+            do {
+                let attributedString = try NSAttributedString(data: data, options: options, documentAttributes: nil)
+                return attributedString
             }
+            catch {
+                print("Error creating NSAttributedString: \(error)")
+            }
+            
         }
-        
-        return textView
+        return NSAttributedString(string: "Error rendering content")
     }
 }
+struct HTMLTextView: UIViewRepresentable {
+    var attributedContent: NSAttributedString
+
+    func makeUIView(context: Context) -> UITextView {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.isScrollEnabled = true
+        textView.dataDetectorTypes = .all
+        textView.attributedText = attributedContent
+        return textView
+    }
+
+    func updateUIView(_ uiView: UITextView, context: Context) {
+        uiView.attributedText = attributedContent
+    }
+}
+

@@ -212,6 +212,7 @@ struct CoursePanel: View {
         private let userClient = UserClient()
         private let moduleClient = ModuleClient()
         private let discussionTopicClient = DiscussionTopicClient()
+        private let pageClient = PageClient()
         @State private var tokenEntered = !retrieveAPIToken()
         let columns: [GridItem] = [
             GridItem(.flexible()), // First column
@@ -233,6 +234,31 @@ struct CoursePanel: View {
                                 return wrappedCourse
                                 
                             }
+                            await withTaskGroup(of: (Int, [Page]?).self) { group in
+                                for (index, wrapper) in tempCourseWrappers.enumerated() {
+                                    group.addTask {
+                                        do {
+                                            let pages = try await pageClient.retrieveCoursePages(from: wrapper.course)
+                                            return (index, pages)
+                                        }
+                                        catch {
+                                            print("Failed to load pages for course \(wrapper.course.id): \(error)")
+                                            return (index, nil)
+                                        }
+                                    }
+                                }
+                                for await result in group {
+                                    let (index, pages) = result
+                                    if let pages = pages {
+                                        for (var page) in pages {
+                                            page.attributedText = HTMLRenderer.makeAttributedString(from: page.body)
+                                            tempCourseWrappers[index].course.pages.append(page)
+                                        }
+                                    }
+                                }
+                                
+                            }
+
                             await withTaskGroup(of: (Int, [Module]?).self) { group in
                                 for (index, wrapper) in tempCourseWrappers.enumerated() {
                                     group.addTask {
@@ -269,7 +295,11 @@ struct CoursePanel: View {
                                 }
                                 for await result in group {
                                     let (index, announcements) = result
-                                    if let announcements = announcements {
+                                    if var announcements = announcements {
+                                        for i in announcements.indices {
+                                            announcements[i].attributedText = HTMLRenderer.makeAttributedString(from: announcements[i].body)
+                                        }
+                                        
                                         tempCourseWrappers[index].course.announcements = announcements
                                     }
                                 }

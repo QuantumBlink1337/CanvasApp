@@ -7,20 +7,22 @@
 
 import Foundation
 
-enum SpecificPage {
-    case FRONT_PAGE
-}
+
 
 struct PageClient {
-    func retrievePage(course_id: Int, page: SpecificPage) async throws -> Page {
-        let endpoint: String = {
-            switch page {
-                case .FRONT_PAGE: return "front_page"
-            }
-        }()
-        guard let url = URL(string: baseURL + "courses/" + String(course_id) + "/" + endpoint) else {
+    func retrieveCoursePages(from course: Course) async throws -> [Page] {
+        let courseID = course.id
+//        let params = [URLQueryItem(name: "include[]", value: "body")]
+//        guard var urlComponents = URLComponents(string: (baseURL + "courses/" + String(courseID)+"/pages?")) else {
+//            throw NetworkError.badURL
+//        }
+//        urlComponents.queryItems = params
+//        let url = urlComponents.url!
+        let urlString = "\(baseURL)courses/\(courseID)/pages?include[]=body"
+        guard let url = URL(string: urlString) else {
             throw NetworkError.badURL
         }
+        print(String(describing: url))
         var request = URLRequest(url:url)
         request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -29,8 +31,8 @@ struct PageClient {
             throw NetworkError.invalidResponse
         }
         do {
-                return try JSONDecoder().decode(Page.self, from: data)
-            }
+            return try JSONDecoder().decode([Page].self, from: data)
+        }
         catch {
                 print("Decoding error: \(error)")
                 throw NetworkError.badDecode
