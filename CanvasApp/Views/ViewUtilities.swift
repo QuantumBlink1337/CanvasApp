@@ -70,12 +70,16 @@ struct HTMLTextView: UIViewRepresentable {
         textView.isEditable = false
         textView.isScrollEnabled = true
         textView.dataDetectorTypes = .all
-        textView.attributedText = attributedContent
+//        textView.attributedText = attributedContent
         return textView
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
-        uiView.attributedText = attributedContent
+        if uiView.attributedText != attributedContent {
+            uiView.attributedText = attributedContent
+        }
+     
     }
+    
 }
 

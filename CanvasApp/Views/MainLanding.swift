@@ -39,7 +39,6 @@ struct CoursePanel: View {
         
     }
     var body: some View {
-        NavigationStack { 
             ZStack(alignment: .topTrailing) {
                 NavigationLink(destination: CourseView(courseWrapper: courseWrapper)) {
                     VStack(alignment: .leading) {
@@ -193,7 +192,7 @@ struct CoursePanel: View {
                     }
 
                 }
-            }
+            
             
     }
         

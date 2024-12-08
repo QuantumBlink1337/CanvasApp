@@ -13,6 +13,7 @@ import UIKit
 
 struct PageView: View {
     var attributedContent: NSAttributedString
+    
     var body: some View {
         HTMLTextView(attributedContent: attributedContent)
     }
