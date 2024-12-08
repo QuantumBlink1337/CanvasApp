@@ -89,7 +89,7 @@ struct ModuleView: View {
         
     }
 }
-enum TimePeriod {
+enum TimePeriod : CaseIterable{
     case today
     case yesterday
     case lastWeek
@@ -196,8 +196,8 @@ struct AnnouncementView : View {
     @ViewBuilder
     private func announcementGroup(timePeriod:  TimePeriod) -> some View {
         if let announcements = datedAnnouncements[timePeriod], !announcements.isEmpty {
-            VStack {
-                List(announcements) { announcement in
+            VStack(spacing: 0) {
+                ForEach(announcements) { announcement in
                     let isExpanded = Binding(
                             get: {expandedAnnouncementID == announcement.id},
                             set: {isExpanded in expandedAnnouncementID = isExpanded ? announcement.id  : nil}
@@ -205,9 +205,16 @@ struct AnnouncementView : View {
                     DisclosureGroup(isExpanded: isExpanded)
                     {
                         if isExpanded.wrappedValue {
-                            PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
-                                .padding()
+                            VStack {
+                                GeometryReader { geometry in
+                                    PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
+                                        .padding()
+                                        .frame(minHeight: 300, maxHeight: geometry.size.height  )
+                                }
                                 .frame(minHeight: 300)
+                                .padding(.bottom)
+                            }
+
                         }
                         
                             
@@ -270,10 +277,8 @@ struct AnnouncementView : View {
                             .navigationBarTitleDisplayMode(.inline)
                     }
                 }.padding(.trailing)
-            }.frame(minHeight: CGFloat(announcements.count) * 60)
-
-                
-            
+            }
+            .padding(.horizontal)
         }
     }
         var body: some View {
@@ -283,37 +288,47 @@ struct AnnouncementView : View {
                     .fontWeight(.heavy)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
+                        Group {
                             Text("Today")
                                 .font(.subheadline)
-                            
+                                .fontWeight(.bold)
+                                .padding(.leading)
                             announcementGroup(timePeriod: .today)
-//                            .frame(minHeight: 100)
+                        }
+                        Group {
                             Text("Yesterday")
                                 .font(.subheadline)
+                                .fontWeight(.bold)
+                                .padding(.leading)
                             announcementGroup(timePeriod: .yesterday)
-//                            .frame(minHeight: 100)
+                        }
+                        Group {
                             Text("Last Week")
                                 .font(.subheadline)
+                                .fontWeight(.bold)
+                                .padding(.leading)
                             announcementGroup(timePeriod: .lastWeek)
-//                            .frame(minHeight: 100)
-
+                        }
+                        Group {
                             Text("Last Month")
                                 .font(.subheadline)
+                                .fontWeight(.bold)
+                                .padding(.leading)
                             announcementGroup(timePeriod: .lastMonth)
-//                            .frame(minHeight: 100)
+                        }
+                        Group {
                             Text("Previously")
                                 .font(.subheadline)
+                                .fontWeight(.bold)
+                                .padding(.leading)
                             announcementGroup(timePeriod: .previously)
-//                            .frame(minHeight: 100)
+                        }
                     }
-
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                
-                
-                
+                .frame(maxHeight: .infinity)
             }
-            
-            
+            .frame(maxHeight: .infinity)
         }
     }
     
