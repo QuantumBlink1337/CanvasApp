@@ -446,7 +446,8 @@ struct AnnouncementView : View {
                             print("Test button")
                         }
                         CourseSectionButton(buttonTitle: "Assignment", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
-                            print("Test button")
+                            print(String(describing: courseWrapper.course.assignments))
+                            print(String(describing: courseWrapper.course.assignments.count))
                         }
                         CourseSectionButton(buttonTitle: "Modules", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
                             navigateToModuleView = true

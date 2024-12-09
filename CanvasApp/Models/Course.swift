@@ -26,6 +26,7 @@ struct Course: Decodable, Encodable, Identifiable {
     var pages: [Page] = []
     var modules: [Module] = []
     var announcements: [DiscussionTopic] = []
+    var assignments: [Assignment] = []
     
     
     var frontPage: Page? {

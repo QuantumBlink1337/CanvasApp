@@ -10,7 +10,7 @@ import Foundation
 struct DiscussionTopic : Codable, Identifiable, PageRepresentable {
     var id: Int
     var title: String
-    var body: String
+    var body: String?
     var postedAt: Date?
     var author: User?
     

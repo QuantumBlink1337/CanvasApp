@@ -14,7 +14,7 @@ struct Page: Decodable, Identifiable, PageRepresentable {
     var attributedText: NSAttributedString? = nil
     var id: Int
     var title: String
-    var body: String
+    var body: String?
     var frontPage: Bool
     
     private enum CodingKeys: String, CodingKey {

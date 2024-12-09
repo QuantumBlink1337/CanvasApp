@@ -3,6 +3,7 @@
 import SwiftUI
 
 
+
 struct CoursePanel: View {
     @ObservedObject var courseWrapper: CourseWrapper
     let image_width: CGFloat = 170
@@ -16,7 +17,8 @@ struct CoursePanel: View {
     
     @State var showTextbox = false
     @State var selectedNickname = ""
-    init(courseWrapper: CourseWrapper, userClient: UserClient) {
+    
+        init(courseWrapper: CourseWrapper, userClient: UserClient) {
         self.courseWrapper = courseWrapper
         let initialColor = (HexToColor(courseWrapper.course.color) ?? .black)
         _color = State(initialValue: initialColor)
@@ -211,6 +213,7 @@ struct CoursePanel: View {
         private let userClient = UserClient()
         private let moduleClient = ModuleClient()
         private let discussionTopicClient = DiscussionTopicClient()
+        private let assignmentClient = AssignmentClient()
         private let pageClient = PageClient()
         @State private var tokenEntered = !retrieveAPIToken()
         let columns: [GridItem] = [
@@ -250,14 +253,13 @@ struct CoursePanel: View {
                                     let (index, pages) = result
                                     if let pages = pages {
                                         for (var page) in pages {
-                                            page.attributedText = HTMLRenderer.makeAttributedString(from: page.body)
+                                            page.attributedText = HTMLRenderer.makeAttributedString(from: page.body ?? "No description was provided")
                                             tempCourseWrappers[index].course.pages.append(page)
                                         }
                                     }
                                 }
                                 
                             }
-
                             await withTaskGroup(of: (Int, [Module]?).self) { group in
                                 for (index, wrapper) in tempCourseWrappers.enumerated() {
                                     group.addTask {
@@ -296,7 +298,7 @@ struct CoursePanel: View {
                                     let (index, announcements) = result
                                     if var announcements = announcements {
                                         for i in announcements.indices {
-                                            announcements[i].attributedText = HTMLRenderer.makeAttributedString(from: announcements[i].body)
+                                            announcements[i].attributedText = HTMLRenderer.makeAttributedString(from: announcements[i].body ?? "No description was provided")
                                         }
                                         
                                         tempCourseWrappers[index].course.announcements = announcements
@@ -304,6 +306,31 @@ struct CoursePanel: View {
                                 }
                                 
                             }
+                            await withTaskGroup(of: (Int, [Assignment]?).self) { group in
+                                for (index, wrapper) in tempCourseWrappers.enumerated() {
+                                    group.addTask {
+                                        do {
+                                            let assignments = try await assignmentClient.getAssignmentsFromCourse(from: wrapper.course)
+                                            return (index, assignments)
+                                        }
+                                        catch {
+                                            print("Failed to load assignments for course \(wrapper.course.id): \(error)")
+                                            return (index, nil)
+                                        }
+                                    }
+                                }
+                                for await result in group {
+                                    let (index, assignments) = result
+                                    if var assignments = assignments {
+                                        for i in assignments.indices {
+                                            assignments[i].attributedText = HTMLRenderer.makeAttributedString(from: assignments[i].body ?? "No description was provided")
+                                        }
+                                        tempCourseWrappers[index].course.assignments = assignments
+                                    }
+                                }
+                                
+                            }
+
 
                             DispatchQueue.main.async {
                                 courseWrappers = tempCourseWrappers

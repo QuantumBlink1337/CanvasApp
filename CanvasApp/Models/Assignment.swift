@@ -7,17 +7,17 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
     var id: Int
     var title: String
     
-    var body: String
+    var body: String?
     var attributedText: NSAttributedString? = nil
     
     var createdAt: Date
     var updatedAt: Date
-    var dueAt: Date
-    var lockedAt: Date
+    var dueAt: Date?
+    var lockedAt: Date?
     
     var courseID: Int
 
-    var pointsPossible: Int
+    var pointsPossible: Int?
 
     private enum CodingKeys : String, CodingKey {
         case id = "id"

@@ -28,6 +28,8 @@
 		3DB88AAE2D02578D00EEF069 /* ModuleItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB88AAD2D02578D00EEF069 /* ModuleItem.swift */; };
 		3DB88AB02D0257E400EEF069 /* ItemRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB88AAF2D0257E400EEF069 /* ItemRepresentable.swift */; };
 		3DB88AB22D02599A00EEF069 /* ModuleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB88AB12D02599A00EEF069 /* ModuleClient.swift */; };
+		3DC6323F2D06CFCA004D2679 /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC6323E2D06CFCA004D2679 /* Assignment.swift */; };
+		3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632402D07755C004D2679 /* AssignmentClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +55,8 @@
 		3DB88AAD2D02578D00EEF069 /* ModuleItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleItem.swift; sourceTree = "<group>"; };
 		3DB88AAF2D0257E400EEF069 /* ItemRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemRepresentable.swift; sourceTree = "<group>"; };
 		3DB88AB12D02599A00EEF069 /* ModuleClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleClient.swift; sourceTree = "<group>"; };
+		3DC6323E2D06CFCA004D2679 /* Assignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
+		3DC632402D07755C004D2679 /* AssignmentClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,7 @@
 				3DB88AAF2D0257E400EEF069 /* ItemRepresentable.swift */,
 				3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */,
 				3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */,
+				3DC6323E2D06CFCA004D2679 /* Assignment.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -127,6 +132,7 @@
 				3D4E2D6C2CF9927000227AC4 /* UserClient.swift */,
 				3DB88AB12D02599A00EEF069 /* ModuleClient.swift */,
 				3DB65E3F2D03E3A900BF734D /* DiscussionTopicClient.swift */,
+				3DC632402D07755C004D2679 /* AssignmentClient.swift */,
 			);
 			path = Clients;
 			sourceTree = "<group>";
@@ -220,6 +226,7 @@
 				3DB88AAE2D02578D00EEF069 /* ModuleItem.swift in Sources */,
 				3DB65E3C2D03E1B400BF734D /* PageRepresentable.swift in Sources */,
 				3D4E2D5F2CF703E900227AC4 /* CourseClient.swift in Sources */,
+				3DC6323F2D06CFCA004D2679 /* Assignment.swift in Sources */,
 				3D4E2D672CF904B600227AC4 /* ClientUtilities.swift in Sources */,
 				3DB88AAC2D02548700EEF069 /* Module.swift in Sources */,
 				3D4E2D6D2CF9927000227AC4 /* UserClient.swift in Sources */,
@@ -228,6 +235,7 @@
 				3D4E2D6F2CF99EC800227AC4 /* ViewUtilities.swift in Sources */,
 				3DB88AB02D0257E400EEF069 /* ItemRepresentable.swift in Sources */,
 				3D4E2D632CF9048100227AC4 /* PageClient.swift in Sources */,
+				3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */,
 				3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */,
 				3D4E2D612CF9030700227AC4 /* Page.swift in Sources */,
 				3D4E2D732CFA872D00227AC4 /* CourseView.swift in Sources */,
