@@ -206,13 +206,17 @@ struct AnnouncementView : View {
                     {
                         if isExpanded.wrappedValue {
                             VStack {
+                                Text("Posted on " + formattedDate(for: announcement))
+                                    .font(.caption)
                                 GeometryReader { geometry in
                                     PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
                                         .padding()
                                         .frame(minHeight: 300, maxHeight: geometry.size.height  )
+                                    
                                 }
                                 .frame(minHeight: 300)
                                 .padding(.bottom)
+                                
                             }
 
                         }
@@ -220,34 +224,7 @@ struct AnnouncementView : View {
                             
                     } label: {
                         HStack(alignment: .top, spacing: 8) {
-                            if let urlString = announcement.author?.avatarURL, let url = URL(string: urlString) {
-                                AsyncImage(url: url) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                            .frame(width: avatarWidth, height: avatarHeight)
-                                    case .success(let image):
-                                        ZStack {
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: avatarWidth , height: avatarHeight)
-                                                .clipShape(Circle())
-                                        .frame(width: avatarWidth, height: avatarHeight)
-                                        }
-                                        
-                                    case .failure:
-                                        Image(systemName: "exclamationmark.triangle.fill")
-                                            .frame(width: avatarWidth, height: avatarHeight)
-                                    @unknown default:
-                                        EmptyView()
-                                    }
-                                }
-                                
-                            } else {
-                                Circle()
-                                    .frame(width: avatarWidth, height: avatarHeight)
-                            }
+                            AsyncImageView(urlString: (announcement.author?.avatarURL) ?? "Missing", width: avatarWidth, height: avatarHeight)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(announcement.title)
                                     .font(.headline)
@@ -269,14 +246,6 @@ struct AnnouncementView : View {
                     .listRowInsets(EdgeInsets())
                 }
                 .listStyle(PlainListStyle())
-                .navigationDestination(isPresented: $loadFullAnnouncementView) {
-                    if let selectedAnnouncement = selectedAnnouncement {
-                            PageView(attributedContent: selectedAnnouncement.attributedText ?? NSAttributedString(
-                                string: "Failed to load NSAttributedString for announcement \(String(describing: selectedAnnouncement.id))"))
-                            .navigationTitle(String(selectedAnnouncement.title))
-                            .navigationBarTitleDisplayMode(.inline)
-                    }
-                }.padding(.trailing)
             }
             .padding(.horizontal)
         }
@@ -329,6 +298,16 @@ struct AnnouncementView : View {
                 .frame(maxHeight: .infinity)
             }
             .frame(maxHeight: .infinity)
+            .navigationDestination(isPresented: $loadFullAnnouncementView) {
+                if let selectedAnnouncement = selectedAnnouncement {
+                    VStack {
+                        PageView(attributedContent: selectedAnnouncement.attributedText ?? NSAttributedString(
+                            string: "Failed to load NSAttributedString for announcement \(String(describing: selectedAnnouncement.id))"))
+                        }
+                        .navigationTitle(String(selectedAnnouncement.title))
+                        .navigationBarTitleDisplayMode(.inline)
+                }
+            }
         }
     }
     

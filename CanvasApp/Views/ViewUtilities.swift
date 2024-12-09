@@ -41,6 +41,65 @@ func colorToHex(_ color: SwiftUI.Color) -> String? {
 }
 
 
+func formattedDate(for discussionTopic: DiscussionTopic) -> String {
+    // Use postedAt directly as it's already a Date
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMMM d'th', yyyy h:mma z"
+    dateFormatter.locale = Locale.current
+    dateFormatter.timeZone = TimeZone.current
+    
+    // Assuming postedAt is already a valid Date
+    return dateFormatter.string(from: discussionTopic.postedAt!)
+}
+enum ShapeType {
+    case rectangle
+    case circle
+}
+struct AsyncImageView: View {
+    
+    let urlString: String
+    let width: CGFloat
+    let height: CGFloat
+    
+    init(urlString: String, width: CGFloat, height: CGFloat) {
+        self.urlString = urlString
+        self.width = width
+        self.height = height
+    }
+    
+
+    
+    var body : some View {
+        if let url = URL(string: urlString) {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .frame(width: width, height: height)
+                case .success(let image):
+                    ZStack {
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: width , height: height)
+                            .clipShape(Circle())
+                    .frame(width: width, height: height)
+                    }
+                    
+                case .failure:
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .frame(width: width, height: height)
+                @unknown default:
+                    EmptyView()
+                }
+            }
+            
+        } else {
+            Circle().frame(width: width, height: height)
+        }
+    }
+}
+
 class HTMLRenderer {
     static func makeAttributedString(from html: String) -> NSAttributedString {
         if let data = html.data(using: .utf8) {
