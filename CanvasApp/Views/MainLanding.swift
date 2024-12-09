@@ -326,6 +326,7 @@ struct CoursePanel: View {
                                             assignments[i].attributedText = HTMLRenderer.makeAttributedString(from: assignments[i].body ?? "No description was provided")
                                         }
                                         tempCourseWrappers[index].course.assignments = assignments
+                                        tempCourseWrappers[index].course.sortAssignmentsByDueDate()
                                     }
                                 }
                                 

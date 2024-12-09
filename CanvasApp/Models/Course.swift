@@ -27,8 +27,12 @@ struct Course: Decodable, Encodable, Identifiable {
     var modules: [Module] = []
     var announcements: [DiscussionTopic] = []
     var assignments: [Assignment] = []
+    var datedAssignments: [DatePriority : [Assignment]]? = nil
     
     
+    /*
+        For convenience, a computed property linking to a possible front page
+     */
     var frontPage: Page? {
         let possibleFront = pages.filter{$0.frontPage}
         if !(possibleFront).isEmpty {
@@ -38,6 +42,53 @@ struct Course: Decodable, Encodable, Identifiable {
             return nil
         }
     }
+    /*
+        Prepares a secondary Assignments grouping in the form of a Dictionary with prioritized assignments.
+        Useful for displaying initial Assignment grouping or on the main status page.
+     */
+    mutating func sortAssignmentsByDueDate() {
+        var datedAssignments: [DatePriority : [Assignment]] = [ : ]
+        var removableAssignments = self.assignments
+        for datePriority in DatePriority.allCases {
+            var assignmentsInPeriod: [Assignment]
+            switch datePriority {
+            case .dueSoon:
+                assignmentsInPeriod = removableAssignments.filter {
+                    assignment in
+                    if let dueAt = assignment.dueAt {
+                        let today = Date()
+                        let daysFromNow = Calendar.current.date(byAdding: .day, value: datePriority.rawValue, to: today)!
+                        return dueAt >= today && dueAt <= daysFromNow
+                    }
+                    return false
+    
+                }
+            case .upcoming:
+                assignmentsInPeriod = removableAssignments.filter {
+                    assignment in
+                    if let dueAt = assignment.dueAt {
+                        let today = Date()
+                        let daysFromNow = Calendar.current.date(byAdding: .day, value: datePriority.rawValue, to: today)!
+                        return dueAt >= today && dueAt <= daysFromNow
+                    }
+                    return false
+    
+                }
+            case .past:
+                assignmentsInPeriod = removableAssignments
+            }
+            datedAssignments[datePriority] = assignmentsInPeriod
+            removableAssignments.removeAll {
+                assignment in assignmentsInPeriod.contains(where: {$0.id == assignment.id})
+            }
+        }
+        
+        self.datedAssignments = datedAssignments
+    }
+
+    
+    
+    
     
     
     

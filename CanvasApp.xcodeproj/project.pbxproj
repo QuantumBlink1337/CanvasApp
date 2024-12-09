@@ -30,6 +30,7 @@
 		3DB88AB22D02599A00EEF069 /* ModuleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB88AB12D02599A00EEF069 /* ModuleClient.swift */; };
 		3DC6323F2D06CFCA004D2679 /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC6323E2D06CFCA004D2679 /* Assignment.swift */; };
 		3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632402D07755C004D2679 /* AssignmentClient.swift */; };
+		3DC632452D078BF9004D2679 /* AssignmentMasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		3DB88AB12D02599A00EEF069 /* ModuleClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleClient.swift; sourceTree = "<group>"; };
 		3DC6323E2D06CFCA004D2679 /* Assignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
 		3DC632402D07755C004D2679 /* AssignmentClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentClient.swift; sourceTree = "<group>"; };
+		3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentMasterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 				3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */,
 				3D4E2D722CFA872D00227AC4 /* CourseView.swift */,
 				3D4E2D752CFBDDDA00227AC4 /* PageView.swift */,
+				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 				3DB65E402D03E3A900BF734D /* DiscussionTopicClient.swift in Sources */,
 				3DB88AB22D02599A00EEF069 /* ModuleClient.swift in Sources */,
 				3DB65E3E2D03E1DF00BF734D /* DiscussionTopic.swift in Sources */,
+				3DC632452D078BF9004D2679 /* AssignmentMasterView.swift in Sources */,
 				3DB88AAE2D02578D00EEF069 /* ModuleItem.swift in Sources */,
 				3DB65E3C2D03E1B400BF734D /* PageRepresentable.swift in Sources */,
 				3D4E2D5F2CF703E900227AC4 /* CourseClient.swift in Sources */,
