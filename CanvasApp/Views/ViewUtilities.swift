@@ -51,6 +51,28 @@ func formattedDate(for discussionTopic: DiscussionTopic) -> String {
     // Assuming postedAt is already a valid Date
     return dateFormatter.string(from: discussionTopic.postedAt!)
 }
+func formattedDate(for date: Date?) -> String {
+    if date == nil { return "Bad date"}
+    // Use postedAt directly as it's already a Date
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMMM d'th', yyyy h:mma z"
+    dateFormatter.locale = Locale.current
+    dateFormatter.timeZone = TimeZone.current
+    
+    // Assuming postedAt is already a valid Date
+    return dateFormatter.string(from: date!)
+}
+func formattedDate(for date: Date?, omitTime: Bool) -> String {
+    if date == nil { return "Bad date"}
+    // Use postedAt directly as it's already a Date
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = !omitTime ?  "MMMM d'th', yyyy h:mma z" : "MMMM d'th', yyyy"
+    dateFormatter.locale = Locale.current
+    dateFormatter.timeZone = TimeZone.current
+    
+    // Assuming postedAt is already a valid Date
+    return dateFormatter.string(from: date!)
+}
 enum ShapeType {
     case rectangle
     case circle
