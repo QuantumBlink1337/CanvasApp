@@ -31,6 +31,8 @@
 		3DC6323F2D06CFCA004D2679 /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC6323E2D06CFCA004D2679 /* Assignment.swift */; };
 		3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632402D07755C004D2679 /* AssignmentClient.swift */; };
 		3DC632452D078BF9004D2679 /* AssignmentMasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */; };
+		3DC632472D094408004D2679 /* UIColorEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632462D094408004D2679 /* UIColorEx.swift */; };
+		3DC632492D0A2A72004D2679 /* Submission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632482D0A2A72004D2679 /* Submission.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +61,8 @@
 		3DC6323E2D06CFCA004D2679 /* Assignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
 		3DC632402D07755C004D2679 /* AssignmentClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentClient.swift; sourceTree = "<group>"; };
 		3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentMasterView.swift; sourceTree = "<group>"; };
+		3DC632462D094408004D2679 /* UIColorEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorEx.swift; sourceTree = "<group>"; };
+		3DC632482D0A2A72004D2679 /* Submission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Submission.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,7 @@
 				3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */,
 				3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */,
 				3DC6323E2D06CFCA004D2679 /* Assignment.swift */,
+				3DC632482D0A2A72004D2679 /* Submission.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -147,6 +152,7 @@
 				3D4E2D722CFA872D00227AC4 /* CourseView.swift */,
 				3D4E2D752CFBDDDA00227AC4 /* PageView.swift */,
 				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
+				3DC632462D094408004D2679 /* UIColorEx.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -236,10 +242,12 @@
 				3D4E2D6D2CF9927000227AC4 /* UserClient.swift in Sources */,
 				3D4E2D4E2CF6FF9E00227AC4 /* MainLanding.swift in Sources */,
 				3D4E2D6B2CF9916600227AC4 /* User.swift in Sources */,
+				3DC632492D0A2A72004D2679 /* Submission.swift in Sources */,
 				3D4E2D6F2CF99EC800227AC4 /* ViewUtilities.swift in Sources */,
 				3DB88AB02D0257E400EEF069 /* ItemRepresentable.swift in Sources */,
 				3D4E2D632CF9048100227AC4 /* PageClient.swift in Sources */,
 				3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */,
+				3DC632472D094408004D2679 /* UIColorEx.swift in Sources */,
 				3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */,
 				3D4E2D612CF9030700227AC4 /* Page.swift in Sources */,
 				3D4E2D732CFA872D00227AC4 /* CourseView.swift in Sources */,

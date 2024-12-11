@@ -3,7 +3,8 @@
 import Foundation
 // https://canvas.instructure.com/doc/api/assignments.html#method.assignments_api.index
 
-enum DatePriority : Int, CaseIterable {
+enum DatePriority : Int, CaseIterable, Identifiable {
+    var id: RawValue { rawValue }
     case dueSoon = 3
     case upcoming = 9
     case past = -1
@@ -24,7 +25,7 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
     
     var courseID: Int
 
-    var pointsPossible: Int?
+    var pointsPossible: Float?
 
     private enum CodingKeys : String, CodingKey {
         case id = "id"
@@ -35,6 +36,6 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
         case dueAt = "due_at"
         case lockedAt = "lock_at"
         case courseID = "course_id"
-        case pointsPossible = "pointsPossible"
+        case pointsPossible = "points_possible"
     }
 }

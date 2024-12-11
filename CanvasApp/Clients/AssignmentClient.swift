@@ -31,4 +31,5 @@ struct AssignmentClient {
                 throw NetworkError.badDecode
             }
     }
+    
 }

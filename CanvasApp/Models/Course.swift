@@ -100,6 +100,21 @@ struct Course: Decodable, Encodable, Identifiable {
         self.term = term
         self.color = color
     }
+    init(
+            name: String?,
+            courseCode: String,
+            id: Int,
+            color: String,
+            assignments: [Assignment],
+            datedAssignments: [DatePriority: [Assignment]]? = nil
+        ) {
+            self.name = name
+            self.courseCode = courseCode
+            self.id = id
+            self.color = color
+            self.assignments = assignments
+            self.datedAssignments = datedAssignments
+        }
 
 
     private enum CodingKeys: String, CodingKey {
