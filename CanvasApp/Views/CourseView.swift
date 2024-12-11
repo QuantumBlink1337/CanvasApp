@@ -133,8 +133,7 @@ struct AnnouncementView : View {
                         let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date()))!
                         let startOfLastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: startOfWeek)!
                         let endOfLastWeek = Calendar.current.date(byAdding: .day, value: -1, to: startOfWeek)!
-//                        print("start of last week" + String(describing: startOfLastWeek))
-//                        print("end of last week" + String(describing: endOfLastWeek))
+
 
 
                         return postedAt >= startOfLastWeek && postedAt <= endOfLastWeek
@@ -327,6 +326,8 @@ struct AnnouncementView : View {
         @State private var navigateToPageView = false
         @State private var navigateToModuleView = false
         @State private var navigateToAnnouncementView = false
+        @State private var navigateToAssignmentView = false
+
         
         @State private var measuredHeight: CGFloat = 0
         
@@ -446,13 +447,16 @@ struct AnnouncementView : View {
                             print("Test button")
                         }
                         CourseSectionButton(buttonTitle: "Assignment", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
-                            print(String(describing: courseWrapper.course.assignments))
-                            print(String(describing: courseWrapper.course.assignments.count))
+                            navigateToModuleView = false
+                            navigateToPageView = false
+                            navigateToAnnouncementView = false
+                            navigateToAssignmentView = true
                         }
                         CourseSectionButton(buttonTitle: "Modules", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
                             navigateToModuleView = true
                             navigateToPageView = false
                             navigateToAnnouncementView = false
+                            navigateToAssignmentView = false
                         }
                         CourseSectionButton(buttonTitle: "Grades", buttonImageIcon: "scroll", color: HexToColor(courseWrapper.course.color) ?? .black) {
                             print("Test button")
@@ -463,6 +467,10 @@ struct AnnouncementView : View {
                     }
                     .navigationDestination(isPresented: $navigateToAnnouncementView) {
                         AnnouncementView(courseWrapper: courseWrapper)
+                    }
+                    .navigationDestination(isPresented: $navigateToAssignmentView) {
+                        AssignmentMasterView(courseWrapper: courseWrapper)
+                        
                     }
                 }
                 .task {
