@@ -4,9 +4,9 @@ import Foundation
 // https://canvas.instructure.com/doc/api/assignments.html#method.assignments_api.index
 
 enum DatePriority : Int, CaseIterable {
-    case past = -1
     case dueSoon = 3
     case upcoming = 9
+    case past = -1
 }
 
 struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentable {
