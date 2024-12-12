@@ -99,7 +99,8 @@ struct CoursePanel: View {
 
                     }.background()
 
-                }.buttonStyle(PlainButtonStyle())
+                }.buttonStyle(PlainButtonStyle()).tint(.white)
+
                 Menu {
                     Button() {
                         showColorPicker = true
@@ -209,12 +210,14 @@ struct CoursePanel: View {
         @State private var user: User?
         @State private var name: String = ""
         @State private var isLoading = true
+        @State private var stage: String = "Loading course data"
         private let courseClient = CourseClient()
         private let userClient = UserClient()
         private let moduleClient = ModuleClient()
         private let discussionTopicClient = DiscussionTopicClient()
         private let assignmentClient = AssignmentClient()
         private let pageClient = PageClient()
+        private let enrollmentClient = EnrollmentClient()
         @State private var tokenEntered = !retrieveAPIToken()
         let columns: [GridItem] = [
             GridItem(.flexible()), // First column
@@ -241,6 +244,7 @@ struct CoursePanel: View {
                                     group.addTask {
                                         do {
                                             let pages = try await pageClient.retrieveCoursePages(from: wrapper.course)
+                                            stage = "Preparing pages from course \(wrapper.course.id)"
                                             return (index, pages)
                                         }
                                         catch {
@@ -260,11 +264,41 @@ struct CoursePanel: View {
                                 }
                                 
                             }
+                            await withTaskGroup(of: (Int, [Enrollment]?).self) { group in
+                                for (index, wrapper) in tempCourseWrappers.enumerated() {
+                                    group.addTask {
+                                        do {
+                                            let enrollments = try await enrollmentClient.getCourseEnrollmentsForUser(from: user!)
+                                            stage = "Preparing enrollments for user"
+                                            return (index, enrollments)
+                                        }
+                                        catch {
+                                            print("Failed to load enrollments \(error)")
+                                            return (index, nil)
+                                        }
+                                    }
+                                }
+                                for await result in group {
+                                    let (index, enrollments) = result
+                                    if let enrollments = enrollments {
+                                        for i in enrollments.indices {
+                                            if let wrapper = tempCourseWrappers.first(where: {$0.course.id == enrollments[i].courseID}) {
+                                                var updatedCourse = wrapper.course
+                                                updatedCourse.enrollment = enrollments[i]
+                                                wrapper.course = updatedCourse
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                            }
                             await withTaskGroup(of: (Int, [Module]?).self) { group in
                                 for (index, wrapper) in tempCourseWrappers.enumerated() {
                                     group.addTask {
                                         do {
                                             let modules = try await moduleClient.getModules(from: wrapper.course)
+                                            stage = "Preparing modules for \(wrapper.course.id)"
+
                                             return (index, modules)
                                         }
                                         catch {
@@ -286,6 +320,7 @@ struct CoursePanel: View {
                                     group.addTask {
                                         do {
                                             let announcements = try await discussionTopicClient.getDiscussionTopicsFromCourse(from: wrapper.course, getAnnouncements: true)
+                                            stage = "Preparing announcements for course \(wrapper.course.id)"
                                             return (index, announcements)
                                         }
                                         catch {
@@ -311,6 +346,7 @@ struct CoursePanel: View {
                                     group.addTask {
                                         do {
                                             let assignments = try await assignmentClient.getAssignmentsFromCourse(from: wrapper.course)
+                                            stage = "Preparing assignments from course: \(wrapper.course.id)"
                                             return (index, assignments)
                                         }
                                         catch {
@@ -351,7 +387,7 @@ struct CoursePanel: View {
                 }
                 else {
                     if (isLoading) {
-                        ProgressView("Loading course data")
+                        ProgressView(stage)
                     }
                     else {
                         NavigationStack {
@@ -373,6 +409,7 @@ struct CoursePanel: View {
                                 }
                                 
                             }
+//                        .tint(.white)
 
                         }
 
@@ -401,7 +438,7 @@ struct TokenManip: View {
         }
     }
 }
-    #Preview {
-        MainLanding()
-    }
+//    #Preview {
+//        MainLanding()
+//    }
 
