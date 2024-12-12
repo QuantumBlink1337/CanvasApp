@@ -8,6 +8,32 @@
 import Foundation
 import SwiftUI
 
+import UIKit
+
+extension UIColor {
+    convenience init(hex: String) {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        if hexSanitized.hasPrefix("#") {
+            hexSanitized.removeFirst()
+        }
+
+        // Ensure the string has exactly 6 characters (RRGGBB format)
+        guard hexSanitized.count == 6, let hexValue = Int(hexSanitized, radix: 16) else {
+            self.init(white: 1.0, alpha: 1.0) // Default color (white)
+            return
+        }
+        
+        let red = CGFloat((hexValue >> 16) & 0xFF) / 255.0
+        let green = CGFloat((hexValue >> 8) & 0xFF) / 255.0
+        let blue = CGFloat(hexValue & 0xFF) / 255.0
+        
+        self.init(red: red, green: green, blue: blue, alpha: 1.0)
+    }
+}
+
+
+
+
 
 func HexToColor(_ hex: String) -> SwiftUI.Color? {
     var hexString = hex.trimmingCharacters(in: .whitespacesAndNewlines)
