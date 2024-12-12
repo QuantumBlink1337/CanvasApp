@@ -28,6 +28,7 @@ struct Course: Decodable, Encodable, Identifiable {
     var announcements: [DiscussionTopic] = []
     var assignments: [Assignment] = []
     var datedAssignments: [DatePriority : [Assignment]]? = nil
+    var enrollment: Enrollment? = nil
     
     
     /*
@@ -86,9 +87,25 @@ struct Course: Decodable, Encodable, Identifiable {
         self.datedAssignments = datedAssignments
     }
 
+    // GPT generated initalizers for use in testing Previews
     
-    
-    
+    init(
+            name: String?,
+            courseCode: String,
+            id: Int,
+            color: String,
+            assignments: [Assignment],
+            datedAssignments: [DatePriority: [Assignment]],
+            enrollment: Enrollment?
+        ) {
+            self.name = name
+            self.courseCode = courseCode
+            self.id = id
+            self.color = color
+            self.assignments = assignments
+            self.datedAssignments = datedAssignments
+            self.enrollment = enrollment
+        }
     
     
     
