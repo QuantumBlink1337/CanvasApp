@@ -278,11 +278,13 @@ struct AnnouncementView : View {
         
         @State private var measuredHeight: CGFloat = 0
         
-        init(courseWrapper: CourseWrapper) {
+        @Binding private var navigationPath: NavigationPath
+        
+        init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
             self.courseWrapper = courseWrapper
             color = HexToColor(courseWrapper.course.color) ?? .accentColor
             pageClient = PageClient()
-            
+            self._navigationPath = navigationPath
         }
         
         
@@ -410,13 +412,13 @@ struct AnnouncementView : View {
                         }
                     }.navigationDestination(isPresented: $navigateToModuleView) {
                         
-                        ModuleView(courseWrapper: courseWrapper)
+                        ModuleView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
                     }
                     .navigationDestination(isPresented: $navigateToAnnouncementView) {
                         AnnouncementView(courseWrapper: courseWrapper)
                     }
                     .navigationDestination(isPresented: $navigateToAssignmentView) {
-                        AssignmentMasterView(courseWrapper: courseWrapper)
+                        AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
                         
                     }
                 }
@@ -433,7 +435,7 @@ struct AnnouncementView : View {
         }
     }
     
-    #Preview {
-        CourseView(courseWrapper: CourseWrapper(course: Course(courseCode: "Test Code", id: 123456, term: Term(id: 1000, name: "2090 Fall Semester", startAt: nil, endAt: nil), color: "#123FAF")))
-        
-    }
+//    #Preview {
+//        CourseView(courseWrapper: CourseWrapper(course: Course(courseCode: "Test Code", id: 123456, term: Term(id: 1000, name: "2090 Fall Semester", startAt: nil, endAt: nil), color: "#123FAF")))
+//        
+//    }
