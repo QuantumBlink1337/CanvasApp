@@ -42,11 +42,15 @@ struct GlobalTracking {
     
     @ViewBuilder
     static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>) -> some View {
+        BackButton(binding: binding, navigationPath: navigationPath, color: .white)
+    }
+    @ViewBuilder
+    static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>, color: Color) -> some View {
         Button(action: {binding.wrappedValue.dismiss()}) {
             Image(systemName: "arrowshape.left.fill")
                 .resizable()
                 .frame(width: 40, height: 30)
-                .foregroundStyle(.white)
+                .foregroundStyle(color)
             
         }
         .contextMenu {

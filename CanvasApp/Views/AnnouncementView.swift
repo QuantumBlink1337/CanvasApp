@@ -18,7 +18,6 @@ struct AnnouncementView : View {
     
     
     var courseWrapper: CourseWrapper
-    let loadAuthorData: Bool
     
     let avatarWidth: CGFloat = 40
     let avatarHeight: CGFloat = 40
@@ -34,7 +33,6 @@ struct AnnouncementView : View {
     
     init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
-        loadAuthorData = courseWrapper.course.announcements[0].author != nil
         _announcementGroupIsExpanded = State(initialValue: Set(TimePeriod.allCases.map{$0.hashValue}))
         _individalAnnouncementIsExpanded = State(initialValue: Set())
         self.color = HexToColor(courseWrapper.course.color) ?? .black
@@ -48,7 +46,7 @@ struct AnnouncementView : View {
     
     @ViewBuilder
     private func buildAnnouncementFullView() -> some View {
-        if var announcement = selectedAnnouncement {
+        if let announcement = selectedAnnouncement {
             VStack {
                 PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
             }

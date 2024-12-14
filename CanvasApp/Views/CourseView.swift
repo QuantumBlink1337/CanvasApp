@@ -42,6 +42,9 @@ struct CourseSectionButton: View {
         var image_height: CGFloat = 200
         let pageClient: PageClient
         
+        @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
+        
         @State private var frontPageLoaded = false
         
         @State private var pageLoadFailed = false
@@ -207,7 +210,19 @@ struct CourseSectionButton: View {
                 
                 
             }
-            
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath, color: color)
+                }
+//                ToolbarItem(placement: .principal) {
+//                    Text("Announcements")
+//                        .foregroundStyle(.white)
+//                        .font(.title)
+//                        .fontWeight(.heavy)
+//                }
+            }
+//            .background(color)
             
         }
     }
