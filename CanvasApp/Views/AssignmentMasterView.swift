@@ -24,32 +24,17 @@ struct AssignmentMasterView: View {
     
     let color: Color
     
-    init(courseWrapper: CourseWrapper) {
+    @Binding private var navigationPath: NavigationPath
+    
+    init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
         _dateIsExpanded = State(initialValue: Set(courseWrapper.course.datedAssignments!.keys))
         _assignIsExpanded = State(initialValue: Set())
         color = HexToColor(courseWrapper.course.color) ?? .black
+        self._navigationPath = navigationPath
         
         
-        // Create and configure the navigation bar appearance
-       let appearance = UINavigationBarAppearance()
-       appearance.configureWithOpaqueBackground()
-        appearance.shadowColor = .clear
        
-       // Set the navigation bar background color (optional)
-        appearance.backgroundColor = UIColor.init(hex: courseWrapper.course.color)
-//        appearance.backButtonAppearance = UIColor.white
-        
-       
-       // Customize the title text attributes (color, font)
-       appearance.titleTextAttributes = [
-           .foregroundColor: UIColor.white,
-           .font: UIFont.boldSystemFont(ofSize: 24) // You can customize the font here
-       ]
-       
-       // Apply the appearance to the navigation bar
-       UINavigationBar.appearance().standardAppearance = appearance
-       UINavigationBar.appearance().scrollEdgeAppearance = appearance
         
     
         
@@ -276,90 +261,92 @@ struct AssignmentMasterView: View {
                 .tint(HexToColor(courseWrapper.course.color))
             }
     }
-    
+    @ViewBuilder
+    private func buildGradeHeader() -> some View{
+        VStack {
+            HStack {
+                ZStack {
+                    Circle()
+                        .stroke(.white, lineWidth: 5)
+                        .frame(width: 45, height: 45)
+                    Text(courseWrapper.course.enrollment?.grade?.currentGrade ?? "X")
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                   
+                }
+                Text(String(courseWrapper.course.enrollment?.grade?.currentScore ?? 0.00) + "%")
+                    .font(.title2)
+                    .foregroundStyle(.white)
+            }
+            Text("Current Grade")
+                .foregroundStyle(.white)
+                .font(.title3)
+            
+           
+        }
+        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+        .padding(.top, 15)
+        .background(color)
+    }
+    @ViewBuilder
+    private func buildAssignmentList() -> some View {
+        List {
+            ForEach(DatePriority.allCases) { datePriority in
+                Section(isExpanded: Binding<Bool> (
+                    get: {
+                        return dateIsExpanded.contains(datePriority)
+                    },
+                    set: { isExpanding in
+                        if (isExpanding) {
+                            dateIsExpanded.insert(datePriority)
+                        }
+                        else {
+                            dateIsExpanded.remove(datePriority)
+                        }
+                    }
+                ),
+                    
+                content: {
+                    buildAssignmentSection(datePriority: datePriority)
+                },
+                header:
+                    {
+                        let prioString = if (datePriority == .dueSoon) {"Due Soon"}
+                        else if (datePriority == .past) {"Past"}
+                        else if (datePriority == .upcoming) {"Upcoming"}
+                        else {"Could not load priority"}
+                                Text("\(prioString)")
+                                .font(.subheadline)
+                                .fontWeight(.heavy)
+                    }
+                )
+            }
+        
+        }
+        .listStyle(.sidebar)
+        .background(color)
+        .padding(.top)
+    }
     
     
     var body: some View {
-        GeometryReader  { geometry in
             VStack {
-                VStack {
-//                    Text("Assignments")
-//                        .font(.title)
-//                        .fontWeight(.heavy)
-//                        .foregroundStyle(.white)
-//                        .frame(width: geometry.size.width, height: 50)
-                    HStack {
-                        ZStack {
-                            Circle()
-                                .stroke(.white, lineWidth: 5)
-                                .frame(width: 45, height: 45)
-                            Text(courseWrapper.course.enrollment?.grade?.currentGrade ?? "X")
-                                .font(.title2)
-                                .foregroundStyle(.white)
-                           
-                        }
-                        Text(String(courseWrapper.course.enrollment?.grade?.currentScore ?? 0.00) + "%")
-                            .font(.title2)
-                            .foregroundStyle(.white)
-                    }
-                    Text("Current Grade")
-                        .foregroundStyle(.white)
-                        .font(.title3)
-                    
-                   
-                }
-                .frame(width: geometry.size.width)
-                .padding(.top, 15)
-                .background(color)
-                   
-                List {
-                    ForEach(DatePriority.allCases) { datePriority in
-                        Section(isExpanded: Binding<Bool> (
-                            get: {
-                                return dateIsExpanded.contains(datePriority)
-                            },
-                            set: { isExpanding in
-                                if (isExpanding) {
-                                    dateIsExpanded.insert(datePriority)
-                                }
-                                else {
-                                    dateIsExpanded.remove(datePriority)
-                                }
-                            }
-                        ),
-                            
-                        content: {
-                            buildAssignmentSection(datePriority: datePriority)
-                        },
-                        header:
-                            {
-                                let prioString = if (datePriority == .dueSoon) {"Due Soon"}
-                                else if (datePriority == .past) {"Past"}
-                                else if (datePriority == .upcoming) {"Upcoming"}
-                                else {"Could not load priority"}
-                                        Text("\(prioString)")
-                                        .font(.subheadline)
-                                        .fontWeight(.heavy)
-                            }
-                        )
-                    }
-                
-                }
-                .listStyle(.sidebar)
-                .background(color)
-                .padding(.top)
-
+                buildGradeHeader()
+                buildAssignmentList()
             }
-
-        }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                GlobalTracking.BackButton(binding: presentationMode)
+                GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath)
+            }
+            ToolbarItem(placement: .principal) {
+                Text("Assignments")
+                    .foregroundStyle(.white)
+                    .font(.title)
+                    .fontWeight(.heavy)
             }
         }
         .background(color)
-        .navigationTitle("Assignments")
     }
     
 }
@@ -437,5 +424,5 @@ struct AssignmentMasterView: View {
     let courseWrapper = CourseWrapper(course: sampleCourse)
 
     // Return the AssignmentMasterView for the preview
-    return AssignmentMasterView(courseWrapper: courseWrapper)
+    return AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: Binding.constant(NavigationPath()))
 }
