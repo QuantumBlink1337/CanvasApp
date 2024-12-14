@@ -376,6 +376,7 @@ struct CoursePanel: View {
                                         }
                                         
                                         tempCourseWrappers[index].course.announcements = announcements
+                                        tempCourseWrappers[index].course.sortAnnouncementsByRecency()
                                     }
                                 }
                                 
