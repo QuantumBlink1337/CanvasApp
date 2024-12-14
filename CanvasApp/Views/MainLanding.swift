@@ -14,17 +14,21 @@ struct CoursePanel: View {
     @State var showColorPicker = false
     @State var selectedColor: Color = .blue
     
+    @Binding var navigationPath: NavigationPath
+    
     
     @State var showTextbox = false
     @State var selectedNickname = ""
     
-        init(courseWrapper: CourseWrapper, userClient: UserClient) {
+    init(courseWrapper: CourseWrapper, userClient: UserClient, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
         let initialColor = (HexToColor(courseWrapper.course.color) ?? .black)
         _color = State(initialValue: initialColor)
         _selectedColor = State(initialValue: initialColor)
         self.userClient = userClient
+        self._navigationPath = navigationPath
 //        print(String(describing: courseWrapper.course.modules))
+        
         
 
     }
@@ -211,6 +215,10 @@ struct CoursePanel: View {
         @State private var name: String = ""
         @State private var isLoading = true
         @State private var stage: String = "Loading course data"
+        
+        @State private var navigationPath = NavigationPath()
+        
+        
         private let courseClient = CourseClient()
         private let userClient = UserClient()
         private let moduleClient = ModuleClient()
@@ -223,6 +231,36 @@ struct CoursePanel: View {
             GridItem(.flexible()), // First column
             GridItem(.flexible()), // Second column
         ]
+//        private func fetchSubmissionsFromAssignments(temp tempCourseWrappers: [CourseWrapper]) async {
+//            await withTaskGroup(of: (Int, [Submission]?).self) { group in
+//                for (index, wrapper) in tempCourseWrappers.enumerated() {
+//                    group.addTask {
+//                        do {
+//                            let pages = try await pageClient.retrieveCoursePages(from: wrapper.course)
+//                            stage = "Preparing pages from course \(wrapper.course.id)"
+//                            return (index, pages)
+//                        }
+//                        catch {
+//                            print("Failed to load pages for course \(wrapper.course.id): \(error)")
+//                            return (index, nil)
+//                        }
+//                    }
+//                }
+//                for await result in group {
+//                    let (index, pages) = result
+//                    if let pages = pages {
+//                        for (var page) in pages {
+//                            page.attributedText = HTMLRenderer.makeAttributedString(from: page.body ?? "No description was provided")
+//                            tempCourseWrappers[index].course.pages.append(page)
+//                        }
+//                    }
+//                }
+//                
+//            }
+//        }
+        
+        
+        
         private func fetchUserAndCourses() async {
                 do {
                     // Fetch user data
@@ -265,7 +303,7 @@ struct CoursePanel: View {
                                 
                             }
                             await withTaskGroup(of: (Int, [Enrollment]?).self) { group in
-                                for (index, wrapper) in tempCourseWrappers.enumerated() {
+                                for (index, _) in tempCourseWrappers.enumerated() {
                                     group.addTask {
                                         do {
                                             let enrollments = try await enrollmentClient.getCourseEnrollmentsForUser(from: user!)
@@ -279,7 +317,7 @@ struct CoursePanel: View {
                                     }
                                 }
                                 for await result in group {
-                                    let (index, enrollments) = result
+                                    let (_, enrollments) = result
                                     if let enrollments = enrollments {
                                         for i in enrollments.indices {
                                             if let wrapper = tempCourseWrappers.first(where: {$0.course.id == enrollments[i].courseID}) {
@@ -367,11 +405,44 @@ struct CoursePanel: View {
                                 }
                                 
                             }
+//                            await withTaskGroup(of: (Int, [[Submission]]?).self) { group in
+//                                for (index, wrapper) in tempCourseWrappers.enumerated() {
+//                                    group.addTask {
+//                                        var submissionList: [[Submission]] = []
+//                                    
+//                                            for assignment in wrapper.course.assignments {
+//                                                print("\(assignment.id), course id: \(wrapper.course.id)")
+//                                                do {
+//                                                    let submissions = try await assignmentClient.getSubmissionForAssignment(from: assignment)
+//                                                    submissionList.append(submissions)
+//                                                    stage = "Preparing submissions of assignment \(assignment.id) from course: \(wrapper.course.id)"
+//                                                }
+//                                                catch {
+//                                                    print("Failed to load submissions for assignment \(assignment.id) for course \(wrapper.course.id): \(error)")
+//                                                    return (index, nil)
+//                                                }
+//                                            }
+//                                        return (index, submissionList)
+//
+//                                    }
+//                                }
+//                                for await result in group {
+//                                    let (index, submissionList) = result
+//                                    if let submissionList = submissionList {
+//                                        // Assign submissions back to the corresponding course assignments
+//                                        for (assignmentIndex, submissions) in submissionList.enumerated() {
+//                                            tempCourseWrappers[index].course.assignments[assignmentIndex].submissions = submissions
+//                                        }
+//                                    }
+//                                }
+//                                
+//                            }
 
 
                             DispatchQueue.main.async {
                                 courseWrappers = tempCourseWrappers
                                 isLoading = false
+                                GlobalTracking.courses = courseWrappers
                             }
                     }
                 } 
@@ -399,7 +470,7 @@ struct CoursePanel: View {
                                 ScrollView {
                                     LazyVGrid(columns: columns, spacing: 20) {
                                         ForEach(courseWrappers) { courseWrapper in
-                                            CoursePanel(courseWrapper: courseWrapper, userClient: userClient)
+                                            CoursePanel(courseWrapper: courseWrapper, userClient: userClient, navigationPath: $navigationPath)
                                                 .padding(.all, 4.0).cornerRadius(2).shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
                                         }
                                     }
