@@ -41,7 +41,6 @@ struct GlobalTracking {
     
     @ViewBuilder
     static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>) -> some View {
-        @State var navigation = false
         Button(action: {binding.wrappedValue.dismiss()}) {
             Image(systemName: "arrowshape.left.fill")
                 .resizable()
@@ -53,19 +52,16 @@ struct GlobalTracking {
             ForEach(courses, id: \.id) { course in
                 Button(action: {
                     navigationPath.wrappedValue = NavigationPath()
-                    navigation.toggle()
+                    navigationPath.wrappedValue.append(course)
                     
                 }, label: {
                     Text("\(course.course.name ?? "Missing Name")")
-                        .foregroundStyle(HexToColor(course.course.color) ?? .black)
-                }).navigationDestination(isPresented: $navigation, destination: {
-                  CourseView(courseWrapper: course)
-                })
+                }
+                )
             }
         }
     }
 }
-
 
 
 

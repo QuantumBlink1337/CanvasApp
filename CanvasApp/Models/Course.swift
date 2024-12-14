@@ -8,7 +8,15 @@
 import Foundation
 import SwiftUI
 
-class CourseWrapper: ObservableObject, Identifiable {
+class CourseWrapper: ObservableObject, Identifiable, Hashable {
+    static func == (lhs: CourseWrapper, rhs: CourseWrapper) -> Bool {
+        return lhs.id == rhs.id
+    }
+        // Hashable conformance
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
     @Published var course: Course
     init(course: Course) {
         self.course = course

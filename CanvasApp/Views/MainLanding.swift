@@ -14,11 +14,12 @@ struct CoursePanel: View {
     @State var showColorPicker = false
     @State var selectedColor: Color = .blue
     
-    @Binding var navigationPath: NavigationPath
     
     
     @State var showTextbox = false
     @State var selectedNickname = ""
+    
+    @Binding private var navigationPath: NavigationPath
     
     init(courseWrapper: CourseWrapper, userClient: UserClient, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
@@ -26,8 +27,8 @@ struct CoursePanel: View {
         _color = State(initialValue: initialColor)
         _selectedColor = State(initialValue: initialColor)
         self.userClient = userClient
-        self._navigationPath = navigationPath
 //        print(String(describing: courseWrapper.course.modules))
+        self._navigationPath = navigationPath
         
         
 
@@ -46,7 +47,7 @@ struct CoursePanel: View {
     }
     var body: some View {
             ZStack(alignment: .topTrailing) {
-                NavigationLink(destination: CourseView(courseWrapper: courseWrapper)) {
+                NavigationLink(destination: CourseView(courseWrapper: courseWrapper, navigationPath: $navigationPath)) {
                     VStack(alignment: .leading) {
                             ZStack(alignment: .topTrailing) {
                                 
@@ -461,7 +462,7 @@ struct CoursePanel: View {
                         ProgressView(stage)
                     }
                     else {
-                        NavigationStack {
+                        NavigationStack(path: $navigationPath) {
                             VStack {
                                 Text("Courses")
                                     .font(.title)
@@ -478,10 +479,12 @@ struct CoursePanel: View {
                                         
                                     }
                                 }
+                            .navigationDestination(for: CourseWrapper.self) { course in
+                                    CourseView(courseWrapper: course, navigationPath: $navigationPath)
+                                }
                                 
                             }
-//                        .tint(.white)
-
+                        
                         }
 
                     }
