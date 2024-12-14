@@ -38,6 +38,7 @@ struct GlobalTracking {
         GlobalTracking.courses = courses
     }
     static var courses: [CourseWrapper] = []
+    static var currentMinHeightForPageView: CGFloat = 0
     
     @ViewBuilder
     static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>) -> some View {
@@ -209,12 +210,16 @@ struct HTMLTextView: UIViewRepresentable {
         textView.isScrollEnabled = true
         textView.dataDetectorTypes = .all
 //        textView.attributedText = attributedContent
+        
         return textView
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
         if uiView.attributedText != attributedContent {
             uiView.attributedText = attributedContent
+            let contentSize = uiView.sizeThatFits(uiView.bounds.size)
+            print(contentSize.height)
+            GlobalTracking.currentMinHeightForPageView = contentSize.height
         }
      
     }

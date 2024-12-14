@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-enum TimePeriod : CaseIterable{
-    case today
-    case yesterday
-    case lastWeek
-    case lastMonth
-    case previously
+enum TimePeriod : String, CaseIterable{
+    case today = "Today"
+    case yesterday = "Yesterday"
+    case lastWeek = "Last Week"
+    case lastMonth = "Last Month"
+    case previously = "Previously"
 }
 struct AnnouncementView : View {
     
@@ -23,10 +23,22 @@ struct AnnouncementView : View {
     let avatarWidth: CGFloat = 40
     let avatarHeight: CGFloat = 40
     
+    @State private var announcementGroupIsExpanded: Set<Int>
+    @State private var individalAnnouncementIsExpanded: Set<Int>
+
     
-    init(courseWrapper: CourseWrapper) {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Binding private var navigationPath: NavigationPath
+    
+    let color: Color
+    
+    init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
         loadAuthorData = courseWrapper.course.announcements[0].author != nil
+        _announcementGroupIsExpanded = State(initialValue: Set(TimePeriod.allCases.map{$0.hashValue}))
+        _individalAnnouncementIsExpanded = State(initialValue: Set())
+        self.color = HexToColor(courseWrapper.course.color) ?? .black
+        self._navigationPath = navigationPath
      
     }
     
@@ -34,124 +46,203 @@ struct AnnouncementView : View {
     @State private var loadFullAnnouncementView: Bool = false
     @State private var expandedAnnouncementID: Int?
     
-    
+    @ViewBuilder
+    private func buildAnnouncementFullView() -> some View {
+        if var announcement = selectedAnnouncement {
+            VStack {
+                PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
+            }
+        }
+        
+    }
     
     
     @ViewBuilder
-    private func announcementGroup(timePeriod:  TimePeriod) -> some View {
-        if let announcements = datedAnnouncements[timePeriod], !announcements.isEmpty {
-            VStack(spacing: 0) {
-                ForEach(announcements) { announcement in
-                    let isExpanded = Binding(
-                            get: {expandedAnnouncementID == announcement.id},
-                            set: {isExpanded in expandedAnnouncementID = isExpanded ? announcement.id  : nil}
-                        )
-                    DisclosureGroup(isExpanded: isExpanded)
-                    {
-                        if isExpanded.wrappedValue {
-                            VStack {
-                                Text("Posted on " + formattedDate(for: announcement))
-                                    .font(.caption)
-                                GeometryReader { geometry in
-                                    PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
-                                        .padding()
-                                        .frame(minHeight: 300, maxHeight: geometry.size.height  )
-                                    
-                                }
-                                .frame(minHeight: 300)
-                                .padding(.bottom)
-                                
-                            }
+    private func buildAnnouncementGlanceView(announcement: DiscussionTopic) -> some View {
+        VStack {
+            PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
+        }.frame(minHeight: GlobalTracking.currentMinHeightForPageView)
+    }
 
+    
+    
+    @ViewBuilder
+    private func buildAnnouncement(timePeriod: TimePeriod) -> some View {
+        let announcements = courseWrapper.course.datedAnnouncements[timePeriod]!
+            ForEach(announcements) { announcement in
+                let loadAuthorData = announcement.author != nil
+                DisclosureGroup(isExpanded: Binding<Bool> (
+                    get: {
+                        return individalAnnouncementIsExpanded.contains(announcement.id)
+                    },
+                    set: { isExpanding in
+                        if (isExpanding) {
+                            individalAnnouncementIsExpanded.insert(announcement.id)
                         }
+                        else {
+                            individalAnnouncementIsExpanded.remove(announcement.id)
+                        }
+                    }
+                ),
+                                content: {
+                    VStack(alignment: .center) {
+                        buildAnnouncementGlanceView(announcement: announcement)
+                    }
+                },
+                                label: {
+                    VStack(alignment: .leading) {
                         
-                            
-                    } label: {
-                        HStack(alignment: .top, spacing: 8) {
-                            AsyncImageView(urlString: (announcement.author?.avatarURL) ?? "Missing", width: avatarWidth, height: avatarHeight)
+                        HStack(alignment: .top) {
+                            let authorURL: String? = announcement.author?.avatarURL
+                            AsyncImageView(urlString: authorURL ?? "Missing", width: avatarWidth, height: avatarHeight)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(announcement.title)
                                     .font(.headline)
                                     .multilineTextAlignment(.leading)
                                     .foregroundStyle(Color.black)
-                                if (announcement.author?.displayName != nil) {
-                                    Text((announcement.author?.displayName!)!)
-                                        .font(.footnote)
-                                        .foregroundStyle(Color.black)
+                                HStack {
+                                    if (loadAuthorData) {
+                                        Text((announcement.author?.displayName!)!)
+                                            .font(.footnote)
+                                            .foregroundStyle(Color.black)
+                                        Spacer()
+                                        Text("\(formattedDate(for: announcement))")
+                                            .font(.footnote)
+                                            .foregroundStyle(Color.black)
+                                    }
+                                    
                                 }
+                               
                             }
                         }
-                    }.simultaneousGesture(
-                        LongPressGesture().onEnded { _ in
-                            selectedAnnouncement = announcement
-                            loadFullAnnouncementView = true
-                        }
-                    )
-                    .listRowInsets(EdgeInsets())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .simultaneousGesture(LongPressGesture().onEnded {_ in 
+                        selectedAnnouncement = announcement
+                        loadFullAnnouncementView = true
+                    })
+                    
                 }
-                .listStyle(PlainListStyle())
+                )
+                .tint(HexToColor(courseWrapper.course.color))
             }
-            .padding(.horizontal)
-        }
     }
-        var body: some View {
-            VStack {
-                Text("Announcements")
-                    .font(.title)
-                    .fontWeight(.heavy)
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Group {
-                            Text("Today")
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                                .padding(.leading)
-                            announcementGroup(timePeriod: .today)
+    
+    
+    @ViewBuilder
+    private func buildAnnouncementList() -> some View {
+        List {
+            ForEach(TimePeriod.allCases, id: \.hashValue) { timePeriod in
+                Section(isExpanded: Binding<Bool> (
+                    get: {
+                        return announcementGroupIsExpanded.contains(timePeriod.hashValue)
+                    },
+                    set: { isExpanding in
+                        if (isExpanding) {
+                            announcementGroupIsExpanded.insert(timePeriod.hashValue)
                         }
-                        Group {
-                            Text("Yesterday")
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                                .padding(.leading)
-                            announcementGroup(timePeriod: .yesterday)
-                        }
-                        Group {
-                            Text("Last Week")
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                                .padding(.leading)
-                            announcementGroup(timePeriod: .lastWeek)
-                        }
-                        Group {
-                            Text("Last Month")
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                                .padding(.leading)
-                            announcementGroup(timePeriod: .lastMonth)
-                        }
-                        Group {
-                            Text("Previously")
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                                .padding(.leading)
-                            announcementGroup(timePeriod: .previously)
+                        else {
+                            announcementGroupIsExpanded.remove((timePeriod.hashValue))
                         }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .frame(maxHeight: .infinity)
+                ),
+                    
+                content: {
+                    buildAnnouncement(timePeriod: timePeriod)
+
+                },
+                header:
+                    {
+                    Text("\(timePeriod.rawValue)")
+                        .font(.subheadline)
+                        .fontWeight(.heavy)
+                    }
+                )
             }
-            .frame(maxHeight: .infinity)
-            .navigationDestination(isPresented: $loadFullAnnouncementView) {
-                if let selectedAnnouncement = selectedAnnouncement {
-                    VStack {
-                        PageView(attributedContent: selectedAnnouncement.attributedText ?? NSAttributedString(
-                            string: "Failed to load NSAttributedString for announcement \(String(describing: selectedAnnouncement.id))"))
-                        }
-                        .navigationTitle(String(selectedAnnouncement.title))
-                        .navigationBarTitleDisplayMode(.inline)
+        
+        }
+        .listStyle(.sidebar)
+        .background(color)
+        .padding(.top)
+    }
+    
+    
+//    @ViewBuilder
+//    private func announcementGroup(timePeriod:  TimePeriod) -> some View {
+//        if let announcements = datedAnnouncements[timePeriod], !announcements.isEmpty {
+//            VStack(spacing: 0) {
+//                ForEach(announcements) { announcement in
+//                    let isExpanded = Binding(
+//                            get: {expandedAnnouncementID == announcement.id},
+//                            set: {isExpanded in expandedAnnouncementID = isExpanded ? announcement.id  : nil}
+//                        )
+//                    DisclosureGroup(isExpanded: isExpanded)
+//                    {
+//                        if isExpanded.wrappedValue {
+//                            VStack {
+//                                Text("Posted on " + formattedDate(for: announcement))
+//                                    .font(.caption)
+//                                GeometryReader { geometry in
+//                                    PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
+//                                        .padding()
+//                                        .frame(minHeight: 300, maxHeight: geometry.size.height  )
+//                                    
+//                                }
+//                                .frame(minHeight: 300)
+//                                .padding(.bottom)
+//                                
+//                            }
+//
+//                        }
+//                        
+//                            
+//                    } label: {
+//                        HStack(alignment: .top, spacing: 8) {
+//                            AsyncImageView(urlString: (announcement.author?.avatarURL) ?? "Missing", width: avatarWidth, height: avatarHeight)
+//                            VStack(alignment: .leading, spacing: 4) {
+//                                Text(announcement.title)
+//                                    .font(.headline)
+//                                    .multilineTextAlignment(.leading)
+//                                    .foregroundStyle(Color.black)
+//                                if (announcement.author?.displayName != nil) {
+//                                    Text((announcement.author?.displayName!)!)
+//                                        .font(.footnote)
+//                                        .foregroundStyle(Color.black)
+//                                }
+//                            }
+//                        }
+//                    }.simultaneousGesture(
+//                        LongPressGesture().onEnded { _ in
+//                            selectedAnnouncement = announcement
+//                            loadFullAnnouncementView = true
+//                        }
+//                    )
+//                    .listRowInsets(EdgeInsets())
+//                }
+//                .listStyle(PlainListStyle())
+//            }
+//            .padding(.horizontal)
+//        }
+//    }
+        var body: some View {
+            VStack {
+                buildAnnouncementList()
+            }
+            .navigationDestination(isPresented: $loadFullAnnouncementView, destination: {buildAnnouncementFullView()})
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath)
+                }
+                ToolbarItem(placement: .principal) {
+                    Text("Announcements")
+                        .foregroundStyle(.white)
+                        .font(.title)
+                        .fontWeight(.heavy)
                 }
             }
+            .background(color)
+            
         }
     }
 

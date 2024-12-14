@@ -172,7 +172,7 @@ struct CourseSectionButton: View {
                         CourseSectionButton(buttonTitle: "Syllabus", buttonImageIcon: "list.bullet.clipboard", color: HexToColor(courseWrapper.course.color) ?? .black) {
                             print("Test button")
                         }
-                        CourseSectionButton(buttonTitle: "Assignment", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
+                        CourseSectionButton(buttonTitle: "Assignments & Grades", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
                             navigateToModuleView = false
                             navigateToPageView = false
                             navigateToAnnouncementView = false
@@ -184,15 +184,15 @@ struct CourseSectionButton: View {
                             navigateToAnnouncementView = false
                             navigateToAssignmentView = false
                         }
-                        CourseSectionButton(buttonTitle: "Grades", buttonImageIcon: "scroll", color: HexToColor(courseWrapper.course.color) ?? .black) {
-                            print("Test button")
-                        }
+//                        CourseSectionButton(buttonTitle: "Grades", buttonImageIcon: "scroll", color: HexToColor(courseWrapper.course.color) ?? .black) {
+//                            print("Test button")
+//                        }
                     }.navigationDestination(isPresented: $navigateToModuleView) {
                         
                         ModuleView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
                     }
                     .navigationDestination(isPresented: $navigateToAnnouncementView) {
-                        AnnouncementView(courseWrapper: courseWrapper)
+                        AnnouncementView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
                     }
                     .navigationDestination(isPresented: $navigateToAssignmentView) {
                         AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
