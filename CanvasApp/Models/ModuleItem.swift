@@ -21,7 +21,7 @@ enum ModuleItemType: String {
 struct ModuleItem : ItemRepresentable, Decodable {
     var id: Int
     var title: String
-    var type: String
+    var type: ModuleItemType
     
    // var contentID: Int?
     
@@ -32,4 +32,13 @@ struct ModuleItem : ItemRepresentable, Decodable {
         case type
     //    case contentID = "content_id"
     }
+    init(from decoder: Decoder) throws {
+       let container = try decoder.container(keyedBy: CodingKeys.self)
+       id = try container.decode(Int.self, forKey: .id)
+       title = try container.decode(String.self, forKey: .title)
+        let typeString = try container.decode(String.self, forKey: .type)
+        type = ModuleItemType(rawValue: typeString)!
+        
+        
+       }
 }
