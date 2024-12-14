@@ -83,6 +83,17 @@ struct Course: Decodable, Encodable, Identifiable {
                 assignment in assignmentsInPeriod.contains(where: {$0.id == assignment.id})
             }
         }
+        datedAssignments[.past]?.sort {first,second in
+            if let firstDate = first.dueAt, let secondDate = second.dueAt {
+                    return firstDate > secondDate // Sort by the soonest date first
+                } else if first.dueAt == nil && second.dueAt != nil {
+                    return false // Assignments without a due date go to the bottom
+                } else if first.dueAt != nil && second.dueAt == nil {
+                    return true // Assignments without a due date go to the bottom
+                } else {
+                    return false // Both are nil, no change in order
+                }        }
+        
         
         self.datedAssignments = datedAssignments
     }
