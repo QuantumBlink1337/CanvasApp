@@ -173,9 +173,14 @@ struct AssignmentMasterView: View {
                             .frame(width: 50, height: 50)
                         Text(String(assignment.currentSubmission?.score ?? 0))
                     }
+                    .contextMenu(ContextMenu(menuItems: {
+                        /*@START_MENU_TOKEN@*/Text("Menu Item 1")/*@END_MENU_TOKEN@*/
+                        
+                    }))
                     Text("Out of \(assignment.pointsPossible!, specifier: "%.1f")")
                     Spacer()
                 }
+                
                 if assignment.scoreStatistic != nil {
                     buildScoreStatistic(for: assignment)
                     
