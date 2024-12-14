@@ -10,6 +10,9 @@ import SwiftUI
 
 import UIKit
 
+
+
+
 extension UIColor {
     convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -28,6 +31,38 @@ extension UIColor {
         let blue = CGFloat(hexValue & 0xFF) / 255.0
         
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
+    }
+}
+struct GlobalTracking {
+    private init(courses: [CourseWrapper]) {
+        GlobalTracking.courses = courses
+    }
+    static var courses: [CourseWrapper] = []
+    
+    @ViewBuilder
+    static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>) -> some View {
+        @State var navigation = false
+        Button(action: {binding.wrappedValue.dismiss()}) {
+            Image(systemName: "arrowshape.left.fill")
+                .resizable()
+                .frame(width: 40, height: 30)
+                .foregroundStyle(.white)
+            
+        }
+        .contextMenu {
+            ForEach(courses, id: \.id) { course in
+                Button(action: {
+                    navigationPath.wrappedValue = NavigationPath()
+                    navigation.toggle()
+                    
+                }, label: {
+                    Text("\(course.course.name ?? "Missing Name")")
+                        .foregroundStyle(HexToColor(course.course.color) ?? .black)
+                }).navigationDestination(isPresented: $navigation, destination: {
+                  CourseView(courseWrapper: course)
+                })
+            }
+        }
     }
 }
 
