@@ -6,6 +6,13 @@
 //
 
 import SwiftUI
+import Charts
+struct ScoreDataPoint : Identifiable{
+    var id: UUID
+    let name: String
+    let value: Float
+    let type: String
+}
 
 
 struct AssignmentMasterView: View {
@@ -13,6 +20,7 @@ struct AssignmentMasterView: View {
     var courseWrapper: CourseWrapper
     @State private var dateIsExpanded: Set<DatePriority>
     @State private var assignIsExpanded: Set<String>
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     let color: Color
     
@@ -43,12 +51,119 @@ struct AssignmentMasterView: View {
        UINavigationBar.appearance().standardAppearance = appearance
        UINavigationBar.appearance().scrollEdgeAppearance = appearance
         
+    
         
+    }
+    @ViewBuilder
+    private func buildScoreStatistic(for assignment: Assignment) -> some View {
+            let scoreStatistic = assignment.scoreStatistic!
+            
+        let data: [ScoreDataPoint] = [
+                ScoreDataPoint(id: UUID(), name: "Max", value: scoreStatistic.max, type: "Computed"),
+                ScoreDataPoint(id: UUID(), name: "Min", value: scoreStatistic.min, type: "Computed"),
+                ScoreDataPoint(id: UUID(), name: "Mean", value: scoreStatistic.mean, type: "Computed"),
+                ScoreDataPoint(id: UUID(), name: "LowerQuart", value: scoreStatistic.lowerQuartile, type: "Quartile"),
+                ScoreDataPoint(id: UUID(), name: "UpperQuart", value: scoreStatistic.upperQuartile, type: "Quartile"),
+                ScoreDataPoint(id: UUID(), name: "Zero", value: 0, type: "Computed"),
+                
+                ScoreDataPoint(id: UUID(), name: "Score", value: Float((assignment.currentSubmission?.score)!), type: "Real")]
+                Chart(data) {
+                   
+                    if let maxValue = data.first(where: { $0.name == "Max" })?.value {
+                            RuleMark(
+                                xStart: .value("Min Value", 0),
+                                xEnd: .value("Max Value", maxValue),
+                                y: .value("Fixed", 0)
+                            )
+                            .foregroundStyle(Color.gray)
+                            .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
+                        }
+                    if let minValue = data.first(where: { $0.name == "Min" })?.value,
+                           let maxValue = data.first(where: { $0.name == "Max" })?.value {
+                            RuleMark(
+                                xStart: .value("Min Value", minValue),
+                                xEnd: .value("Max Value", maxValue),
+                                y: .value("Fixed", 0)
+                            )
+                            .foregroundStyle(Color.black)
+                            .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
+                        }
+                    if let minValue = data.first(where: { $0.name == "LowerQuart" })?.value,
+                           let maxValue = data.first(where: { $0.name == "UpperQuart" })?.value {
+                            RuleMark(
+                                xStart: .value("Min Value", minValue),
+                                xEnd: .value("Max Value", maxValue),
+                                y: .value("Fixed", 0)
+                            )
+                            .foregroundStyle(Color.blue)
+                            .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
+                        }
+                    if ($0.type == "Computed") {
+                        PointMark(
+                            x: .value($0.name, $0.value)
+                        )
+                        .foregroundStyle(color)
+                        .symbol(.plus)
+                        .symbolSize(100)
+
+                    }
+                    else if ($0.type == "Quartile") {
+                        PointMark(
+                            x: .value($0.name, $0.value)
+                        )
+                        .foregroundStyle(.blue)
+                        .symbol(.diamond)
+                        .symbolSize(100)
+                    }
+                    else {
+                        PointMark(
+                            x: .value($0.name, $0.value)
+                        )
+                        .foregroundStyle(color)
+                        .symbolSize(150)
+                    }
+                    
+                }.frame(height: 40)
+                .chartYAxis(.hidden)
+                .chartXScale(domain: 0...scoreStatistic.max)
+                .chartXAxis {
+                    AxisMarks(values: [scoreStatistic.min, scoreStatistic.mean, scoreStatistic.max]) { value in
+
+                        AxisTick()
+                            
+                    }
+                }
+        HStack {
+            Text("Min: \(scoreStatistic.min, specifier: "%.2f")")
+                .font(.caption)
+            Spacer()
+            Text("Mean: \(scoreStatistic.mean, specifier: "%.2f")")
+                .font(.caption)
+
+            Spacer()
+            Text("Max: \(scoreStatistic.max, specifier: "%.2f")")
+                .font(.caption)
+        }
+        HStack {
+            Text("Lower Quartile: \(scoreStatistic.lowerQuartile, specifier: "%.2f")")
+                .font(.caption)
+            Spacer()
+            Text("Median: \(scoreStatistic.median, specifier: "%.2f")")
+                .font(.caption)
+
+            Spacer()
+            Text("Upper Quartile: \(scoreStatistic.upperQuartile, specifier: "%.2f")")
+                .font(.caption)
+        }
+
+        
+
         
     }
     @ViewBuilder
     private func buildAssignmentGlanceView(for assignment: Assignment) -> some View {
 //        GeometryReader { geometry in
+        if (assignment.currentSubmission?.score == nil) {
             VStack(alignment: .center) {
                 HStack {
                     Spacer()
@@ -58,15 +173,32 @@ struct AssignmentMasterView: View {
                             .frame(width: 50, height: 50)
                         Text(String(assignment.pointsPossible ?? 0))
                     }
-                    Text("Point Total")
+                    Text("Points Possible")
                     Spacer()
                 }
                 
             }
-//        }        .background(.blue)
+        }
+        else {
+            VStack {
+                HStack {
+                    ZStack(alignment: .center) {
+                        Circle()
+                            .stroke(color, lineWidth: 5)
+                            .frame(width: 50, height: 50)
+                        Text(String(assignment.currentSubmission?.score ?? 0))
+                    }
+                    Text("Out of \(assignment.pointsPossible!, specifier: "%.1f")")
+                    Spacer()
+                }
+                if assignment.scoreStatistic != nil {
+                    buildScoreStatistic(for: assignment)
+                    
 
-        
-        
+                }
+
+            }
+        }
     }
     @ViewBuilder
     private func buildAssignmentSection(datePriority: DatePriority) -> some View {
@@ -108,11 +240,30 @@ struct AssignmentMasterView: View {
                                 }
                             }
                             Spacer()
-                            ZStack {
-                                Text("\(Int(assignment.pointsPossible!))")
-                                    .font(.callout)
-                                    .foregroundStyle(.white)
+                            Spacer()
+                            VStack {
+                                    if (assignment.currentSubmission?.score != nil) {
+                                        ZStack {
+                                            Circle()
+                                                .stroke(Color.green, lineWidth: 5)
+                                                .frame(width: 40, height: 40)
+                                                
+                                            Image(systemName: "person.fill.checkmark")
+                                                .resizable()
+                                                .frame(width: 20, height: 15)                                        .foregroundStyle(.green)
+                                        }.padding(.top, 4)
+                                            .padding(.trailing, 10)
+                                       
+
+                                        
+                                    }
+
+                                
+                                
                             }
+                            
+
+                            
                             
                             
                             
@@ -201,12 +352,20 @@ struct AssignmentMasterView: View {
             }
 
         }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                GlobalTracking.BackButton(binding: presentationMode)
+            }
+        }
         .background(color)
         .navigationTitle("Assignments")
     }
     
 }
 #Preview {
+    let scoreStatistic = ScoreStatistic(min: 52.3, max: 101.8, mean: 78.1, upperQuartile: 80, median: 11, lowerQuartile: 40)
+    let submission = Submission(id: 100, score: 79.75, assignmentID: 1, userID: 105, graderID: 1, attempt: 1, late: false , missing: false)
     // Create sample assignments
     let sampleAssignments = [
         Assignment(
@@ -240,9 +399,11 @@ struct AssignmentMasterView: View {
             dueAt: Calendar.current.date(byAdding: .day, value: -2, to: Date()),
             lockedAt: nil,
             courseID: 101,
-            pointsPossible: 75
+            pointsPossible: 100,
+            currentSubmission: submission, scoreStatistic: scoreStatistic
         )
     ]
+
 
     // Create sample datedAssignments
     let sampleDatedAssignments: [DatePriority: [Assignment]] = [
