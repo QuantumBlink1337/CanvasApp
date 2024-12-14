@@ -12,46 +12,112 @@ struct ModuleView: View {
     var courseWrapper: CourseWrapper
     
     let iconTypeLookup: [ModuleItemType : String] = [ModuleItemType.assignment : "pencil.and.list.clipboard.rtl", ModuleItemType.discussion : "person.wave.2.fill", ModuleItemType.externalTool : "book.and.wrench.fill", ModuleItemType.externalURL : "globe", ModuleItemType.file : "folder.fill", ModuleItemType.page : "book.pages.fill", ModuleItemType.subheader : "list.dash.header.rectangle", ModuleItemType.quiz : "list.bullet.rectangle.portrait.fill"]
-    
-    @State private var isExpanded: Set<String>
-    init(courseWrapper: CourseWrapper) {
+        
+    @State private var moduleSectionIsExpanded: Set<Int>
+    @State private var moduleItemSectionIsExpanded: Set<Int>
+
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    let color: Color
+    @Binding private var navigationPath: NavigationPath
+    init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
-        _isExpanded = State(initialValue: Set(courseWrapper.course.modules.map{$0.name}))
+        self.color = HexToColor(courseWrapper.course.color) ?? .black
+        self._navigationPath = navigationPath
+        _moduleSectionIsExpanded = State(initialValue: Set())
+        _moduleItemSectionIsExpanded = State(initialValue: Set())
+
     }
-    var body: some View {
-            List(courseWrapper.course.modules) { module in
-                Section(isExpanded: Binding<Bool> (
+    private func buildModuleItems(module: Module) -> some View {
+        ForEach(module.items!) { item in
+                DisclosureGroup(isExpanded: Binding<Bool> (
                     get: {
-                        return isExpanded.contains(module.name)
+                        return moduleItemSectionIsExpanded.contains(item.id)
                     },
                     set: { isExpanding in
                         if (isExpanding) {
-                            isExpanded.insert(module.name)
+                            moduleItemSectionIsExpanded.insert(item.id)
                         }
                         else {
-                            isExpanded.remove(module.name)
+                            moduleItemSectionIsExpanded.remove(item.id)
                         }
                     }
                 ),
-
-                        content: {
-                            ForEach(module.items!, id: \.id) { moduleItem in
-                            HStack {
-                                Image(systemName: iconTypeLookup[ModuleItemType(rawValue: moduleItem.type)!] ?? "questionmark.app.dashed")
-                                    .frame(width: 20, height: 20)
-                                Text(moduleItem.title)
-                                    .padding(.leading, 15.0)
-
-                            }
-                        }
-
+                content: {
+                    
                 },
-                        header: {
-                            Text(module.name)
+                label: {
+                    let icon = iconTypeLookup[item.type]
+                    HStack {
+                        Image(systemName: icon!)
+                        Text("\(item.title)")
+                    }
+                    
+                }
+                )
+                .tint(HexToColor(courseWrapper.course.color))
+            }
+    }
+
+    
+    @ViewBuilder
+    private func buildModuleSectionList() -> some View {
+        List {
+            ForEach(courseWrapper.course.modules) { module in
+                Section(isExpanded: Binding<Bool> (
+                    get: {
+                        return moduleSectionIsExpanded.contains(module.id)
+                    },
+                    set: { isExpanding in
+                        if (isExpanding) {
+                            moduleSectionIsExpanded.insert(module.id)
                         }
+                        else {
+                            moduleSectionIsExpanded.remove(module.id)
+                        }
+                    }
+                ),
+                    
+                content: {
+                    buildModuleItems(module: module)
+                },
+                header:
+                    {
+                    Text("\(module.name)")
+                        .font(.subheadline)
+                        .fontWeight(.heavy)
+                    }
                 )
             }
-            .listStyle(.sidebar)
+        
+        }
+        .listStyle(.sidebar)
+        .background(color)
+        .padding(.top)
+    }
+
+    
+    
+    
+    
+    var body: some View {
+        VStack {
+            buildModuleSectionList()
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath)
+            }
+            ToolbarItem(placement: .principal) {
+                Text("Modules")
+                    .foregroundStyle(.white)
+                    .font(.title)
+                    .fontWeight(.heavy)
+
+            }
+        }
+        .background(color)
+            
             
             
         
