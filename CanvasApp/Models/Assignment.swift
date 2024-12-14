@@ -26,6 +26,11 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
     var courseID: Int
 
     var pointsPossible: Float?
+    
+    
+    var submissions: [Submission] = []
+    var currentSubmission: Submission?
+    var scoreStatistic: ScoreStatistic?
 
     private enum CodingKeys : String, CodingKey {
         case id = "id"
@@ -37,5 +42,7 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
         case lockedAt = "lock_at"
         case courseID = "course_id"
         case pointsPossible = "points_possible"
+        case scoreStatistic = "score_statistics"
+        case currentSubmission = "submission"
     }
 }
