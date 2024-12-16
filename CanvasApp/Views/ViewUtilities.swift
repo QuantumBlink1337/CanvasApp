@@ -185,7 +185,7 @@ struct AsyncImageView: View {
 }
 
 class HTMLRenderer {
-    static func makeAttributedString(from html: String) -> NSAttributedString {
+    static func makeAttributedString(from html: String) -> AttributedString {
         if let data = html.data(using: .utf8) {
             let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
                 .documentType: NSAttributedString.DocumentType.html,
@@ -194,39 +194,23 @@ class HTMLRenderer {
             
             
             do {
-                let attributedString = try NSAttributedString(data: data, options: options, documentAttributes: nil)
-                return attributedString
+                let nsAttributed = try NSAttributedString(data: data, options: options, documentAttributes: nil)
+                let attributedString = try? AttributedString(nsAttributed, including: \.uiKit)
+                return attributedString!
             }
             catch {
                 print("Error creating NSAttributedString: \(error)")
             }
             
         }
-        return NSAttributedString(string: "Error rendering content")
+        return AttributedString()
     }
 }
-struct HTMLTextView: UIViewRepresentable {
-    var attributedContent: NSAttributedString
-
-    func makeUIView(context: Context) -> UITextView {
-        let textView = UITextView()
-        textView.isEditable = false
-        textView.isScrollEnabled = true
-        textView.dataDetectorTypes = .all
-//        textView.attributedText = attributedContent
-        
-        return textView
-    }
-
-    func updateUIView(_ uiView: UITextView, context: Context) {
-        if uiView.attributedText != attributedContent {
-            uiView.attributedText = attributedContent
-            let contentSize = uiView.sizeThatFits(uiView.bounds.size)
-            print(contentSize.height)
-            GlobalTracking.currentMinHeightForPageView = contentSize.height
-        }
-     
-    }
-    
+@ViewBuilder
+func preparePageDisplay(page: any PageRepresentable) -> some View {
+    preparePageDisplay(page: page, alignment: .leading)
 }
-
+@ViewBuilder
+func preparePageDisplay(page: any PageRepresentable, alignment: TextAlignment) -> some View {
+    Text(page.attributedText ?? "Could not load attributed text").multilineTextAlignment(alignment)
+}

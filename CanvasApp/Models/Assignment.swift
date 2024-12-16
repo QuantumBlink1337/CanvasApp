@@ -16,7 +16,7 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
     var title: String
     
     var body: String?
-    var attributedText: NSAttributedString? = nil
+    var attributedText: AttributedString? = nil
     
     var createdAt: Date
     var updatedAt: Date

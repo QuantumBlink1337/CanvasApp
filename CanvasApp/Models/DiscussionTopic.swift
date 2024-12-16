@@ -14,7 +14,7 @@ struct DiscussionTopic : Codable, Identifiable, PageRepresentable {
     var postedAt: Date?
     var author: User?
     
-    var attributedText: NSAttributedString? = nil
+    var attributedText: AttributedString? = nil
     
     
     private enum CodingKeys: String, CodingKey {
