@@ -49,23 +49,32 @@ struct CoursePanel: View {
             ZStack(alignment: .topTrailing) {
                 NavigationLink(destination: CourseView(courseWrapper: courseWrapper, navigationPath: $navigationPath)) {
                     VStack(alignment: .leading) {
-                            ZStack(alignment: .topTrailing) {
+                            ZStack(alignment: .topLeading) {
                                 buildAsyncImage(urlString: courseWrapper.course.image_download_url ?? "", imageWidth: image_width, imageHeight: image_height, color: HexToColor(courseWrapper.course.color) ?? .clear, shape: .rectangle, colorOpacity: 0.5, placeShapeOnTop: true)
-    
-                                    
+                        
+                                let grade = courseWrapper.course.enrollment?.grade
+                                if (grade != nil && grade?.currentGrade != "X") {
+                                    Text("\(grade?.currentGrade ?? "X") \(grade?.currentScore?.clean ?? "0")%")
+                                        .padding(4)
+                                        .background {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .foregroundStyle(.white)
+//                                            .padding(.all)
+                                    }.padding(.leading, 5)
+                                        .padding(.top,8.0)
                                 }
+                                
+                                
+                            }
+                    
+                                
                             
                             Text(courseWrapper.course.name ?? "Missing name")
-                                .font(.body) // Display course name
+                                .font(.subheadline) // Display course name
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(2, reservesSpace: true)
                                 .padding(.leading, 1.0)
                                 .foregroundStyle(color)
-                            Text(courseWrapper.course.courseCode)
-                                .font(.caption2) // Display course name
-                                .multilineTextAlignment(.leading)
-                                .lineLimit(2, reservesSpace: true)
-                                .padding(.leading, 1.0)
                         
                         
 

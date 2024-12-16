@@ -11,8 +11,6 @@ import SwiftUI
 import UIKit
 
 
-
-
 extension UIColor {
     convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -205,6 +203,12 @@ func buildAsyncImage(urlString: String, imageWidth width: CGFloat, imageHeight h
     }
 }
 
+extension Float {
+    /// https://stackoverflow.com/questions/31390466/swift-how-to-remove-a-decimal-from-a-float-if-the-decimal-is-equal-to-0
+    var clean: String {
+       return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
+    }
+}
 
 
 
