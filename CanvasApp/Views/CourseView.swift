@@ -163,8 +163,7 @@ struct CourseSectionButton: View {
                     }
                     .navigationDestination(isPresented: $navigateToPageView) {
                         if (courseWrapper.course.frontPage != nil) {
-                            PageView(attributedContent: courseWrapper.course.frontPage!.attributedText! )
-                            
+                            PageView(courseWrapper: courseWrapper, page: courseWrapper.course.frontPage!, navigationPath: $navigationPath, textAlignment: .center)
                         }
                     }
                     ScrollView {

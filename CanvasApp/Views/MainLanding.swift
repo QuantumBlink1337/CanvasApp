@@ -407,40 +407,6 @@ struct CoursePanel: View {
                                 }
                                 
                             }
-//                            await withTaskGroup(of: (Int, [[Submission]]?).self) { group in
-//                                for (index, wrapper) in tempCourseWrappers.enumerated() {
-//                                    group.addTask {
-//                                        var submissionList: [[Submission]] = []
-//                                    
-//                                            for assignment in wrapper.course.assignments {
-//                                                print("\(assignment.id), course id: \(wrapper.course.id)")
-//                                                do {
-//                                                    let submissions = try await assignmentClient.getSubmissionForAssignment(from: assignment)
-//                                                    submissionList.append(submissions)
-//                                                    stage = "Preparing submissions of assignment \(assignment.id) from course: \(wrapper.course.id)"
-//                                                }
-//                                                catch {
-//                                                    print("Failed to load submissions for assignment \(assignment.id) for course \(wrapper.course.id): \(error)")
-//                                                    return (index, nil)
-//                                                }
-//                                            }
-//                                        return (index, submissionList)
-//
-//                                    }
-//                                }
-//                                for await result in group {
-//                                    let (index, submissionList) = result
-//                                    if let submissionList = submissionList {
-//                                        // Assign submissions back to the corresponding course assignments
-//                                        for (assignmentIndex, submissions) in submissionList.enumerated() {
-//                                            tempCourseWrappers[index].course.assignments[assignmentIndex].submissions = submissions
-//                                        }
-//                                    }
-//                                }
-//                                
-//                            }
-
-
                             DispatchQueue.main.async {
                                 courseWrappers = tempCourseWrappers
                                 isLoading = false

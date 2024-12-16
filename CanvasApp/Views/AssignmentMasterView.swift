@@ -240,7 +240,8 @@ struct AssignmentMasterView: View {
                                                 
                                             Image(systemName: "person.fill.checkmark")
                                                 .resizable()
-                                                .frame(width: 20, height: 15)                                        .foregroundStyle(.green)
+                                                .frame(width: 20, height: 15)                                        
+                                                .foregroundStyle(.green)
                                         }.padding(.top, 4)
                                             .padding(.trailing, 10)
                                        

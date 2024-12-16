@@ -48,7 +48,7 @@ struct AnnouncementView : View {
     private func buildAnnouncementFullView() -> some View {
         if let announcement = selectedAnnouncement {
             VStack {
-                PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
+                PageView(courseWrapper: courseWrapper, page: announcement, navigationPath: $navigationPath, textAlignment: .leading)
             }
         }
         
@@ -58,8 +58,11 @@ struct AnnouncementView : View {
     @ViewBuilder
     private func buildAnnouncementGlanceView(announcement: DiscussionTopic) -> some View {
         VStack {
-            PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
-        }.frame(minHeight: GlobalTracking.currentMinHeightForPageView)
+            
+            preparePageDisplay(page: announcement, alignment: .leading)
+            
+        }
+            
     }
 
     
@@ -100,16 +103,16 @@ struct AnnouncementView : View {
                                     .foregroundStyle(Color.black)
                                 HStack {
                                     if (loadAuthorData) {
-                                        Text((announcement.author?.displayName!)!)
-                                            .font(.footnote)
-                                            .foregroundStyle(Color.black)
-                                        Spacer()
-                                        Text("\(formattedDate(for: announcement))")
+                                        Text((announcement.author?.displayName ?? "No author")!)
                                             .font(.footnote)
                                             .foregroundStyle(Color.black)
                                     }
                                     
+                                    
                                 }
+                                Text("\(formattedDate(for: announcement))")
+                                    .font(.footnote)
+                                    .foregroundStyle(Color.black)
                                
                             }
                         }
@@ -163,65 +166,6 @@ struct AnnouncementView : View {
         .background(color)
         .padding(.top)
     }
-    
-    
-//    @ViewBuilder
-//    private func announcementGroup(timePeriod:  TimePeriod) -> some View {
-//        if let announcements = datedAnnouncements[timePeriod], !announcements.isEmpty {
-//            VStack(spacing: 0) {
-//                ForEach(announcements) { announcement in
-//                    let isExpanded = Binding(
-//                            get: {expandedAnnouncementID == announcement.id},
-//                            set: {isExpanded in expandedAnnouncementID = isExpanded ? announcement.id  : nil}
-//                        )
-//                    DisclosureGroup(isExpanded: isExpanded)
-//                    {
-//                        if isExpanded.wrappedValue {
-//                            VStack {
-//                                Text("Posted on " + formattedDate(for: announcement))
-//                                    .font(.caption)
-//                                GeometryReader { geometry in
-//                                    PageView(attributedContent: announcement.attributedText ?? NSAttributedString(string: "Failed to load NSAttributedString for announcement \(announcement.id)", attributes: nil)).id(announcement.id)
-//                                        .padding()
-//                                        .frame(minHeight: 300, maxHeight: geometry.size.height  )
-//                                    
-//                                }
-//                                .frame(minHeight: 300)
-//                                .padding(.bottom)
-//                                
-//                            }
-//
-//                        }
-//                        
-//                            
-//                    } label: {
-//                        HStack(alignment: .top, spacing: 8) {
-//                            AsyncImageView(urlString: (announcement.author?.avatarURL) ?? "Missing", width: avatarWidth, height: avatarHeight)
-//                            VStack(alignment: .leading, spacing: 4) {
-//                                Text(announcement.title)
-//                                    .font(.headline)
-//                                    .multilineTextAlignment(.leading)
-//                                    .foregroundStyle(Color.black)
-//                                if (announcement.author?.displayName != nil) {
-//                                    Text((announcement.author?.displayName!)!)
-//                                        .font(.footnote)
-//                                        .foregroundStyle(Color.black)
-//                                }
-//                            }
-//                        }
-//                    }.simultaneousGesture(
-//                        LongPressGesture().onEnded { _ in
-//                            selectedAnnouncement = announcement
-//                            loadFullAnnouncementView = true
-//                        }
-//                    )
-//                    .listRowInsets(EdgeInsets())
-//                }
-//                .listStyle(PlainListStyle())
-//            }
-//            .padding(.horizontal)
-//        }
-//    }
         var body: some View {
             VStack {
                 buildAnnouncementList()

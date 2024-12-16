@@ -11,7 +11,7 @@ enum SpecificPage {
 }
 
 struct Page: Decodable, Identifiable, PageRepresentable {
-    var attributedText: NSAttributedString? = nil
+    var attributedText: AttributedString? = nil
     var id: Int
     var title: String
     var body: String?
