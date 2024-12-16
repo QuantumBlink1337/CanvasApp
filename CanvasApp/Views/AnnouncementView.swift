@@ -110,7 +110,7 @@ struct AnnouncementView : View {
                                     
                                     
                                 }
-                                Text("\(formattedDate(for: announcement))")
+                                Text("\(formattedDate(for: announcement.postedAt ?? Date(), format: formatDate.longForm))")
                                     .font(.footnote)
                                     .foregroundStyle(Color.black)
                                

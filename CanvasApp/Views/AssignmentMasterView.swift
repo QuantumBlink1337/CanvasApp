@@ -26,6 +26,8 @@ struct AssignmentMasterView: View {
     
     @Binding private var navigationPath: NavigationPath
     
+    var assignmentDates: [Assignment : String] = [ : ]
+    
     init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
         _dateIsExpanded = State(initialValue: Set(courseWrapper.course.datedAssignments!.keys))
@@ -33,7 +35,10 @@ struct AssignmentMasterView: View {
         color = HexToColor(courseWrapper.course.color) ?? .black
         self._navigationPath = navigationPath
         
-        
+        for assignment in courseWrapper.course.assignments {
+            let formattedDate = formattedDate(for: assignment.dueAt ?? Date(), format: .longFormWithTime)
+            assignmentDates.updateValue(formattedDate, forKey: assignment)
+        }
        
         
     
@@ -225,7 +230,7 @@ struct AssignmentMasterView: View {
                                 Text(assignment.title)
                                     .font(.body)
                                 if (assignment.dueAt != nil) {
-                                    Text("Due at " + formattedDate(for: assignment.dueAt, omitTime: false))
+                                    Text(assignmentDates[assignment] ?? "XX")
                                         .font(.caption)
                                 }
                             }

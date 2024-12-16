@@ -18,6 +18,7 @@ struct PageView<T : PageRepresentable>: View {
     
     var color: Color
     
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding private var navigationPath: NavigationPath
     
@@ -33,6 +34,7 @@ struct PageView<T : PageRepresentable>: View {
         }
         self.alignment = alignment
         self.disableTitle = disableTitle
+        
         
     }
     init(courseWrapper: CourseWrapper, page: T, navigationPath: Binding<NavigationPath>, textAlignment: TextAlignment) {
@@ -50,7 +52,7 @@ struct PageView<T : PageRepresentable>: View {
                 
             }
             if (discussionTopic != nil) {
-                Text("\(formattedDate(for: discussionTopic?.postedAt))")
+                Text("\(formattedDate(for: discussionTopic?.postedAt ?? Date(), format: .longFormWithTime))")
                     .font(.subheadline)
                     .foregroundStyle(Color.black)
             }

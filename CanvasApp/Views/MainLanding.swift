@@ -19,6 +19,8 @@ struct CoursePanel: View {
     @State var showTextbox = false
     @State var selectedNickname = ""
     
+    var assignmentDates: [Assignment : String] = [ : ]
+
     @Binding private var navigationPath: NavigationPath
     
     init(courseWrapper: CourseWrapper, userClient: UserClient, navigationPath: Binding<NavigationPath>) {
@@ -29,6 +31,12 @@ struct CoursePanel: View {
         self.userClient = userClient
 //        print(String(describing: courseWrapper.course.modules))
         self._navigationPath = navigationPath
+        
+        let assignments = courseWrapper.course.datedAssignments![.dueSoon]!
+        for assignment in assignments {
+            let formattedDate = formattedDate(for: assignment.dueAt ?? Date(), format: .shortForm)
+            assignmentDates.updateValue(formattedDate, forKey: assignment)
+        }
         
         
 
@@ -75,6 +83,20 @@ struct CoursePanel: View {
                                 .lineLimit(2, reservesSpace: true)
                                 .padding(.leading, 1.0)
                                 .foregroundStyle(color)
+                            Text("Due Soon")
+                                .font(.footnote)
+                                .multilineTextAlignment(.leading)
+                                .padding(.leading, 1.0)
+                                .foregroundStyle(color)
+                        let assignments = courseWrapper.course.datedAssignments?[DatePriority.dueSoon] ?? []
+                        
+                        ForEach(assignments, id: \.id) { assignment in
+                            HStack {
+                                Text(assignment.title)
+                                    .font(.footnote)
+                                Text(assignmentDates[assignment] ?? "XX/XX")
+                            }
+                        }
                         
                         
 

@@ -10,7 +10,7 @@ enum DatePriority : Int, CaseIterable, Identifiable {
     case past = -1
 }
 
-struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentable {
+struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentable, Hashable {
 
     var id: Int
     var title: String
@@ -44,5 +44,18 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
         case pointsPossible = "points_possible"
         case scoreStatistic = "score_statistics"
         case currentSubmission = "submission"
+    }
+    
+    
+    static func == (lhs: Assignment, rhs: Assignment) -> Bool {
+        return lhs.id == rhs.id && lhs.title == rhs.title && lhs.createdAt == rhs.createdAt && lhs.updatedAt == rhs.updatedAt && lhs.courseID == rhs.courseID
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(title)
+        hasher.combine(createdAt)
+        hasher.combine(updatedAt)
+        hasher.combine(courseID)
     }
 }
