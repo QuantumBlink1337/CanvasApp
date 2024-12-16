@@ -50,41 +50,8 @@ struct CoursePanel: View {
                 NavigationLink(destination: CourseView(courseWrapper: courseWrapper, navigationPath: $navigationPath)) {
                     VStack(alignment: .leading) {
                             ZStack(alignment: .topTrailing) {
-                                
-                                if let urlString = courseWrapper.course.image_download_url, let url = URL(string: urlString) {
-                                    AsyncImage(url: url) { phase in
-                                        switch phase {
-                                        case .empty:
-                                            ProgressView()
-                                                .frame(width: image_width, height: image_height)
-                                        case .success(let image):
-                                            ZStack {
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                    .frame(width: image_width , height: image_height)
-                                                    .clipShape(Rectangle())
-                                                Rectangle()
-                                                    .frame(width: image_width, height: image_height)
-                                                    
-                                                    .foregroundStyle(color.opacity(0.5))
-                                            }
-                                            
-                                        case .failure:
-                                            Image(systemName: "exclamationmark.triangle.fill")
-                                                .foregroundColor(color)
-                                                .frame(width: image_width, height: image_height)
-                                        @unknown default:
-                                            EmptyView()
-                                        }
-                                    }
-                                    
-                                } else {
-                                    Rectangle()
-                                        .frame(width: image_width, height: image_height).foregroundStyle(color)
-                                }
-                             
-                                    
+                                buildAsyncImage(urlString: courseWrapper.course.image_download_url ?? "", imageWidth: image_width, imageHeight: image_height, color: HexToColor(courseWrapper.course.color) ?? .clear, shape: .rectangle, colorOpacity: 0.5, placeShapeOnTop: true)
+    
                                     
                                 }
                             
@@ -479,7 +446,5 @@ struct TokenManip: View {
         }
     }
 }
-//    #Preview {
-//        MainLanding()
-//    }
+
 

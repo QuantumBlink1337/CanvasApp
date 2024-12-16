@@ -139,50 +139,74 @@ enum ShapeType {
     case rectangle
     case circle
 }
-struct AsyncImageView: View {
-    
-    let urlString: String
-    let width: CGFloat
-    let height: CGFloat
-    
-    init(urlString: String, width: CGFloat, height: CGFloat) {
-        self.urlString = urlString
-        self.width = width
-        self.height = height
-    }
-    
 
-    
-    var body : some View {
-        if let url = URL(string: urlString) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                        .frame(width: width, height: height)
-                case .success(let image):
-                    ZStack {
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: width , height: height)
-                            .clipShape(Circle())
+
+@ViewBuilder
+func buildAsyncImage(urlString: String, imageWidth width: CGFloat, imageHeight height: CGFloat, color: Color = .clear, shape: ShapeType = .rectangle, colorOpacity opacity: Double = 1.0, placeShapeOnTop: Bool = false) -> some View {
+ 
+    if let url = URL(string: urlString) {
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .empty:
+                ProgressView()
                     .frame(width: width, height: height)
+            case .success(let image):
+                ZStack {
+                    switch shape {
+                    case .rectangle:
+                        image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: width , height: height)
+                        .clipShape(Rectangle())
+                        if placeShapeOnTop {
+                            Rectangle()
+                                .frame(width: width , height: height)
+                                .foregroundStyle(color).opacity(opacity)
+
+                        }
+                    case .circle:
+                        image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: width , height: height)
+                        .clipShape(Circle())
+                        if placeShapeOnTop {
+                            Circle()
+                                .frame(width: width , height: height)
+                                .foregroundStyle(color).opacity(opacity)
+
+                        }
                     }
-                    
-                case .failure:
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .frame(width: width, height: height)
-                @unknown default:
-                    EmptyView()
+                        
                 }
+                
+            case .failure:
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .frame(width: width, height: height)
+            @unknown default:
+                EmptyView()
             }
-            
-        } else {
-            Circle().frame(width: width, height: height)
+        }
+        
+    } else {
+        switch shape {
+        case .rectangle:
+            Rectangle()
+                .frame(width: width, height: height)
+                .foregroundStyle(color)
+
+        case .circle:
+            Circle()
+                .frame(width: width, height: height)
+                .foregroundStyle(color)
+
         }
     }
 }
+
+
+
 
 class HTMLRenderer {
     static func makeAttributedString(from html: String) -> AttributedString {

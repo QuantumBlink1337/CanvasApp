@@ -42,7 +42,7 @@ struct PageView<T : PageRepresentable>: View {
         VStack(alignment: .center) {
             HStack {
                 if (author != nil) {
-                    AsyncImageView(urlString: author?.avatarURL ?? "No url", width: 50, height: 50)
+                    buildAsyncImage(urlString: author?.avatarURL ?? "No url", imageWidth: 50, imageHeight: 50)
                     Text(author?.displayName ?? "No display name")
                         .font(.title3)
                     

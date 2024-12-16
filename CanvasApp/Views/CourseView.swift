@@ -73,38 +73,7 @@ struct CourseSectionButton: View {
                 VStack {
                     ZStack() {
                         VStack {
-                            if let urlString = courseWrapper.course.image_download_url, let url = URL(string: urlString) {
-                                AsyncImage(url: url) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                            .frame(width: geometry.size.width, height: image_width)
-                                    case .success(let image):
-                                        ZStack {
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: geometry.size.width , height: image_height)
-                                                .clipShape(Rectangle())
-                                            Rectangle()
-                                                .frame(width: geometry.size.width, height: image_height)
-                                            
-                                                .foregroundStyle(color.opacity(0.5))
-                                        }
-                                        
-                                    case .failure:
-                                        Image(systemName: "exclamationmark.triangle.fill")
-                                            .foregroundColor(color)
-                                            .frame(width: geometry.size.width, height: image_height)
-                                    @unknown default:
-                                        EmptyView()
-                                    }
-                                }
-                                
-                            } else {
-                                Rectangle()
-                                    .frame(width: geometry.size.width, height: image_height).foregroundStyle(color)
-                            }
+                            buildAsyncImage(urlString: courseWrapper.course.image_download_url ?? "", imageWidth: geometry.size.width, imageHeight: image_height, color: HexToColor(courseWrapper.course.color) ?? .clear, shape: .rectangle, colorOpacity: 0.5, placeShapeOnTop: true)
                         }
                         VStack {
                             Text(courseWrapper.course.name ?? "Missing Name")

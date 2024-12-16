@@ -94,8 +94,8 @@ struct AnnouncementView : View {
                     VStack(alignment: .leading) {
                         
                         HStack(alignment: .top) {
-                            let authorURL: String? = announcement.author?.avatarURL
-                            AsyncImageView(urlString: authorURL ?? "Missing", width: avatarWidth, height: avatarHeight)
+                            let authorURL: String = announcement.author?.avatarURL ?? "Missing"
+                            buildAsyncImage(urlString: authorURL, imageWidth: avatarWidth, imageHeight: avatarHeight, shape: .circle)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(announcement.title)
                                     .font(.headline)
