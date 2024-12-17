@@ -22,7 +22,6 @@ struct PageClient {
         guard let url = URL(string: urlString) else {
             throw NetworkError.badURL
         }
-        print(String(describing: url))
         var request = URLRequest(url:url)
         request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
         let (data, response) = try await URLSession.shared.data(for: request)

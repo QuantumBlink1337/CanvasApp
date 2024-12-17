@@ -39,8 +39,6 @@ func retrieveAPIToken() -> Bool {
     catch {
         print("Failed to open file")
     }
-    print(String(describing: APIToken))
-    print(APIToken.isEmpty)
     return APIToken.isEmpty
 }
 
