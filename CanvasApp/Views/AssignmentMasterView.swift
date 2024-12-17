@@ -165,7 +165,7 @@ struct AssignmentPageView : View {
                         .font(.footnote)
 
                     Spacer()
-                    Text(formattedDate(for: assignment.currentSubmission?.submittedAt ?? Date(), format: .longFormWithTime))
+                    Text(formattedDate(for: assignment.currentSubmission?.submittedAt ?? Date(), format: .mediuMFormWithTime))
                         .font(.footnote)
 
                 }
@@ -203,7 +203,7 @@ struct AssignmentPageView : View {
                 Text("No Due Date")
             }
             else {
-                Text("\(formattedDate(for: assignment.dueAt ?? Date(),format: .longFormWithTime))")
+                Text("\(formattedDate(for: assignment.dueAt ?? Date(),format: .mediuMFormWithTime))")
                     .font(.caption)
                     .fontWeight(.regular)
                 
@@ -505,80 +505,4 @@ struct AssignmentMasterView: View {
         .background(color)
     }
     
-}
-#Preview {
-    let scoreStatistic = ScoreStatistic(min: 52.3, max: 101.8, mean: 78.1, upperQuartile: 80, median: 11, lowerQuartile: 40)
-    let submission = Submission(id: 100, score: 79.75, assignmentID: 1, userID: 105, graderID: 1, attempt: 1, late: false , missing: false)
-    // Create sample assignments
-    let sampleAssignments = [
-        Assignment(
-            id: 1,
-            title: "Assignment 1",
-            body: "This is the body of assignment 1",
-            createdAt: Date(),
-            updatedAt: Date(),
-            dueAt: Calendar.current.date(byAdding: .day, value: 2, to: Date()),
-            lockedAt: nil,
-            courseID: 101,
-            pointsPossible: 100
-        ),
-        Assignment(
-            id: 2,
-            title: "Assignment 2",
-            body: "This is the body of assignment 2",
-            createdAt: Date(),
-            updatedAt: Date(),
-            dueAt: Calendar.current.date(byAdding: .day, value: 5, to: Date()),
-            lockedAt: nil,
-            courseID: 101,
-            pointsPossible: 50
-        ),
-        Assignment(
-            id: 3,
-            title: "Assignment 3",
-            body: "This is the body of assignment 3",
-            createdAt: Date(),
-            updatedAt: Date(),
-            dueAt: Calendar.current.date(byAdding: .day, value: -2, to: Date()),
-            lockedAt: nil,
-            courseID: 101,
-            pointsPossible: 100,
-            currentSubmission: submission, scoreStatistic: scoreStatistic
-        )
-    ]
-
-
-    // Create sample datedAssignments
-    let sampleDatedAssignments: [DatePriority: [Assignment]] = [
-        .dueSoon: [sampleAssignments[0]],
-        .upcoming: [sampleAssignments[1]],
-        .past: [sampleAssignments[2]]
-    ]
-    let sampleGrade = Grade(currentGrade: "A-", currentScore: 91.50)
-
-    // Create a sample enrollment
-    let sampleEnrollment = Enrollment(
-        id: 1,
-        courseID: 101,
-        enrollmentState: "active",
-        enrollmentType: .StudentEnrollment,
-        grade: sampleGrade
-    )
-
-    // Create a sample course
-    let sampleCourse = Course(
-        name: "Sample Course",
-        courseCode: "SC101",
-        id: 101,
-        color: "#FF5733",
-        assignments: sampleAssignments,
-        datedAssignments: sampleDatedAssignments,
-        enrollment: sampleEnrollment
-    )
-
-    // Wrap the sample course in a CourseWrapper
-    let courseWrapper = CourseWrapper(course: sampleCourse)
-
-    // Return the AssignmentMasterView for the preview
-    return AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: Binding.constant(NavigationPath()))
 }
