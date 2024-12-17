@@ -13,6 +13,7 @@ struct DiscussionTopic : Codable, Identifiable, PageRepresentable {
     var body: String?
     var postedAt: Date?
     var author: User?
+    var lockedForComments: Bool
     
     var attributedText: AttributedString? = nil
     
@@ -23,6 +24,8 @@ struct DiscussionTopic : Codable, Identifiable, PageRepresentable {
         case body = "message"
         case postedAt = "posted_at"
         case author = "author"
+        case lockedForComments = "locked"
     }
     
 }
+    
