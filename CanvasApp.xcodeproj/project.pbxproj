@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D08DBD72D0BAF3600CCB89E /* ScoreStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBD62D0BAF3600CCB89E /* ScoreStatistic.swift */; };
+		3D08DBD92D0D546600CCB89E /* ModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBD82D0D546600CCB89E /* ModuleView.swift */; };
+		3D08DBDB2D0E054C00CCB89E /* AnnouncementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */; };
 		3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */; };
 		3D4E2D4E2CF6FF9E00227AC4 /* MainLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */; };
 		3D4E2D502CF6FF9F00227AC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4F2CF6FF9F00227AC4 /* Assets.xcassets */; };
@@ -20,7 +23,6 @@
 		3D4E2D6D2CF9927000227AC4 /* UserClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D6C2CF9927000227AC4 /* UserClient.swift */; };
 		3D4E2D6F2CF99EC800227AC4 /* ViewUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */; };
 		3D4E2D732CFA872D00227AC4 /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D722CFA872D00227AC4 /* CourseView.swift */; };
-		3D4E2D762CFBDDDA00227AC4 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D752CFBDDDA00227AC4 /* PageView.swift */; };
 		3DB65E3C2D03E1B400BF734D /* PageRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */; };
 		3DB65E3E2D03E1DF00BF734D /* DiscussionTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */; };
 		3DB65E402D03E3A900BF734D /* DiscussionTopicClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB65E3F2D03E3A900BF734D /* DiscussionTopicClient.swift */; };
@@ -35,9 +37,15 @@
 		3DC632492D0A2A72004D2679 /* Submission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632482D0A2A72004D2679 /* Submission.swift */; };
 		3DC6324B2D0A8C36004D2679 /* Enrollment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC6324A2D0A8C36004D2679 /* Enrollment.swift */; };
 		3DC6324F2D0B2461004D2679 /* Grade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC6324E2D0B2461004D2679 /* Grade.swift */; };
+		3DC632512D0B25B7004D2679 /* EnrollmentClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632502D0B25B7004D2679 /* EnrollmentClient.swift */; };
+		3DE41F8D2D114A83007FDEEA /* HTMLStreamer in Frameworks */ = {isa = PBXBuildFile; productRef = 3DE41F8C2D114A83007FDEEA /* HTMLStreamer */; };
+		3DEC9DD52D0E5C7200AC2564 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC9DD42D0E5C7200AC2564 /* PageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3D08DBD62D0BAF3600CCB89E /* ScoreStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreStatistic.swift; sourceTree = "<group>"; };
+		3D08DBD82D0D546600CCB89E /* ModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleView.swift; sourceTree = "<group>"; };
+		3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementView.swift; sourceTree = "<group>"; };
 		3D4E2D482CF6FF9E00227AC4 /* CanvasApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CanvasApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasApp.swift; sourceTree = "<group>"; };
 		3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLanding.swift; sourceTree = "<group>"; };
@@ -52,7 +60,6 @@
 		3D4E2D6C2CF9927000227AC4 /* UserClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserClient.swift; sourceTree = "<group>"; };
 		3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewUtilities.swift; sourceTree = "<group>"; };
 		3D4E2D722CFA872D00227AC4 /* CourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseView.swift; sourceTree = "<group>"; };
-		3D4E2D752CFBDDDA00227AC4 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageRepresentable.swift; sourceTree = "<group>"; };
 		3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionTopic.swift; sourceTree = "<group>"; };
 		3DB65E3F2D03E3A900BF734D /* DiscussionTopicClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionTopicClient.swift; sourceTree = "<group>"; };
@@ -67,6 +74,8 @@
 		3DC632482D0A2A72004D2679 /* Submission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Submission.swift; sourceTree = "<group>"; };
 		3DC6324A2D0A8C36004D2679 /* Enrollment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enrollment.swift; sourceTree = "<group>"; };
 		3DC6324E2D0B2461004D2679 /* Grade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grade.swift; sourceTree = "<group>"; };
+		3DC632502D0B25B7004D2679 /* EnrollmentClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollmentClient.swift; sourceTree = "<group>"; };
+		3DEC9DD42D0E5C7200AC2564 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DE41F8D2D114A83007FDEEA /* HTMLStreamer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,6 +142,7 @@
 				3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */,
 				3DC6323E2D06CFCA004D2679 /* Assignment.swift */,
 				3DC632482D0A2A72004D2679 /* Submission.swift */,
+				3D08DBD62D0BAF3600CCB89E /* ScoreStatistic.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -141,11 +152,12 @@
 			children = (
 				3D4E2D5E2CF703E900227AC4 /* CourseClient.swift */,
 				3D4E2D622CF9048100227AC4 /* PageClient.swift */,
+				3DB65E3F2D03E3A900BF734D /* DiscussionTopicClient.swift */,
 				3D4E2D662CF904B600227AC4 /* ClientUtilities.swift */,
 				3D4E2D6C2CF9927000227AC4 /* UserClient.swift */,
 				3DB88AB12D02599A00EEF069 /* ModuleClient.swift */,
-				3DB65E3F2D03E3A900BF734D /* DiscussionTopicClient.swift */,
 				3DC632402D07755C004D2679 /* AssignmentClient.swift */,
+				3DC632502D0B25B7004D2679 /* EnrollmentClient.swift */,
 			);
 			path = Clients;
 			sourceTree = "<group>";
@@ -156,9 +168,11 @@
 				3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */,
 				3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */,
 				3D4E2D722CFA872D00227AC4 /* CourseView.swift */,
-				3D4E2D752CFBDDDA00227AC4 /* PageView.swift */,
 				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
 				3DC632462D094408004D2679 /* UIColorEx.swift */,
+				3D08DBD82D0D546600CCB89E /* ModuleView.swift */,
+				3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */,
+				3DEC9DD42D0E5C7200AC2564 /* PageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -195,6 +209,9 @@
 			dependencies = (
 			);
 			name = CanvasApp;
+			packageProductDependencies = (
+				3DE41F8C2D114A83007FDEEA /* HTMLStreamer */,
+			);
 			productName = CanvasApp;
 			productReference = 3D4E2D482CF6FF9E00227AC4 /* CanvasApp.app */;
 			productType = "com.apple.product-type.application";
@@ -223,6 +240,9 @@
 				Base,
 			);
 			mainGroup = 3D4E2D3F2CF6FF9E00227AC4;
+			packageReferences = (
+				3DE41F8B2D114A83007FDEEA /* XCRemoteSwiftPackageReference "HTMLStreamer" */,
+			);
 			productRefGroup = 3D4E2D492CF6FF9E00227AC4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -250,12 +270,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D4E2D5B2CF6FFF200227AC4 /* Course.swift in Sources */,
-				3D4E2D762CFBDDDA00227AC4 /* PageView.swift in Sources */,
 				3DB65E402D03E3A900BF734D /* DiscussionTopicClient.swift in Sources */,
 				3DB88AB22D02599A00EEF069 /* ModuleClient.swift in Sources */,
 				3DB65E3E2D03E1DF00BF734D /* DiscussionTopic.swift in Sources */,
 				3DC6324F2D0B2461004D2679 /* Grade.swift in Sources */,
 				3DC632452D078BF9004D2679 /* AssignmentMasterView.swift in Sources */,
+				3D08DBD72D0BAF3600CCB89E /* ScoreStatistic.swift in Sources */,
 				3DB88AAE2D02578D00EEF069 /* ModuleItem.swift in Sources */,
 				3DB65E3C2D03E1B400BF734D /* PageRepresentable.swift in Sources */,
 				3D4E2D5F2CF703E900227AC4 /* CourseClient.swift in Sources */,
@@ -267,10 +287,14 @@
 				3D4E2D6B2CF9916600227AC4 /* User.swift in Sources */,
 				3DC632492D0A2A72004D2679 /* Submission.swift in Sources */,
 				3D4E2D6F2CF99EC800227AC4 /* ViewUtilities.swift in Sources */,
+				3D08DBD92D0D546600CCB89E /* ModuleView.swift in Sources */,
+				3DC632512D0B25B7004D2679 /* EnrollmentClient.swift in Sources */,
 				3DB88AB02D0257E400EEF069 /* ItemRepresentable.swift in Sources */,
 				3D4E2D632CF9048100227AC4 /* PageClient.swift in Sources */,
 				3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */,
 				3DC632472D094408004D2679 /* UIColorEx.swift in Sources */,
+				3D08DBDB2D0E054C00CCB89E /* AnnouncementView.swift in Sources */,
+				3DEC9DD52D0E5C7200AC2564 /* PageView.swift in Sources */,
 				3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */,
 				3DC6324B2D0A8C36004D2679 /* Enrollment.swift in Sources */,
 				3D4E2D612CF9030700227AC4 /* Page.swift in Sources */,
@@ -410,6 +434,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CanvasApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Portrait for Canvas";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -438,6 +463,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CanvasApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Portrait for Canvas";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -478,6 +504,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3DE41F8B2D114A83007FDEEA /* XCRemoteSwiftPackageReference "HTMLStreamer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://git.shadowfacts.net/shadowfacts/HTMLStreamer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3DE41F8C2D114A83007FDEEA /* HTMLStreamer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DE41F8B2D114A83007FDEEA /* XCRemoteSwiftPackageReference "HTMLStreamer" */;
+			productName = HTMLStreamer;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D4E2D402CF6FF9E00227AC4 /* Project object */;
 }

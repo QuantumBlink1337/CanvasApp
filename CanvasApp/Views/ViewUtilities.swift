@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 import UIKit
-
+import HTMLStreamer
 
 extension UIColor {
     convenience init(hex: String) {
@@ -204,25 +204,22 @@ extension Float {
 
 
 class HTMLRenderer {
+    
+    
+    
     static func makeAttributedString(from html: String) -> AttributedString {
-        if let data = html.data(using: .utf8) {
-            let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-                .documentType: NSAttributedString.DocumentType.html,
-                .characterEncoding: String.Encoding.utf8.rawValue
-            ]
-            
-            
-            do {
-                let nsAttributed = try NSAttributedString(data: data, options: options, documentAttributes: nil)
-                let attributedString = try? AttributedString(nsAttributed, including: \.uiKit)
-                return attributedString!
-            }
-            catch {
-                print("Error creating NSAttributedString: \(error)")
-            }
-            
-        }
-        return AttributedString()
+        let config = AttributedStringConverterConfiguration(
+            font: UIFont.systemFont(ofSize: 13),
+            monospaceFont: UIFont.monospacedSystemFont(ofSize: 13, weight: .regular),
+            fontMetrics: .default,
+            color: UIColor.black,
+            paragraphStyle: .default
+        )
+
+        
+        let converter = AttributedStringConverter(configuration: config)
+        let attributedString = try? AttributedString(converter.convert(html: html), including: \.uiKit)
+        return attributedString!
     }
 }
 @ViewBuilder
