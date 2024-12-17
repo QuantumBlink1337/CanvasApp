@@ -9,6 +9,18 @@ enum DatePriority : Int, CaseIterable, Identifiable {
     case upcoming = 9
     case past = -1
 }
+enum SubmissionTypes : String, Decodable {
+    case discussionTopic = "discussion_topic"
+    case onlineQuiz = "online_quiz"
+    case onPaper = "on_paper"
+    case none = "none"
+    case externalTool = "external_tool"
+    case onlineTextEntry = "online_text_entry"
+    case onlineURL = "online_url"
+    case onlineUpload = "online_upload"
+    case mediaRecording = "media_recording"
+    case studentAnnotation = "student_annotation"
+}
 
 struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentable, Hashable {
 
@@ -29,6 +41,7 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
     
     
     var submissions: [Submission] = []
+    var submissionTypes: [SubmissionTypes]
     var currentSubmission: Submission?
     var scoreStatistic: ScoreStatistic?
 
@@ -44,7 +57,32 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
         case pointsPossible = "points_possible"
         case scoreStatistic = "score_statistics"
         case currentSubmission = "submission"
+        case submissionTypes = "submission_types"
     }
+    
+    init(from decoder: Decoder) throws {
+           let container = try decoder.container(keyedBy: CodingKeys.self)
+           
+           // Decode required properties
+           self.id = try container.decode(Int.self, forKey: .id)
+           self.title = try container.decode(String.self, forKey: .title)
+           self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+           self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+           self.courseID = try container.decode(Int.self, forKey: .courseID)
+           
+           // Decode optional properties
+           self.body = try container.decodeIfPresent(String.self, forKey: .body)
+           self.dueAt = try container.decodeIfPresent(Date.self, forKey: .dueAt)
+           self.lockedAt = try container.decodeIfPresent(Date.self, forKey: .lockedAt)
+           self.pointsPossible = try container.decodeIfPresent(Float.self, forKey: .pointsPossible)
+           self.scoreStatistic = try container.decodeIfPresent(ScoreStatistic.self, forKey: .scoreStatistic)
+           self.currentSubmission = try container.decodeIfPresent(Submission.self, forKey: .currentSubmission)
+           
+           // Decode arrays with default value fallback
+           self.submissionTypes = (try container.decodeIfPresent([SubmissionTypes].self, forKey: .submissionTypes)) ?? []
+       }
+
+    
     
     
     static func == (lhs: Assignment, rhs: Assignment) -> Bool {
