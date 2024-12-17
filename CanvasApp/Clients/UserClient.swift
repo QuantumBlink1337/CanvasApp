@@ -42,10 +42,11 @@ struct UserClient {
     }
     /// Retrieves the Enrollments of a given User.
     ///  Can throw an error if there is a bad URL, an invalid response, or a decoding error.
-    /// - Parameter userID: the ID of the User. By default, this value is 0 which is corrected to "self".
+    /// - Parameter from: the User you wish to retrieve. If the ID of the User can't be retrieved, by default it will retrieve 'self'
     /// - Returns: An array of Enrollment objects.
-    func getUserEnrollments(userID: Int = 0) async throws -> [Enrollment] {
-        guard let url = URL(string: baseURL + "users/\(userID == 0 ? "self" : String(userID))/enrollments") else {
+    func getUserEnrollments(from user: User) async throws -> [Enrollment] {
+        let idString = user.id != nil ? String(user.id!) : "self"
+        guard let url = URL(string: baseURL + "users/\(idString)/enrollments?per_page=400") else {
             throw NetworkError.badURL
 
         }
