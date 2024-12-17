@@ -1,0 +1,24 @@
+{
+  "originHash" : "a0b44f3bc085312267dd5d6bf3be59cdb8a46ce6f4da27b5d04461f9518e8076",
+  "pins" : [
+    {
+      "identity" : "htmlfastparse",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ezhes/HTMLFastParse.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "d5578458748327c8197b41869e32c48b62a69556"
+      }
+    },
+    {
+      "identity" : "htmlstreamer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://git.shadowfacts.net/shadowfacts/HTMLStreamer.git",
+      "state" : {
+        "revision" : "68e43131b7fbf6cabfba540ed15798df378d9997",
+        "version" : "0.3.0"
+      }
+    }
+  ],
+  "version" : 3
+}

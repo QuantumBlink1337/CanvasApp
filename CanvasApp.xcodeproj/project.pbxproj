@@ -130,19 +130,14 @@
 		3D4E2D592CF6FFE000227AC4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3DE41F8F2D1216A4007FDEEA /* Protocols */,
+				3DE41F8E2D121689007FDEEA /* ModuleModel */,
 				3DC6324D2D0B2450004D2679 /* EnrollmentModel */,
-				3DC6324C2D0B2445004D2679 /* SubmissionModel */,
+				3DC6324C2D0B2445004D2679 /* AssignmentModel */,
 				3D4E2D5A2CF6FFF200227AC4 /* Course.swift */,
 				3D4E2D602CF9030700227AC4 /* Page.swift */,
 				3D4E2D6A2CF9916600227AC4 /* User.swift */,
-				3DB88AAB2D02548700EEF069 /* Module.swift */,
-				3DB88AAD2D02578D00EEF069 /* ModuleItem.swift */,
-				3DB88AAF2D0257E400EEF069 /* ItemRepresentable.swift */,
-				3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */,
 				3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */,
-				3DC6323E2D06CFCA004D2679 /* Assignment.swift */,
-				3DC632482D0A2A72004D2679 /* Submission.swift */,
-				3D08DBD62D0BAF3600CCB89E /* ScoreStatistic.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -177,11 +172,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		3DC6324C2D0B2445004D2679 /* SubmissionModel */ = {
+		3DC6324C2D0B2445004D2679 /* AssignmentModel */ = {
 			isa = PBXGroup;
 			children = (
+				3DC6323E2D06CFCA004D2679 /* Assignment.swift */,
+				3D08DBD62D0BAF3600CCB89E /* ScoreStatistic.swift */,
+				3DC632482D0A2A72004D2679 /* Submission.swift */,
 			);
-			path = SubmissionModel;
+			path = AssignmentModel;
 			sourceTree = "<group>";
 		};
 		3DC6324D2D0B2450004D2679 /* EnrollmentModel */ = {
@@ -191,6 +189,24 @@
 				3DC6324E2D0B2461004D2679 /* Grade.swift */,
 			);
 			path = EnrollmentModel;
+			sourceTree = "<group>";
+		};
+		3DE41F8E2D121689007FDEEA /* ModuleModel */ = {
+			isa = PBXGroup;
+			children = (
+				3DB88AAB2D02548700EEF069 /* Module.swift */,
+				3DB88AAD2D02578D00EEF069 /* ModuleItem.swift */,
+			);
+			path = ModuleModel;
+			sourceTree = "<group>";
+		};
+		3DE41F8F2D1216A4007FDEEA /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				3DB88AAF2D0257E400EEF069 /* ItemRepresentable.swift */,
+				3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

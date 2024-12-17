@@ -85,22 +85,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D64802D4-DD8D-42E8-BC96-B848D62DC97A"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Views/MainLanding.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "B4707998-1060-44DB-84BA-8EF371EBD585"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -108,8 +92,8 @@
             filePath = "CanvasApp/Views/CourseView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "414"
-            endingLineNumber = "414"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -124,8 +108,8 @@
             filePath = "CanvasApp/Views/CourseView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "460"
-            endingLineNumber = "460"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -133,225 +117,176 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FC005268-954E-4A60-B65A-2A0CC0B14E52"
+            uuid = "0CA0B5E1-CA85-4373-BC14-722D8A38CBA4"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Views/CourseView.swift"
+            filePath = "CanvasApp/Views/MainLanding.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
-            landmarkName = "announcementGroup(timePeriod:)"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
+            landmarkName = "fetchUserAndCourses()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8316C593-1DEE-4A62-A877-9FA46488080E"
+            uuid = "BF285EEE-36DA-4017-8390-1E1E362E3974"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Views/CourseView.swift"
+            filePath = "CanvasApp/Views/MainLanding.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
-            landmarkName = "prepareAnnouncements(from:)"
+            startingLineNumber = "313"
+            endingLineNumber = "313"
+            landmarkName = "fetchUserAndCourses()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5309CB1C-B613-4B51-9331-6C8DCCE00FC9"
-            shouldBeEnabled = "Yes"
-            condition = "self.id == 253049"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "sortAssignmentsByDueDate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "FE7E7C8F-C432-431D-BBCF-5287064627AE"
+            uuid = "554091D2-4DA2-426E-84F3-7B3858A33783"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
+            filePath = "CanvasApp/Views/AssignmentMasterView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "sortAssignmentsByDueDate()"
-            landmarkType = "7">
+            startingLineNumber = "499"
+            endingLineNumber = "499"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4AB9A480-5C96-4D77-8B26-3C3368D4C074"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "sortAssignmentsByDueDate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8A52A4B7-434E-4D73-AA28-DFA752D3A689"
+            uuid = "CFA52C41-6057-40D4-B8A6-A6DF49EF9C96"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
+            filePath = "CanvasApp/Views/AssignmentMasterView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "sortAssignmentsByDueDate()"
+            startingLineNumber = "329"
+            endingLineNumber = "329"
+            landmarkName = "buildAssignmentGlanceView(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FEB289D1-2181-4B82-A3A6-FDC870AF1223"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "sortAssignmentsByDueDate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "35BF615F-8680-4F7A-8A1E-0CDE0E5F2968"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "sortAssignmentsByDueDate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "37C22456-9F1E-4260-A5B5-1A19F75C8559"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "sortAssignmentsByDueDate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7EF675B4-6E0E-429A-BFD3-0156FABC8FBC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "sortAssignmentsByDueDate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "AF08BF23-3858-47D1-9037-7E6E53CC7718"
+            uuid = "00692A75-DC88-494E-9B7D-685B5B0A1319"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
+            filePath = "CanvasApp/Views/AssignmentMasterView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
-            landmarkName = "sortAssignmentsByDueDate()"
+            startingLineNumber = "500"
+            endingLineNumber = "500"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5EF68F37-7EAE-457D-A3F2-418F4CF04564"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CanvasApp/Views/MainLanding.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "451"
+            endingLineNumber = "451"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6F8A5AAE-E81A-416F-8C0C-E0DC446B3A0E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CanvasApp/Views/MainLanding.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "47D4D931-BF3F-49BC-A565-4A9223544B58"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CanvasApp/Views/MainLanding.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "405"
+            endingLineNumber = "405"
+            landmarkName = "fetchUserAndCourses()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1E43D04F-50FB-4384-962F-74BDC21D1DF3"
-            shouldBeEnabled = "Yes"
+            uuid = "9371DBE9-EDB5-4AA6-A592-CB3E6E98A821"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
+            filePath = "CanvasApp/Views/MainLanding.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "sortAssignmentsByDueDate()"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
+            landmarkName = "fetchUserAndCourses()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "25C9BC03-8545-4545-8A16-BBE5A8998D01"
+            uuid = "37E20B16-D25C-43C8-A2AB-678C318C88D8"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
+            filePath = "CanvasApp/Views/MainLanding.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "sortAssignmentsByDueDate()"
+            startingLineNumber = "406"
+            endingLineNumber = "406"
+            landmarkName = "fetchUserAndCourses()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A4829983-69F0-4E5D-BA47-92D30855B0F3"
+            uuid = "87897F74-CF04-4C15-BFEE-2186C45194AD"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Models/Course.swift"
+            filePath = "CanvasApp/Views/ModuleView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
-            landmarkName = "sortAssignmentsByDueDate()"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "buildModuleItems(module:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
