@@ -100,29 +100,33 @@ func colorToHex(_ color: SwiftUI.Color) -> String? {
     return "#\(redHex)\(greenHex)\(blueHex)"
 }
 
-enum formatDate {
-    case longFormWithTime
-    case longForm
-    case shortForm
+/// longFormWithTime = January 1st, 1970, 12:00 AM
+/// longForm = January 1st, 1970
+/// shortForm = 1/1
+/// mediumForm = Jan 1, 1970
+/// mediumFormWithTime =  Jan 1, 1970 12:00 AM
+enum formatDate : String {
+    case longFormWithTime = "MMMM d'th', yyyy h:mma z"
+    case longForm = "MMMM d'th', yyyy"
+    case shortForm = "MM/dd"
+    case mediumForm = "MMM d, yyyy"
+    case mediuMFormWithTime = "MMM d, yyyy h:mm a"
+    
 }
 
+/// formattedDate returns a String formatted from a Date object.
+/// - Parameters:
+///   - date: A Date object. By default, it is a new Date() instance.
+///   - format: A formatDate enum. By default, it is the .shortForm case.
+/// - Returns: A String formatted dependent on the format parameter.
 func formattedDate(for date: Date = Date(), format: formatDate = formatDate.shortForm) -> String {
     let dateFormatter = DateFormatter()
     
-    switch format {
-        case .longForm:
-        dateFormatter.dateFormat = "MMMM d'th', yyyy"
-        case .longFormWithTime:
-        dateFormatter.dateFormat = "MMMM d'th', yyyy h:mma z"
-        case .shortForm:
-        dateFormatter.dateFormat = "MM/dd"
-    }
+    dateFormatter.dateFormat = format.rawValue
     dateFormatter.locale = Locale.current
     dateFormatter.timeZone = TimeZone.current
     return dateFormatter.string(from: date)
 }
-
-
 
 enum ShapeType {
     case rectangle
@@ -228,5 +232,7 @@ func preparePageDisplay(page: any PageRepresentable) -> some View {
 }
 @ViewBuilder
 func preparePageDisplay(page: any PageRepresentable, alignment: TextAlignment) -> some View {
-    Text(page.attributedText ?? "Could not load attributed text").multilineTextAlignment(alignment)
+    ScrollView {
+        Text(page.attributedText ?? "Could not load attributed text").multilineTextAlignment(alignment)
+    }
 }
