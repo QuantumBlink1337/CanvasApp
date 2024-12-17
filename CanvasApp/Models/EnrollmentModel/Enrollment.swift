@@ -25,6 +25,7 @@ struct Enrollment: Decodable, Identifiable {
     var grade: Grade?
     
     
+    
     private enum CodingKeys : String, CodingKey {
         case id
         case courseID = "course_id"

@@ -32,10 +32,6 @@ extension UIColor {
     }
 }
 struct GlobalTracking {
-    private init(courses: [CourseWrapper]) {
-        GlobalTracking.courses = courses
-    }
-    static var courses: [CourseWrapper] = []
     static var currentMinHeightForPageView: CGFloat = 0
     
     @ViewBuilder
@@ -52,7 +48,7 @@ struct GlobalTracking {
             
         }
         .contextMenu {
-            ForEach(courses, id: \.id) { course in
+            ForEach(MainUser.selfCourseWrappers, id: \.id) { course in
                 Button(action: {
                     navigationPath.wrappedValue = NavigationPath()
                     navigationPath.wrappedValue.append(course)

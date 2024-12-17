@@ -13,6 +13,8 @@ struct CoursePanel: View {
     let image_height: CGFloat = 80
     let userClient: UserClient
     
+    let enrollment: Enrollment?
+    
     @State var color: Color
     @State var showColorPicker = false
     @State var selectedColor: Color = .blue
@@ -40,6 +42,10 @@ struct CoursePanel: View {
             let formattedDate = formattedDate(for: assignment.dueAt ?? Date(), format: .shortForm)
             assignmentDates.updateValue(formattedDate, forKey: assignment)
         }
+        self.enrollment = MainUser.selfUser?.enrollments.first(where: {
+            $0.courseID == courseWrapper.course.id &&
+            $0.enrollmentType == .StudentEnrollment
+        })
         
         
 
@@ -63,7 +69,7 @@ struct CoursePanel: View {
                             ZStack(alignment: .topLeading) {
                                 buildAsyncImage(urlString: courseWrapper.course.image_download_url ?? "", imageWidth: image_width, imageHeight: image_height, color: HexToColor(courseWrapper.course.color) ?? .clear, shape: .rectangle, colorOpacity: 0.5, placeShapeOnTop: true)
                         
-                                let grade = courseWrapper.course.enrollment?.grade
+                                let grade = enrollment?.grade
                                 if (grade != nil && grade?.currentGrade != nil && grade?.currentScore != nil) {
                                     Text("\(grade?.currentGrade ?? "X") \(grade?.currentScore?.clean ?? "0")%")
                                         .padding(4)

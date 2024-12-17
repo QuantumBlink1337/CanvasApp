@@ -287,6 +287,8 @@ struct AssignmentMasterView: View {
     
     var assignmentDates: [Assignment : String] = [ : ]
     
+    let enrollment: Enrollment?
+    
     init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
         _dateIsExpanded = State(initialValue: Set(courseWrapper.course.datedAssignments!.keys))
@@ -298,7 +300,10 @@ struct AssignmentMasterView: View {
             let formattedDate = formattedDate(for: assignment.dueAt ?? Date(), format: .longFormWithTime)
             assignmentDates.updateValue(formattedDate, forKey: assignment)
         }
-        
+        self.enrollment = MainUser.selfUser?.enrollments.first(where: {
+            $0.courseID == courseWrapper.course.id &&
+            $0.enrollmentType == .StudentEnrollment
+        })
     
         
     }
@@ -436,12 +441,12 @@ struct AssignmentMasterView: View {
                     Circle()
                         .stroke(.white, lineWidth: 5)
                         .frame(width: 45, height: 45)
-                    Text(courseWrapper.course.enrollment?.grade?.currentGrade ?? "X")
+                    Text(enrollment?.grade?.currentGrade ?? "X")
                         .font(.title2)
                         .foregroundStyle(.white)
                    
                 }
-                Text(String(courseWrapper.course.enrollment?.grade?.currentScore?.clean ?? "0") + "%")
+                Text(String(enrollment?.grade?.currentScore?.clean ?? "0") + "%")
                     .font(.title2)
                     .foregroundStyle(.white)
             }

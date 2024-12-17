@@ -40,7 +40,6 @@ struct Course: Decodable, Encodable, Identifiable {
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
     var assignments: [Assignment] = []
     var datedAssignments: [DatePriority : [Assignment]]? = nil
-    var enrollment: Enrollment? = nil
     
     
     /*
@@ -201,7 +200,6 @@ struct Course: Decodable, Encodable, Identifiable {
             self.color = color
             self.assignments = assignments
             self.datedAssignments = datedAssignments
-            self.enrollment = enrollment
         }
     
     

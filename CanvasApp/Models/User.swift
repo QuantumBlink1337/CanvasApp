@@ -19,6 +19,9 @@ struct User: Codable, Identifiable {
     var pronouns: String?
     var avatarURL: String?
     
+    var enrollments: [Enrollment] = []
+    
+    
     private enum CodingKeys: String, CodingKey {
         case id
         case firstName = "first_name"

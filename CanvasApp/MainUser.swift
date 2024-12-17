@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+
+/// Static struct that stores the information relevant to the current connected user using the application
+struct MainUser {
+    static var selfUser: User? = nil
+    static var selfCourseWrappers: [CourseWrapper] = []
+    
+    
+    
+}
