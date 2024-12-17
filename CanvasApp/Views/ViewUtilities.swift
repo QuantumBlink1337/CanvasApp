@@ -213,8 +213,8 @@ class HTMLRenderer {
     
     static func makeAttributedString(from html: String) -> AttributedString {
         let config = AttributedStringConverterConfiguration(
-            font: UIFont.systemFont(ofSize: 13),
-            monospaceFont: UIFont.monospacedSystemFont(ofSize: 13, weight: .regular),
+            font: UIFont.systemFont(ofSize: 16),
+            monospaceFont: UIFont.monospacedSystemFont(ofSize: 16, weight: .regular),
             fontMetrics: .default,
             color: UIColor.black,
             paragraphStyle: .default
