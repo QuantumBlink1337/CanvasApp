@@ -128,6 +128,7 @@ struct AssignmentPageView : View {
     
     let color: Color
     var loadGrades: Bool = false
+    var submissionTypeString: String = ""
     
     @Binding private var navigationPath: NavigationPath
     
@@ -137,7 +138,15 @@ struct AssignmentPageView : View {
         self.color = HexToColor(courseWrapper.course.color) ?? .black
         self._navigationPath = navigationPath
         loadGrades = assignment.currentSubmission?.grade != nil
+        prepareSubmissionTypeString()
     }
+    
+    mutating func prepareSubmissionTypeString() {
+        for type in assignment.submissionTypes {
+            submissionTypeString.append("\(type.rawValue) ")
+        }
+    }
+    
     @ViewBuilder
     private func buildHeader() -> some View {
         VStack(alignment: .leading) {
@@ -198,7 +207,7 @@ struct AssignmentPageView : View {
     private func buildDueAndSubType() -> some View {
         VStack(alignment: .leading) {
             Text("Due")
-                .font(.caption)
+                .font(.footnote)
             if (assignment.dueAt == nil) {
                 Text("No Due Date")
             }
@@ -206,8 +215,13 @@ struct AssignmentPageView : View {
                 Text("\(formattedDate(for: assignment.dueAt ?? Date(),format: .mediuMFormWithTime))")
                     .font(.caption)
                     .fontWeight(.regular)
-                
             }
+            Text("Submission Types")
+                .font(.footnote)
+            Text(submissionTypeString)
+                .font(.caption)
+                .fontWeight(.regular)
+
         }
         .padding(.leading)
     }
@@ -296,7 +310,6 @@ struct AssignmentMasterView: View {
         if (assignment.currentSubmission?.score == nil) {
             VStack(alignment: .center) {
                 HStack {
-                    Spacer()
                     ZStack(alignment: .center) {
                         Circle()
                             .stroke(color, lineWidth: 5)
@@ -305,12 +318,25 @@ struct AssignmentMasterView: View {
                     }
                     Text("Points Possible")
                     Spacer()
+                    if (assignment.currentSubmission == nil) {
+                        Text("No submission")
+                    }
                 }
+                
                 
             }
         }
         else {
             VStack {
+                HStack {
+                    Text("Attempt: \(assignment.currentSubmission?.attempt ?? 0)")
+                        .font(.footnote)
+
+                    Spacer()
+                    Text(formattedDate(for: assignment.currentSubmission?.submittedAt ?? Date(), format: .mediuMFormWithTime))
+                        .font(.footnote)
+
+                }
                 HStack {
                     ZStack(alignment: .center) {
                         Circle()
@@ -389,20 +415,8 @@ struct AssignmentMasterView: View {
                                                 .foregroundStyle(.green)
                                         }.padding(.top, 8)
                                             .padding(.trailing, 10)
-                                       
-
-                                        
                                     }
-
-                                
-                                
                             }
-                            
-
-                            
-                            
-                            
-                            
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
