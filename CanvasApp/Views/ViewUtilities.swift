@@ -32,7 +32,6 @@ extension UIColor {
     }
 }
 struct GlobalTracking {
-    static var currentMinHeightForPageView: CGFloat = 0
     
     @ViewBuilder
     static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>) -> some View {
