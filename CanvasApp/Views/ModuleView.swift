@@ -15,6 +15,9 @@ struct ModuleView: View {
         
     @State private var moduleSectionIsExpanded: Set<Int>
     @State private var moduleItemSectionIsExpanded: Set<Int>
+    
+    @State private var selectedAssignment: Assignment? = nil
+    @State private var loadAssignmentPage: Bool = false
 
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let color: Color
@@ -25,6 +28,7 @@ struct ModuleView: View {
         self._navigationPath = navigationPath
         _moduleSectionIsExpanded = State(initialValue: Set())
         _moduleItemSectionIsExpanded = State(initialValue: Set())
+        
     }
     private func buildModuleItems(module: Module) -> some View {
         ForEach(module.items!) { item in
@@ -42,7 +46,7 @@ struct ModuleView: View {
                     }
                 ),
                 content: {
-                    
+//                    preparePageDisplay(page: item)
                 },
                 label: {
                     let icon = iconTypeLookup[item.type]
@@ -60,13 +64,20 @@ struct ModuleView: View {
                         if (item.linkedAssignment != nil) {
                             Text("Due on \(formattedDate(for: item.linkedAssignment?.dueAt ?? Date(), format: formatDate.shortForm))")
                                 .font(.footnote)
-                                .padding(.leading, 28)
+                                .padding(.leading, 32)
                         }
                     }
                     
                     
                 }
                 )
+                .simultaneousGesture(LongPressGesture().onEnded {_ in
+                    
+                    if item.linkedAssignment != nil {
+                        selectedAssignment = item.linkedAssignment!
+                        loadAssignmentPage = true
+                    }
+                })
                 .tint(HexToColor(courseWrapper.course.color))
             }
     }
@@ -116,6 +127,14 @@ struct ModuleView: View {
         VStack {
             buildModuleSectionList()
         }
+        
+        .navigationDestination(isPresented: $loadAssignmentPage, destination: {
+            if (selectedAssignment != nil) {
+                AssignmentPageView(courseWrapper: courseWrapper, assignment: selectedAssignment!,  navigationPath: $navigationPath)
+
+            }
+        })
+        
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {

@@ -282,7 +282,7 @@ struct AssignmentMasterView: View {
     
     @Binding private var navigationPath: NavigationPath
     
-    @State private var selectedAssignment: Assignment
+    @State private var selectedAssignment: Assignment? = nil
     @State private var loadAssignmentPage: Bool = false
     
     var assignmentDates: [Assignment : String] = [ : ]
@@ -298,7 +298,6 @@ struct AssignmentMasterView: View {
             let formattedDate = formattedDate(for: assignment.dueAt ?? Date(), format: .longFormWithTime)
             assignmentDates.updateValue(formattedDate, forKey: assignment)
         }
-        selectedAssignment = courseWrapper.course.assignments[0]
         
     
         
@@ -502,7 +501,10 @@ struct AssignmentMasterView: View {
                 buildGradeHeader()
                 buildAssignmentList()
             }.navigationDestination(isPresented: $loadAssignmentPage, destination: {
-                AssignmentPageView(courseWrapper: courseWrapper, assignment: selectedAssignment, navigationPath: $navigationPath)
+                if (selectedAssignment != nil) {
+                    AssignmentPageView(courseWrapper: courseWrapper, assignment: selectedAssignment!, navigationPath: $navigationPath)
+
+                }
             })
         .navigationBarBackButtonHidden(true)
         .toolbar {
