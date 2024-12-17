@@ -41,16 +41,21 @@ struct PageView<T : PageRepresentable>: View {
         self.init(courseWrapper: courseWrapper, page: page, navigationPath: navigationPath, textAlignment: textAlignment, disableTitle: false)
     }
     var body : some View {
+        
+        
         VStack(alignment: .center) {
-            HStack {
-                if (author != nil) {
-                    buildAsyncImage(urlString: author?.avatarURL ?? "No url", imageWidth: 50, imageHeight: 50)
-                    Text(author?.displayName ?? "No display name")
-                        .font(.title3)
+            VStack(alignment: .leading) {
+                HStack() {
+                    if (author != nil) {
+                        buildAsyncImage(urlString: author?.avatarURL ?? "No url", imageWidth: 50, imageHeight: 50, shape: .circle)
+                        Text(author?.displayName ?? "No display name")
+                            .font(.title3)
+                    }
                     
                 }
-                
             }
+            
+            
             if (discussionTopic != nil) {
                 Text("\(formattedDate(for: discussionTopic?.postedAt ?? Date(), format: .longFormWithTime))")
                     .font(.subheadline)
@@ -58,7 +63,7 @@ struct PageView<T : PageRepresentable>: View {
             }
             
             Text(page.title)
-                .font(.headline)
+                .font(.title)
             preparePageDisplay(page: page, alignment: alignment)
                 .padding(.leading)
                 .padding(.trailing)
