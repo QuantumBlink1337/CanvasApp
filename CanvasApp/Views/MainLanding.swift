@@ -261,6 +261,7 @@ struct CoursePanel: View {
                             let tempCourseWrappers = fetchedCourses.map { course in
                                 let wrappedCourse = CourseWrapper(course: course)
                                 wrappedCourse.course.color = customColorsDict.getHexCode(courseID: course.id) ?? "#000000"
+                                wrappedCourse.course.syllabusAttributedString = HTMLRenderer.makeAttributedString(from: course.syllabusBody ?? "")
                                 return wrappedCourse
                                 
                             }
