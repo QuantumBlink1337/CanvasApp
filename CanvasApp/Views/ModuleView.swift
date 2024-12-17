@@ -25,7 +25,6 @@ struct ModuleView: View {
         self._navigationPath = navigationPath
         _moduleSectionIsExpanded = State(initialValue: Set())
         _moduleItemSectionIsExpanded = State(initialValue: Set())
-
     }
     private func buildModuleItems(module: Module) -> some View {
         ForEach(module.items!) { item in
@@ -47,10 +46,24 @@ struct ModuleView: View {
                 },
                 label: {
                     let icon = iconTypeLookup[item.type]
-                    HStack {
-                        Image(systemName: icon!)
-                        Text("\(item.title)")
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Image(systemName: icon!)
+                                .frame(width: 30, height: 30)
+                            Text("\(item.title)")
+                            if (item.linkedAssignment != nil) {
+                                Spacer()
+                                Text("Points: \(item.linkedAssignment?.pointsPossible?.clean ?? "0")")
+                                    .font(.footnote)
+                            }
+                        }
+                        if (item.linkedAssignment != nil) {
+                            Text("Due on \(formattedDate(for: item.linkedAssignment?.dueAt ?? Date(), format: formatDate.shortForm))")
+                                .font(.footnote)
+                                .padding(.leading, 28)
+                        }
                     }
+                    
                     
                 }
                 )
