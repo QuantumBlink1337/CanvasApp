@@ -15,6 +15,10 @@ extension Data {
 }
 
 struct UserClient {
+    
+    /// Retrieves the User object of the connected API token.
+    /// Can throw an error if there is a bad URL, an invalid response, or a decoding error.
+    /// - Returns: A User object.
     func getSelfUser() async throws -> User {
         guard let url = URL(string: baseURL + "users/self") else {
             throw NetworkError.badURL
@@ -36,6 +40,34 @@ struct UserClient {
             }
         
     }
+    /// Retrieves the Enrollments of a given User.
+    ///  Can throw an error if there is a bad URL, an invalid response, or a decoding error.
+    /// - Parameter userID: the ID of the User. By default, this value is 0 which is corrected to "self".
+    /// - Returns: An array of Enrollment objects.
+    func getUserEnrollments(userID: Int = 0) async throws -> [Enrollment] {
+        guard let url = URL(string: baseURL + "users/\(userID == 0 ? "self" : String(userID))/enrollments") else {
+            throw NetworkError.badURL
+
+        }
+        var request = URLRequest(url:url)
+        request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw NetworkError.invalidResponse
+        }
+        do {
+                return try JSONDecoder().decode([Enrollment].self, from: data)
+            }
+        catch {
+                print("Decoding error: \(error)")
+                throw NetworkError.badDecode
+            }
+    }
+    
+    
+    
+    
     func getColorInfoFromSelf() async throws -> UserColorCodes {
         guard let url = URL(string: baseURL + "users/self/colors") else {
             throw NetworkError.badURL
