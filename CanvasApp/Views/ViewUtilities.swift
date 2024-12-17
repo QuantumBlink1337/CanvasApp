@@ -227,12 +227,13 @@ class HTMLRenderer {
     }
 }
 @ViewBuilder
-func preparePageDisplay(page: any PageRepresentable) -> some View {
-    preparePageDisplay(page: page, alignment: .leading)
+func preparePageDisplay(page: any PageRepresentable, alignment: TextAlignment = .leading) -> some View {
+    preparePageDisplay(attributedText: page.attributedText ?? AttributedString(), alignment: .leading)
 }
+
 @ViewBuilder
-func preparePageDisplay(page: any PageRepresentable, alignment: TextAlignment) -> some View {
+func preparePageDisplay(attributedText: AttributedString, alignment: TextAlignment = .center) -> some View {
     ScrollView {
-        Text(page.attributedText ?? "Could not load attributed text").multilineTextAlignment(alignment)
+        Text(attributedText).multilineTextAlignment(alignment)
     }
 }

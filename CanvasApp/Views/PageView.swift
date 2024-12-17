@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PageView<T : PageRepresentable>: View {
     var courseWrapper: CourseWrapper
-    var page: T
+    var page: T? = nil
     var discussionTopic: DiscussionTopic?
     
     var author: User? = nil
@@ -17,6 +17,9 @@ struct PageView<T : PageRepresentable>: View {
     let disableTitle: Bool
     
     var color: Color
+    
+    let title: String
+    let attributedText: AttributedString
     
     let avatarWidth: CGFloat = 50
     let avatarHeight: CGFloat = 50
@@ -30,18 +33,29 @@ struct PageView<T : PageRepresentable>: View {
         self.page = page
         self.color = HexToColor(courseWrapper.course.color)!
         self._navigationPath = navigationPath
-        
+        self.title = page.title
         if (page is DiscussionTopic) {
             discussionTopic = page as? DiscussionTopic
             author = discussionTopic?.author
         }
         self.alignment = alignment
         self.disableTitle = disableTitle
-        
+        self.attributedText = page.attributedText ?? AttributedString()
         
     }
     init(courseWrapper: CourseWrapper, page: T, navigationPath: Binding<NavigationPath>, textAlignment: TextAlignment) {
         self.init(courseWrapper: courseWrapper, page: page, navigationPath: navigationPath, textAlignment: textAlignment, disableTitle: false)
+    }
+    init(courseWrapper: CourseWrapper, attributedText: AttributedString, title: String, navigationPath: Binding<NavigationPath>, textAlignment: TextAlignment, disableTitle: Bool = false) {
+        self.courseWrapper = courseWrapper
+        self.color = HexToColor(courseWrapper.course.color)!
+        self._navigationPath = navigationPath
+        self.title = title
+        self.alignment = textAlignment
+        self.attributedText = attributedText
+        self.disableTitle = disableTitle
+        
+
     }
     
     @ViewBuilder
@@ -72,11 +86,11 @@ struct PageView<T : PageRepresentable>: View {
                 buildAuthorHeader()
                     .padding(.leading)
             }
-            Text(page.title)
+            Text(title)
                 .font(.title)
                 .padding(.leading)
             Divider()
-            preparePageDisplay(page: page, alignment: alignment)
+            preparePageDisplay(attributedText: attributedText, alignment: alignment)
                 .padding(.leading)
                 .padding(.trailing)
             Divider()
@@ -100,7 +114,7 @@ struct PageView<T : PageRepresentable>: View {
                 GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath)
             }
             ToolbarItem(placement: .principal) {
-                Text(page.title)
+                Text(title)
                     .foregroundStyle(.white)
                     .font(.title2)
                     .fontWeight(.heavy)
