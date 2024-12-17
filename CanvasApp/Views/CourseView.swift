@@ -50,10 +50,11 @@ struct CourseSectionButton: View {
         @State private var pageLoadFailed = false
         @State private var showAlert = false
         
-        @State private var navigateToPageView = false
+        @State private var navigateToHomePage = false
         @State private var navigateToModuleView = false
         @State private var navigateToAnnouncementView = false
         @State private var navigateToAssignmentView = false
+        @State private var navigateToSyllabusView = false
 
         
         @State private var measuredHeight: CGFloat = 0
@@ -93,7 +94,7 @@ struct CourseSectionButton: View {
                     
                     Button(action:  {
                         if  (frontPageLoaded) {
-                            navigateToPageView = true
+                            navigateToHomePage = true
                         }
                         else if (!courseWrapper.course.modules.isEmpty) {
                             navigateToModuleView = true
@@ -130,7 +131,7 @@ struct CourseSectionButton: View {
                     } message: {
                         Text("Requested page could not be found")
                     }
-                    .navigationDestination(isPresented: $navigateToPageView) {
+                    .navigationDestination(isPresented: $navigateToHomePage) {
                         if (courseWrapper.course.frontPage != nil) {
                             PageView(courseWrapper: courseWrapper, page: courseWrapper.course.frontPage!, navigationPath: $navigationPath, textAlignment: .center)
                         }
@@ -140,18 +141,24 @@ struct CourseSectionButton: View {
                             navigateToAnnouncementView = true
                             
                         }
-                        CourseSectionButton(buttonTitle: "Syllabus", buttonImageIcon: "list.bullet.clipboard", color: HexToColor(courseWrapper.course.color) ?? .black) {
-                            print("Test button")
+                        if (courseWrapper.course.syllabusBody != nil) {
+                            CourseSectionButton(buttonTitle: "Syllabus", buttonImageIcon: "list.bullet.clipboard", color: HexToColor(courseWrapper.course.color) ?? .black) {
+                                navigateToModuleView = false
+                                navigateToHomePage = false
+                                navigateToAnnouncementView = false
+                                navigateToSyllabusView = true
+                            }
                         }
+                       
                         CourseSectionButton(buttonTitle: "Assignments & Grades", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
                             navigateToModuleView = false
-                            navigateToPageView = false
+                            navigateToHomePage = false
                             navigateToAnnouncementView = false
                             navigateToAssignmentView = true
                         }
                         CourseSectionButton(buttonTitle: "Modules", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
                             navigateToModuleView = true
-                            navigateToPageView = false
+                            navigateToHomePage = false
                             navigateToAnnouncementView = false
                             navigateToAssignmentView = false
                         }
@@ -167,6 +174,10 @@ struct CourseSectionButton: View {
                     }
                     .navigationDestination(isPresented: $navigateToAssignmentView) {
                         AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
+                        
+                    }
+                    .navigationDestination(isPresented: $navigateToSyllabusView) {
+                        PageView<Page>(courseWrapper: courseWrapper, attributedText: courseWrapper.course.syllabusAttributedString, title: "Syllabus", navigationPath: $navigationPath, textAlignment: .leading)
                         
                     }
                 }

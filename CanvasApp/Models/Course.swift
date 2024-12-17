@@ -27,6 +27,9 @@ class CourseWrapper: ObservableObject, Identifiable, Hashable {
 struct Course: Decodable, Encodable, Identifiable {
     var name: String?
     var courseCode: String
+    var syllabusBody: String? = nil
+    var syllabusAttributedString: AttributedString = AttributedString()
+    
     var id: Int
     var image_download_url: String?
     var term: Term?
@@ -234,6 +237,7 @@ struct Course: Decodable, Encodable, Identifiable {
         case image_download_url
         case term
         case courseCode = "course_code"
+        case syllabusBody = "syllabus_body"
 //        case color = "color"
     }
           
