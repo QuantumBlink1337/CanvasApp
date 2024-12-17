@@ -61,7 +61,7 @@ struct CoursePanel: View {
                                 buildAsyncImage(urlString: courseWrapper.course.image_download_url ?? "", imageWidth: image_width, imageHeight: image_height, color: HexToColor(courseWrapper.course.color) ?? .clear, shape: .rectangle, colorOpacity: 0.5, placeShapeOnTop: true)
                         
                                 let grade = courseWrapper.course.enrollment?.grade
-                                if (grade != nil && grade?.currentGrade != "X") {
+                                if (grade != nil && grade?.currentGrade != nil && grade?.currentScore != nil) {
                                     Text("\(grade?.currentGrade ?? "X") \(grade?.currentScore?.clean ?? "0")%")
                                         .padding(4)
                                         .background {
@@ -89,12 +89,28 @@ struct CoursePanel: View {
                                 .padding(.leading, 1.0)
                                 .foregroundStyle(color)
                         let assignments = courseWrapper.course.datedAssignments?[DatePriority.dueSoon] ?? []
+                        if (assignments.isEmpty) {
+                            HStack {
+                                Text("No assignments due!")
+                                    .font(.footnote)
+                                    .fontWeight(.thin)
+                                    .lineLimit(2, reservesSpace: true)
+                            }
+                        }
                         
                         ForEach(assignments, id: \.id) { assignment in
                             HStack {
                                 Text(assignment.title)
                                     .font(.footnote)
+                                    .fontWeight(.light)
+                                    .lineLimit(2, reservesSpace: true)
+                                Spacer()
                                 Text(assignmentDates[assignment] ?? "XX/XX")
+                                    .font(.footnote)
+                                    .fontWeight(.light)
+                                    .lineLimit(2, reservesSpace: true)
+
+
                             }
                         }
                         
@@ -230,34 +246,6 @@ struct CoursePanel: View {
             GridItem(.flexible()), // First column
             GridItem(.flexible()), // Second column
         ]
-//        private func fetchSubmissionsFromAssignments(temp tempCourseWrappers: [CourseWrapper]) async {
-//            await withTaskGroup(of: (Int, [Submission]?).self) { group in
-//                for (index, wrapper) in tempCourseWrappers.enumerated() {
-//                    group.addTask {
-//                        do {
-//                            let pages = try await pageClient.retrieveCoursePages(from: wrapper.course)
-//                            stage = "Preparing pages from course \(wrapper.course.id)"
-//                            return (index, pages)
-//                        }
-//                        catch {
-//                            print("Failed to load pages for course \(wrapper.course.id): \(error)")
-//                            return (index, nil)
-//                        }
-//                    }
-//                }
-//                for await result in group {
-//                    let (index, pages) = result
-//                    if let pages = pages {
-//                        for (var page) in pages {
-//                            page.attributedText = HTMLRenderer.makeAttributedString(from: page.body ?? "No description was provided")
-//                            tempCourseWrappers[index].course.pages.append(page)
-//                        }
-//                    }
-//                }
-//                
-//            }
-//        }
-        
         
         
         private func fetchUserAndCourses() async {
@@ -396,9 +384,23 @@ struct CoursePanel: View {
                                 for await result in group {
                                     let (index, assignments) = result
                                     if var assignments = assignments {
+                                        
                                         for i in assignments.indices {
-                                            assignments[i].attributedText = HTMLRenderer.makeAttributedString(from: assignments[i].body ?? "No description was provided")
-                                        }
+                                                assignments[i].attributedText = HTMLRenderer.makeAttributedString(from: assignments[i].body ?? "No description was provided")
+                                                
+                                                // Update linked assignments in modules
+                                                for moduleIndex in tempCourseWrappers[index].course.modules.indices {
+                                                    guard var moduleItems = tempCourseWrappers[index].course.modules[moduleIndex].items else { continue }
+                                                    
+                                                    for itemIndex in moduleItems.indices where moduleItems[itemIndex].type == .assignment && moduleItems[itemIndex].contentID == assignments[i].id {
+                                                        moduleItems[itemIndex].linkedAssignment = assignments[i]
+                                                    }
+                                                    
+                                                    // Write the modified items back to the module
+                                                    tempCourseWrappers[index].course.modules[moduleIndex].items = moduleItems
+                                                }
+                                            }
+                                        
                                         tempCourseWrappers[index].course.assignments = assignments
                                         tempCourseWrappers[index].course.sortAssignmentsByDueDate()
                                     }

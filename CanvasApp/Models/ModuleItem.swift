@@ -22,11 +22,9 @@ struct ModuleItem : ItemRepresentable, Decodable {
     var id: Int
     var title: String
     var type: ModuleItemType
-    
-    
     var contentID: Int?
     
-    
+    var linkedAssignment: Assignment? = nil
     
     
     enum CodingKeys: String, CodingKey {
