@@ -28,6 +28,9 @@ struct PageView<T : PageRepresentable>: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding private var navigationPath: NavigationPath
     
+    @State private var showMenu = false
+
+    
     init(courseWrapper: CourseWrapper, page: T, navigationPath: Binding<NavigationPath>, textAlignment alignment: TextAlignment, disableTitle: Bool) {
         self.courseWrapper = courseWrapper
         self.page = page
@@ -107,11 +110,20 @@ struct PageView<T : PageRepresentable>: View {
                 }
             }
             Spacer()
-        }.padding(.top)
+        }
+        .padding(.top)
+        .overlay {
+            if showMenu {
+                SideMenuView(isPresented: $showMenu, navigationPath: $navigationPath)
+                    .zIndex(1) // Make sure it overlays above the content
+                    .transition(.move(edge: .leading))
+                    .frame(maxHeight: .infinity) // Full screen height
+            }
+        }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                BackButton(binding: presentationMode, navigationPath: $navigationPath)
+                BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
             }
             ToolbarItem(placement: .principal) {
                 Text(title)

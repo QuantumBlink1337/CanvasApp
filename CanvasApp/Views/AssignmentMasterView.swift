@@ -284,6 +284,8 @@ struct AssignmentMasterView: View {
     
     @State private var selectedAssignment: Assignment? = nil
     @State private var loadAssignmentPage: Bool = false
+    @State private var showMenu = false
+
     
     var assignmentDates: [Assignment : String] = [ : ]
     
@@ -511,10 +513,18 @@ struct AssignmentMasterView: View {
 
                 }
             })
+            .overlay {
+                if showMenu {
+                    SideMenuView(isPresented: $showMenu, navigationPath: $navigationPath)
+                        .zIndex(1) // Make sure it overlays above the content
+                        .transition(.move(edge: .leading))
+                        .frame(maxHeight: .infinity) // Full screen height
+                }
+            }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                BackButton(binding: presentationMode, navigationPath: $navigationPath)
+                BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
             }
             ToolbarItem(placement: .principal) {
                 Text("Assignments")

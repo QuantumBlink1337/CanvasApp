@@ -17,6 +17,9 @@ struct PeopleView: View {
     @State private var enrollmentTypeIsExpanded: Set<EnrollmentType>
     @State private var userIsExpanded: Set<Int>
     
+    @State private var showMenu = false
+
+    
     init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
         self.color = HexToColor(courseWrapper.course.color) ?? .black
@@ -24,12 +27,7 @@ struct PeopleView: View {
         let set: Set = [EnrollmentType.TaEnrollment, EnrollmentType.TeacherEnrollment]
         _enrollmentTypeIsExpanded = State(initialValue: set)
         _userIsExpanded = State(initialValue: Set())
-        
-
-        
     }
-    
-    
     
     @ViewBuilder
     private func buildUserView(users: [User]) -> some View {
@@ -93,16 +91,22 @@ struct PeopleView: View {
         .padding(.top)
     }
     
-    
-    
     var body: some View {
         VStack {
             buildPeopleList()
         }
+    .overlay {
+        if showMenu {
+            SideMenuView(isPresented: $showMenu, navigationPath: $navigationPath)
+                .zIndex(1) // Make sure it overlays above the content
+                .transition(.move(edge: .leading))
+                .frame(maxHeight: .infinity) // Full screen height
+        }
+    }
     .navigationBarBackButtonHidden(true)
     .toolbar {
         ToolbarItem(placement: .topBarLeading) {
-            BackButton(binding: presentationMode, navigationPath: $navigationPath)
+            BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
         }
         ToolbarItem(placement: .principal) {
             Text("People")

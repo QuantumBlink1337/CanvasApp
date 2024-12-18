@@ -44,6 +44,9 @@ struct AnnouncementView : View {
     @State private var loadFullAnnouncementView: Bool = false
     @State private var expandedAnnouncementID: Int?
     
+    @State private var showMenu = false
+
+    
     @ViewBuilder
     private func buildAnnouncementFullView() -> some View {
         if let announcement = selectedAnnouncement {
@@ -166,27 +169,35 @@ struct AnnouncementView : View {
         .background(color)
         .padding(.top)
     }
-        var body: some View {
-            VStack {
-                buildAnnouncementList()
-            }
-            .navigationDestination(isPresented: $loadFullAnnouncementView, destination: {buildAnnouncementFullView()})
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    BackButton(binding: presentationMode, navigationPath: $navigationPath)
-                }
-                ToolbarItem(placement: .principal) {
-                    Text("Announcements")
-                        .foregroundStyle(.white)
-                        .font(.title)
-                        .fontWeight(.heavy)
-                }
-            }
-            .background(color)
-            
+    var body: some View {
+        VStack {
+            buildAnnouncementList()
         }
+        .navigationDestination(isPresented: $loadFullAnnouncementView, destination: {buildAnnouncementFullView()})
+        .overlay {
+            if showMenu {
+                SideMenuView(isPresented: $showMenu, navigationPath: $navigationPath)
+                    .zIndex(1) // Make sure it overlays above the content
+                    .transition(.move(edge: .leading))
+                    .frame(maxHeight: .infinity) // Full screen height
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
+            }
+            ToolbarItem(placement: .principal) {
+                Text("Announcements")
+                    .foregroundStyle(.white)
+                    .font(.title)
+                    .fontWeight(.heavy)
+            }
+        }
+        .background(color)
+        
     }
+}
 
 //#Preview {
 ////    AnnouncementView()
