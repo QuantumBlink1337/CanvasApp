@@ -215,7 +215,7 @@ import SwiftUI
                         ProgressView(stage)
                     }
                     else {
-                        NavigationStack(path: $navigationPath) {
+                        CustomNavigationStack(content: {
                             VStack {
                                 Text("Courses")
                                     .font(.title)
@@ -236,7 +236,7 @@ import SwiftUI
                                     CourseView(courseWrapper: course, navigationPath: $navigationPath)
                                 }
                                 
-                            }
+                            }, path: $navigationPath)
                         
                         }
 

@@ -64,6 +64,73 @@ struct GlobalTracking {
         }
     }
 }
+struct CustomNavigationStack<Content: View>: View {
+    @ViewBuilder var content: Content
+    
+    @Binding var path: NavigationPath
+    
+    @State private var interactivePopGestureRecognizer: UIScreenEdgePanGestureRecognizer = {
+        let gesture = UIScreenEdgePanGestureRecognizer()
+        gesture.name = UUID().uuidString
+        gesture.edges = UIRectEdge.left
+        gesture.isEnabled = true
+        return gesture
+    }()
+    
+    var body: some View {
+        NavigationStack(path: $path) {
+            content
+                .background {
+                    AttachPopGestureView(gesture: $interactivePopGestureRecognizer)
+                }
+        }
+    }
+}
+
+// https://medium.com/@yunchingtan/back-swipe-gesture-missing-when-using-swiftui-custom-back-button-0873f20be61f
+// modified the custom navigation stack to take a link binding
+
+
+struct AttachPopGestureView: UIViewRepresentable {
+    @Binding var gesture: UIScreenEdgePanGestureRecognizer
+    
+    func makeUIView(context: Context) -> some UIView {
+        return UIView()
+    }
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
+            if let parentVC = uiView.parentViewController {
+                if let navigationController = parentVC.navigationController {
+                    
+                    // To prevent duplication
+                    guard !(navigationController.view.gestureRecognizers?
+                        .contains(where: {$0.name == gesture.name}) ?? true) else { return }
+                
+                    navigationController.addInteractivePopGesture(gesture)
+                }
+            }
+        }
+    }
+}
+
+
+
+//MARK: - Helper
+fileprivate extension UINavigationController {
+    func addInteractivePopGesture(_ gesture: UIPanGestureRecognizer) {
+        guard let gestureSelector = interactivePopGestureRecognizer?.value(forKey: "targets") else { return }
+        
+        gesture.setValue(gestureSelector, forKey: "targets")
+        view.addGestureRecognizer(gesture)
+    }
+}
+
+extension UIView {
+    var parentViewController: UIViewController? {
+        sequence(first: self) { $0.next }.first(where: { $0 is UIViewController }) as? UIViewController
+    }
+}
 
 
 
