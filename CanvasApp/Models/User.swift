@@ -12,6 +12,7 @@ struct User: Codable, Identifiable {
     var id: Int?
     var firstName: String?
     var lastName: String?
+    var name: String?
     var fullName: String {
         return firstName! + " " + lastName!
     }
@@ -29,6 +30,7 @@ struct User: Codable, Identifiable {
         case displayName = "display_name"
         case pronouns
         case avatarURL = "avatar_image_url"
+        case name = "name"
     }
 }
 struct UserColorCodes: Codable {
