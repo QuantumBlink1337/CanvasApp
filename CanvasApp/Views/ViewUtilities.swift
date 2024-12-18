@@ -37,33 +37,113 @@ struct GlobalTracking {
     static let avatarHeight: CGFloat = 40
     
     
-    @ViewBuilder
-    static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>) -> some View {
-        BackButton(binding: binding, navigationPath: navigationPath, color: .white)
+}
+
+
+/// Builds a View intended for use as the "nav menu button" for the Toolbar.
+/// - Parameters:
+///   - binding: A Binding to the PresentationMode of the application.
+///   - navigationPath: A Binding to the current NavigationPath being used by the NavigationStack of the calling code.
+///   - color: The preferred color of the button image.
+///   - action: A closure to be invoked on pressing the button.
+/// - Returns: Some View representing a Button.
+@ViewBuilder
+func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>, color: Color = .white, action: (() -> Void)? = nil) -> some View {
+    Button(action: {
+        action?()
+    }) {
+        Image(systemName: "line.3.horizontal")
+            .resizable()
+            .frame(width: 30, height: 30)
+            .foregroundStyle(color)
+            .padding(.bottom)
+        
     }
-    @ViewBuilder
-    static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>, color: Color) -> some View {
-        Button(action: {binding.wrappedValue.dismiss()}) {
-            Image(systemName: "arrowshape.left.fill")
-                .resizable()
-                .frame(width: 40, height: 30)
-                .foregroundStyle(color)
-            
-        }
-        .contextMenu {
-            ForEach(MainUser.selfCourseWrappers, id: \.id) { course in
-                Button(action: {
-                    navigationPath.wrappedValue = NavigationPath()
-                    navigationPath.wrappedValue.append(course)
-                    
-                }, label: {
-                    Text("\(course.course.name ?? "Missing Name")")
+
+}
+struct SideMenuView: View {
+    @Binding var isPresented: Bool
+    @GestureState private var dragOffset = CGSize.zero
+
+    private let swipeThreshold: CGFloat = 20 // Distance to trigger swipe-to-dismiss
+    
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                ScrollView {
+                    VStack(spacing: 16) {
+                        ForEach(MainUser.selfCourseWrappers) { courseWrapper in
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .frame(width: 160, height: 60)
+                                    .foregroundStyle(HexToColor(courseWrapper.course.color) ?? .clear)
+                                Button(action: {
+                                    
+                                },
+                                       
+                                label: {
+                                    Text("\(courseWrapper.course.name ?? "Missing name")")
+                                        .foregroundStyle(.white)
+                                        .multilineTextAlignment(.leading)
+                                        .lineLimit(2)
+                                        .font(.headline)
+                                        .padding(.leading)
+                                        .padding(.trailing)
+                                }
+
+                                )
+                                
+                                .frame(width: 160, alignment: .leading)
+                                
+                                    
+                            }
+                            .padding(.leading)
+                            .padding(.trailing)
+                            
+
+
+                    }
+
+                    }
                 }
-                )
+                    
+                // Menu content here
             }
+            .background(.background)
+            .background(Color.black.opacity(0.3))
+//            .background(Color.white)
+            .frame(width: 600, height: geometry.size.height, alignment: .topLeading) // Full height based on GeometryReader
+            .offset(x: isPresented ? dragOffset.width : -600) // Off-screen when not presented and allows drag to update offset
+            .animation(.easeInOut(duration: 0.2), value: isPresented)
+            .simultaneousGesture(
+                DragGesture()
+                    .updating($dragOffset) { value, state, _ in
+                        // Track the drag offset
+                        state = value.translation
+                    }
+                    .onEnded { value in
+                        if value.translation.width < -swipeThreshold { // If swipe crosses the threshold, dismiss the menu
+                            withAnimation {
+                                isPresented = false
+                            }
+                        } else { // If not, reset the menu to its original position
+                            withAnimation {
+                                isPresented = true
+                            }
+                        }
+                    }
+            )
+            .contentShape(Rectangle()) // Ensure the entire area of the menu is tappable and draggable
+            .safeAreaInset(edge: .top, spacing: 0) { // Avoiding overlap with status bar
+            Color.clear.frame(height: 0) // Making sure it doesn't overlap with the status bar
+                        }
         }
+        .shadow(radius: 20)
     }
 }
+
+
+
 struct CustomNavigationStack<Content: View>: View {
     @ViewBuilder var content: Content
     

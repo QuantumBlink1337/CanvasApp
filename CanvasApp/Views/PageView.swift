@@ -111,7 +111,7 @@ struct PageView<T : PageRepresentable>: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath)
+                BackButton(binding: presentationMode, navigationPath: $navigationPath)
             }
             ToolbarItem(placement: .principal) {
                 Text(title)

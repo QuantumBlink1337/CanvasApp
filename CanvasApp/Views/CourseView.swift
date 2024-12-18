@@ -56,6 +56,8 @@ struct CourseSectionButton: View {
         @State private var navigateToAssignmentView = false
         @State private var navigateToSyllabusView = false
         @State private var navigateToPeopleView = false
+        
+        @State private var showMenu = false
 
         
         @State private var measuredHeight: CGFloat = 0
@@ -198,19 +200,22 @@ struct CourseSectionButton: View {
                 
                 
             }
+            .overlay {
+                if showMenu {
+                    SideMenuView(isPresented: $showMenu)
+                        .zIndex(1) // Make sure it overlays above the content
+                        .transition(.move(edge: .leading))
+                        .frame(maxHeight: .infinity) // Full screen height
+                }
+            }
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath, color: color)
+                    BackButton(binding: presentationMode, navigationPath: $navigationPath, color: color, action: {showMenu.toggle()})
                 }
-//                ToolbarItem(placement: .principal) {
-//                    Text("Announcements")
-//                        .foregroundStyle(.white)
-//                        .font(.title)
-//                        .fontWeight(.heavy)
-//                }
             }
-//            .background(color)
+
+            
             
         }
     }

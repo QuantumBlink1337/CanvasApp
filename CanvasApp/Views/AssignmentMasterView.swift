@@ -255,7 +255,7 @@ struct AssignmentPageView : View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath)
+                BackButton(binding: presentationMode, navigationPath: $navigationPath)
             }
             ToolbarItem(placement: .principal) {
                 Text("Assignment Details")
@@ -514,7 +514,7 @@ struct AssignmentMasterView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                GlobalTracking.BackButton(binding: presentationMode, navigationPath: $navigationPath)
+                BackButton(binding: presentationMode, navigationPath: $navigationPath)
             }
             ToolbarItem(placement: .principal) {
                 Text("Assignments")
