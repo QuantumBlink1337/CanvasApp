@@ -55,6 +55,7 @@ struct CourseSectionButton: View {
         @State private var navigateToAnnouncementView = false
         @State private var navigateToAssignmentView = false
         @State private var navigateToSyllabusView = false
+        @State private var navigateToPeopleView = false
 
         
         @State private var measuredHeight: CGFloat = 0
@@ -149,6 +150,12 @@ struct CourseSectionButton: View {
                                 navigateToSyllabusView = true
                             }
                         }
+                        CourseSectionButton(buttonTitle: "Modules", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
+                            navigateToModuleView = true
+                            navigateToHomePage = false
+                            navigateToAnnouncementView = false
+                            navigateToAssignmentView = false
+                        }
                        
                         CourseSectionButton(buttonTitle: "Assignments & Grades", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
                             navigateToModuleView = false
@@ -156,12 +163,10 @@ struct CourseSectionButton: View {
                             navigateToAnnouncementView = false
                             navigateToAssignmentView = true
                         }
-                        CourseSectionButton(buttonTitle: "Modules", buttonImageIcon: "pencil.and.list.clipboard.rtl", color: HexToColor(courseWrapper.course.color) ?? .black) {
-                            navigateToModuleView = true
-                            navigateToHomePage = false
-                            navigateToAnnouncementView = false
-                            navigateToAssignmentView = false
+                        CourseSectionButton(buttonTitle: "People", buttonImageIcon: "person.fill", color: HexToColor(courseWrapper.course.color) ?? .black) {
+                            navigateToPeopleView = true
                         }
+                       
 //                        CourseSectionButton(buttonTitle: "Grades", buttonImageIcon: "scroll", color: HexToColor(courseWrapper.course.color) ?? .black) {
 //                            print("Test button")
 //                        }
@@ -174,6 +179,10 @@ struct CourseSectionButton: View {
                     }
                     .navigationDestination(isPresented: $navigateToAssignmentView) {
                         AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
+                        
+                    }
+                    .navigationDestination(isPresented: $navigateToPeopleView) {
+                        PeopleView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
                         
                     }
                     .navigationDestination(isPresented: $navigateToSyllabusView) {

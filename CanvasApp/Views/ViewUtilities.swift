@@ -33,6 +33,10 @@ extension UIColor {
 }
 struct GlobalTracking {
     
+    static let avatarWidth: CGFloat = 40
+    static let avatarHeight: CGFloat = 40
+    
+    
     @ViewBuilder
     static func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<NavigationPath>) -> some View {
         BackButton(binding: binding, navigationPath: navigationPath, color: .white)
