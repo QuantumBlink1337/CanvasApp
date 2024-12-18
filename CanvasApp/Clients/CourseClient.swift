@@ -96,7 +96,7 @@ struct CourseClient {
         var enrolledUsers: [EnrollmentType : [User]] = [ : ]
         
         for type in EnrollmentType.allCases {
-            guard let URL = URL(string: baseURL + "courses/\(course.id)/search_users?include[]=avatar_url&per_page=\(course.totalStudents)&enrollment_type[]=\(type.rawValue)") else {
+            guard let URL = URL(string: baseURL + "courses/\(course.id)/search_users?include[]=avatar_url&per_page=\(min(600, course.totalStudents))&enrollment_type[]=\(type.rawValue)") else {
                 throw NetworkError.badURL
             }
             var request = URLRequest(url:URL)
