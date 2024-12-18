@@ -12,7 +12,7 @@ import Foundation
 
 struct CourseClient {
     private func getActiveCourses() async throws -> [Course] {
-        guard let url = URL(string: "https://umsystem.instructure.com/api/v1/courses?per_page=400&enrollment_state=active&include[]=term&include[]=course_image&include[]=syllabus_body") else {
+        guard let url = URL(string: "https://umsystem.instructure.com/api/v1/courses?per_page=400&enrollment_state=active&include[]=term&include[]=course_image&include[]=syllabus_body&include[]=total_students") else {
             throw NetworkError.badURL
         }
         let decoder = JSONDecoder()
@@ -86,5 +86,37 @@ struct CourseClient {
                 print("Decoding error: \(error)")
                 throw NetworkError.badDecode
             }
+    }
+    
+    /// Returns the Users enrolled in a given Course, grouped by Enrollment Type.
+    /// Attaches avatar URL to User.
+    /// - Parameter course: A Course object.
+    /// - Returns: A dictionary with Users keyed by Enrollment Type
+    func getUsersEnrolledInCourse(from course: Course) async throws -> [EnrollmentType : [User]] {
+        var enrolledUsers: [EnrollmentType : [User]] = [ : ]
+        
+        for type in EnrollmentType.allCases {
+            guard let URL = URL(string: baseURL + "courses/\(course.id)/search_users?include[]=avatar_url&per_page=\(course.totalStudents)&enrollment_type[]=\(type.rawValue)") else {
+                throw NetworkError.badURL
+            }
+            var request = URLRequest(url:URL)
+            request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                throw NetworkError.invalidResponse
+            }
+            do {
+                    let users = try JSONDecoder().decode([User].self, from: data)
+                    enrolledUsers.updateValue(users, forKey: type)
+                }
+            catch {
+                    print("Decoding error: \(error)")
+                    throw NetworkError.badDecode
+                }
+        }
+        return enrolledUsers
+    
+        
     }
 }

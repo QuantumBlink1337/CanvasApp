@@ -30,6 +30,8 @@ struct Course: Decodable, Encodable, Identifiable {
     var syllabusBody: String? = nil
     var syllabusAttributedString: AttributedString = AttributedString()
     
+    var totalStudents: Int = 0
+    
     var id: Int
     var image_download_url: String?
     var term: Term?
@@ -40,6 +42,8 @@ struct Course: Decodable, Encodable, Identifiable {
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
     var assignments: [Assignment] = []
     var datedAssignments: [DatePriority : [Assignment]]? = nil
+    
+    var usersInCourse: [EnrollmentType : [User]] = [ : ]
     
     
     /*
@@ -236,6 +240,7 @@ struct Course: Decodable, Encodable, Identifiable {
         case term
         case courseCode = "course_code"
         case syllabusBody = "syllabus_body"
+        case totalStudents = "total_students"
 //        case color = "color"
     }
           

@@ -7,7 +7,9 @@
 
 import Foundation
 
-enum EnrollmentType: String {
+enum EnrollmentType: String, CaseIterable, Identifiable {
+    var id: Int {rawValue.hashValue}
+    
     case StudentEnrollment = "StudentEnrollment"
     case TeacherEnrollment = "TeacherEnrollment"
     case TaEnrollment = "TaEnrollment"
