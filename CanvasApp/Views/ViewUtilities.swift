@@ -67,6 +67,8 @@ struct SideMenuView: View {
 
     private let swipeThreshold: CGFloat = 20 // Distance to trigger swipe-to-dismiss
     
+    @Binding var navigationPath: NavigationPath
+
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading) {
@@ -78,7 +80,9 @@ struct SideMenuView: View {
                                     .frame(width: 160, height: 60)
                                     .foregroundStyle(HexToColor(courseWrapper.course.color) ?? .clear)
                                 Button(action: {
-                                    
+                                    $navigationPath.wrappedValue = NavigationPath()
+                                    $navigationPath.wrappedValue.append(courseWrapper)
+                                    isPresented = false
                                 },
                                        
                                 label: {
@@ -109,8 +113,7 @@ struct SideMenuView: View {
                     
                 // Menu content here
             }
-            .background(.background)
-            .background(Color.black.opacity(0.3))
+            .background(.background.opacity(0.75))
 //            .background(Color.white)
             .frame(width: 600, height: geometry.size.height, alignment: .topLeading) // Full height based on GeometryReader
             .offset(x: isPresented ? dragOffset.width : -600) // Off-screen when not presented and allows drag to update offset
