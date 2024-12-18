@@ -51,6 +51,33 @@ import SwiftUI
                                 return wrappedCourse
                                 
                             }
+                            await withTaskGroup(of: (Int, [EnrollmentType : [User]]?).self) { group in
+                                for (index, wrapper) in tempCourseWrappers.enumerated() {
+                                    group.addTask {
+                                        do {
+                                            let users = try await courseClient.getUsersEnrolledInCourse(from: wrapper.course)
+                                            stage = "Preparing user list for course \(wrapper.course.id)"
+                                            return (index, users)
+                                        }
+                                        catch {
+                                            print("Failed to load user list for course \(wrapper.course.id): \(error)")
+                                            return (index, nil)
+                                        }
+                                    }
+                                }
+                                for await result in group {
+                                    let (index, users) = result
+                                    if let users = users {
+//                                        for i in announcements.indices {
+//                                            announcements[i].attributedText = HTMLRenderer.makeAttributedString(from: announcements[i].body ?? "No description was provided")
+//                                        }
+                                        
+                                        tempCourseWrappers[index].course.usersInCourse = users
+                                        
+                                    }
+                                }
+                                
+                            }
                             await withTaskGroup(of: (Int, [Page]?).self) { group in
                                 for (index, wrapper) in tempCourseWrappers.enumerated() {
                                     group.addTask {
