@@ -13,6 +13,7 @@ struct DiscussionTopic : Codable, Identifiable, PageRepresentable {
     var body: String?
     var postedAt: Date?
     var author: User?
+    var authorRole: EnrollmentType? = nil
     var lockedForComments: Bool
     
     var attributedText: AttributedString? = nil

@@ -29,7 +29,7 @@ struct User: Codable, Identifiable {
         case lastName = "last_name"
         case displayName = "display_name"
         case pronouns
-        case avatarURL = "avatar_image_url"
+        case avatarURL = "avatar_url"
         case name = "name"
     }
 }

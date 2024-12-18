@@ -66,11 +66,11 @@ struct PageView<T : PageRepresentable>: View {
                 let authorURL: String = discussionTopic?.author?.avatarURL ?? "Missing"
                 buildAsyncImage(urlString: authorURL, imageWidth: avatarWidth, imageHeight: avatarHeight, shape: .circle)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(discussionTopic?.author?.displayName ?? "Missing")
+                    Text(discussionTopic?.author?.name ?? "Missing")
                         .font(.headline)
                         .multilineTextAlignment(.leading)
                         .foregroundStyle(Color.black)
-                    Text("Author | Test")
+                    Text("Author | \(discussionTopic?.authorRole?.rawValue.replacingOccurrences(of: "Enrollment", with: "") ?? "Missing role")")
                     Text("Created: \(formattedDate(for: discussionTopic?.postedAt ?? Date(), format: formatDate.mediuMFormWithTime))")
                         .font(.footnote)
                         .foregroundStyle(Color.black)

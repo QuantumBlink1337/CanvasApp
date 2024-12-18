@@ -9,7 +9,15 @@ import Foundation
 
 
 struct DiscussionTopicClient {
-    func getDiscussionTopicsFromCourse(from course: Course, getAnnouncements getAnn: Bool) async throws -> [DiscussionTopic] {
+    /// Retrieves Discussion Topics from a given Course.
+    /// Since Announcements are a special case of Discussion Topic, this function can also do that.
+    /// - Parameters:
+    ///   - course: The Course you want to retrieve Discussion Topics from.
+    ///   - getAnn: Whether or not you want Announcements from the course instead of regular Discussion Topics.
+    ///   - loadFullAuthorData: Whether or not you want "proper" author data included with the Discussion Topic. PRECONDITION: Course users must have been retrieved prior to calling this function.
+    ///
+    /// - Returns: An array of DiscussionTopics.
+    func getDiscussionTopicsFromCourse(from course: Course, getAnnouncements getAnn: Bool, loadFullAuthorData: Bool = true) async throws -> [DiscussionTopic] {
         let courseID = course.id
         guard let url = URL(string: baseURL + "courses/" + String(courseID) + "/discussion_topics?only_announcements=" + String(getAnn)) else {
             throw NetworkError.badURL
@@ -24,14 +32,31 @@ struct DiscussionTopicClient {
             throw NetworkError.invalidResponse
             }
         do {
-                return try decoder.decode([DiscussionTopic].self, from: data)
+                var discussionTopics =  try decoder.decode([DiscussionTopic].self, from: data)
+                if loadFullAuthorData {
+                    discussionTopics = discussionTopics.map { topic in
+                        var updatedTopic = topic
+                        if let authorID = topic.author?.id {
+                            for (type, users) in course.usersInCourse {
+                                if let author = users.first(where: { $0.id == authorID }) {
+                                    updatedTopic.author = author
+                                    updatedTopic.authorRole = type
+                                    break
+                                }
+                            }
+                        }
+                        return updatedTopic
+                    }
+                }
+                
+                return discussionTopics
+            
+                
             }
         catch {
                 print("Decoding error: \(error)")
                 throw NetworkError.badDecode
             }
-        
-        
     }
 
 }

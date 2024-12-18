@@ -103,7 +103,7 @@ struct AnnouncementView : View {
                                     .foregroundStyle(Color.black)
                                 HStack {
                                     if (loadAuthorData) {
-                                        Text((announcement.author?.displayName ?? "No author")!)
+                                        Text((announcement.author?.name ?? "No author")!)
                                             .font(.footnote)
                                             .foregroundStyle(Color.black)
                                     }
