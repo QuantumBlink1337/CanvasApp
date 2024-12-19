@@ -10,9 +10,14 @@ import Foundation
 
 
 struct ModuleClient {
-    func getModules(from course: Course) async throws -> [Module] {
+    
+    /// - Description: Retrieves the Modules (and optionally their ModuleItems) from the given Course.
+    ///   - course: The Course to retrieve Modules from.
+    ///   - includeItems: Whether to retrieve each Module's ModuleItems.
+    /// - Returns: An array of Modules.
+    func getModules(from course: Course, includeItems: Bool = true) async throws -> [Module] {
         let courseID = course.id
-        guard let url = URL(string: baseURL + "courses/"+String(courseID)+"/modules?include[]=items") else {
+        guard let url = URL(string: baseURL + "courses/"+String(courseID)+"/modules\(includeItems ? "?include[]=items" : "")") else {
             throw NetworkError.badURL
         }
         let decoder = JSONDecoder()
@@ -46,4 +51,23 @@ struct ModuleClient {
     }
         
     }
+    
+    
+    func linkModuleItemsToPages(from course: Course, fromModules: [Module] = [], pageClient: PageClient = PageClient()) async throws -> [Module] {
+        var modules = fromModules.isEmpty ? course.modules : fromModules
+        for moduleIndex in modules.indices {
+                if var items = modules[moduleIndex].items {
+                    for i in items.indices {
+                        guard items[i].type == .page, let pageURL = items[i].pageURL else { continue }
+                        items[i].linkedPage = try await pageClient.retrieveIndividualPage(from: course, pageURL: pageURL)
+                    }
+                    modules[moduleIndex].items = items
+                }
+            
+            }
+        return modules
+    }
+    
+    
+    
 }

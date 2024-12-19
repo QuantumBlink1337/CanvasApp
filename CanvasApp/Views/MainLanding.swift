@@ -68,10 +68,6 @@ import SwiftUI
                                 for await result in group {
                                     let (index, users) = result
                                     if let users = users {
-//                                        for i in announcements.indices {
-//                                            announcements[i].attributedText = HTMLRenderer.makeAttributedString(from: announcements[i].body ?? "No description was provided")
-//                                        }
-                                        
                                         tempCourseWrappers[index].course.usersInCourse = users
                                         
                                     }
@@ -107,7 +103,9 @@ import SwiftUI
                                 for (index, wrapper) in tempCourseWrappers.enumerated() {
                                     group.addTask {
                                         do {
-                                            let modules = try await moduleClient.getModules(from: wrapper.course)
+                                            var modules = try await moduleClient.getModules(from: wrapper.course)
+                                            // this kinda sucks, but we need to contact Canvas for the pages
+                                            modules = try await moduleClient.linkModuleItemsToPages(from: wrapper.course, fromModules: modules)
                                             stage = "Preparing modules for \(wrapper.course.id)"
 
                                             return (index, modules)
@@ -121,8 +119,13 @@ import SwiftUI
                                 for await result in group {
                                     let (index, modules) = result
                                     if let modules = modules {
+
                                         tempCourseWrappers[index].course.modules = modules
                                     }
+                                    
+                                    
+                                    
+                                    
                                 }
                                 
                             }
