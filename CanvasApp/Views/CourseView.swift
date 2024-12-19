@@ -206,12 +206,18 @@ struct CourseView: View {
                     .zIndex(1) // Make sure it overlays above the content
                     .transition(.move(edge: .leading))
                     .frame(maxHeight: .infinity) // Full screen height
+                    .ignoresSafeArea(edges: [.bottom, .trailing])
             }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                BackButton(binding: presentationMode, navigationPath: $navigationPath, color: color, action: {showMenu.toggle()})
+                if (!showMenu) {
+                    BackButton(binding: presentationMode, navigationPath: $navigationPath, color: color, action: {showMenu.toggle()})
+                }
+                else {
+                    Color.clear.frame(height: 30)
+                }
             }
         }
 

@@ -56,7 +56,6 @@ func BackButton(binding: Binding<PresentationMode>, navigationPath: Binding<Navi
             .resizable()
             .frame(width: 30, height: 30)
             .foregroundStyle(color)
-            .padding(.bottom)
         
     }
 
@@ -66,63 +65,79 @@ struct SideMenuView: View {
     @GestureState private var dragOffset = CGSize.zero
 
     private let swipeThreshold: CGFloat = 20 // Distance to trigger swipe-to-dismiss
+    private let menuWidth: CGFloat = 1200
     
     @Binding var navigationPath: NavigationPath
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading) {
-                ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(MainUser.selfCourseWrappers) { courseWrapper in
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .frame(width: 160, height: 60)
-                                    .foregroundStyle(HexToColor(courseWrapper.course.color) ?? .clear)
+            ZStack(alignment: .leading) {
+                Color.gray.opacity(0.3)
+                    .onTapGesture {
+                        withAnimation {
+                            isPresented = false
+                        }
+                    }
+                    .ignoresSafeArea(edges: [.bottom, .trailing])
+
+                    .allowsHitTesting(isPresented) // Prevent background interaction when menu is not shown
+                VStack(alignment: .leading) {
+                    HStack {
+                        let authorURL: String = MainUser.selfUser?.avatarURL ?? "Missing"
+                        buildAsyncImage(urlString: authorURL, imageWidth: 65, imageHeight: 65, shape: .circle)
+                        Text("Hi, \(MainUser.selfUser?.firstName ?? "Missing name")")
+                            .font(.title)
+                            .fontWeight(.semibold)
+                    }
+                    .padding(.leading)
+                    .padding(.trailing)
+                    
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            ForEach(MainUser.selfCourseWrappers) { courseWrapper in
                                 Button(action: {
                                     $navigationPath.wrappedValue = NavigationPath()
                                     $navigationPath.wrappedValue.append(courseWrapper)
                                     isPresented = false
                                 },
                                        
-                                label: {
-                                    Text("\(courseWrapper.course.name ?? "Missing name")")
-                                        .foregroundStyle(.white)
-                                        .multilineTextAlignment(.leading)
-                                        .lineLimit(2)
-                                        .font(.headline)
-                                        .padding(.leading)
-                                        .padding(.trailing)
-                                }
-
-                                )
-                                
-                                .frame(width: 160, alignment: .leading)
-                                
+                                    label: {
                                     
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .frame(width: 240, height: 60)
+                                            .foregroundStyle(HexToColor(courseWrapper.course.color) ?? .clear)
+                                        Text("\(courseWrapper.course.name ?? "Missing name")")
+                                            .foregroundStyle(.white)
+                                            .multilineTextAlignment(.leading)
+                                            .lineLimit(2)
+                                            .font(.headline)
+                                            .padding(.leading)
+                                            .padding(.trailing)
+                                    }
+                                        
+                                }
+                                )
+                                .frame(width: 240)
+                                .padding(.leading)
+                                .padding(.trailing)
                             }
-                            .padding(.leading)
-                            .padding(.trailing)
-                            
-
-
-                    }
-
+                        }
                     }
                 }
-                    
-                // Menu content here
+                .background(.thinMaterial)
             }
-            .background(.background.opacity(0.75))
-//            .background(Color.white)
-            .frame(width: 600, height: geometry.size.height, alignment: .topLeading) // Full height based on GeometryReader
-            .offset(x: isPresented ? dragOffset.width : -600) // Off-screen when not presented and allows drag to update offset
-            .animation(.easeInOut(duration: 0.2), value: isPresented)
+            .frame(width: menuWidth, height: geometry.size.height, alignment: .topLeading) // Full height based on GeometryReader
+            .shadow(radius: 10)
+            .offset(x: isPresented ? max(dragOffset.width, 0) : -menuWidth) // Restrict dragging to the right// Off-screen when not presented and allows drag to update offset
+            .animation(.easeInOut, value: isPresented)
             .simultaneousGesture(
                 DragGesture()
                     .updating($dragOffset) { value, state, _ in
                         // Track the drag offset
-                        state = value.translation
+                        if (value.translation.width < 0) {
+                            state = value.translation
+                        }
                     }
                     .onEnded { value in
                         if value.translation.width < -swipeThreshold { // If swipe crosses the threshold, dismiss the menu
@@ -137,9 +152,7 @@ struct SideMenuView: View {
                     }
             )
             .contentShape(Rectangle()) // Ensure the entire area of the menu is tappable and draggable
-            .safeAreaInset(edge: .top, spacing: 0) { // Avoiding overlap with status bar
-            Color.clear.frame(height: 0) // Making sure it doesn't overlap with the status bar
-                        }
+            .ignoresSafeArea(edges: [.bottom, .trailing])
         }
         .shadow(radius: 20)
     }
