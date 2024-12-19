@@ -19,6 +19,9 @@ struct ModuleView: View {
     @State private var selectedAssignment: Assignment? = nil
     @State private var loadAssignmentPage: Bool = false
     @State private var showMenu = false
+    
+    @State private var selectedPage: Page? = nil
+    @State private var loadPage: Bool = false
 
     
 
@@ -49,6 +52,9 @@ struct ModuleView: View {
                     }
                 ),
                 content: {
+                    if item.linkedPage != nil {
+                        preparePageDisplay(page: item.linkedPage!)
+                    }
 //                    preparePageDisplay(page: item)
                 },
                 label: {
@@ -79,6 +85,10 @@ struct ModuleView: View {
                     if item.linkedAssignment != nil {
                         selectedAssignment = item.linkedAssignment!
                         loadAssignmentPage = true
+                    }
+                    else if item.linkedPage != nil {
+                        selectedPage = item.linkedPage!
+                        loadPage = true
                     }
                 })
                 .tint(HexToColor(courseWrapper.course.color))
@@ -134,6 +144,12 @@ struct ModuleView: View {
         .navigationDestination(isPresented: $loadAssignmentPage, destination: {
             if (selectedAssignment != nil) {
                 AssignmentPageView(courseWrapper: courseWrapper, assignment: selectedAssignment!,  navigationPath: $navigationPath)
+
+            }
+        })
+        .navigationDestination(isPresented: $loadPage, destination: {
+            if (selectedPage != nil) {
+                PageView(courseWrapper: courseWrapper, page: selectedPage!, navigationPath: $navigationPath, textAlignment: .leading)
 
             }
         })

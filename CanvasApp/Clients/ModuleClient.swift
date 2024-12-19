@@ -60,6 +60,8 @@ struct ModuleClient {
                     for i in items.indices {
                         guard items[i].type == .page, let pageURL = items[i].pageURL else { continue }
                         items[i].linkedPage = try await pageClient.retrieveIndividualPage(from: course, pageURL: pageURL)
+                        let body = items[i].linkedPage?.body
+                        items[i].linkedPage?.attributedText = HTMLRenderer.makeAttributedString(from: body ?? "")
                     }
                     modules[moduleIndex].items = items
                 }
