@@ -130,6 +130,8 @@ struct AssignmentPageView : View {
     var loadGrades: Bool = false
     var submissionTypeString: String = ""
     
+    @State private var showMenu = false
+    
     @Binding private var navigationPath: NavigationPath
     
     init(courseWrapper: CourseWrapper, assignment: Assignment, navigationPath: Binding<NavigationPath>) {
@@ -252,17 +254,39 @@ struct AssignmentPageView : View {
             Spacer()
             
         }
+        .overlay {
+            if showMenu {
+                SideMenuView(isPresented: $showMenu, navigationPath: $navigationPath)
+                    .zIndex(1) // Make sure it overlays above the content
+                    .transition(.move(edge: .leading))
+                    .frame(maxHeight: .infinity) // Full screen height
+                    .ignoresSafeArea(edges: [.trailing])
+            }
+        }
+
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                BackButton(binding: presentationMode, navigationPath: $navigationPath)
-            }
-            ToolbarItem(placement: .principal) {
-                Text("Assignment Details")
-                    .foregroundStyle(.white)
-                    .font(.title)
-                    .fontWeight(.heavy)
-            }
+                ToolbarItem(placement: .topBarLeading) {
+                    if (!showMenu) {
+                        BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
+
+                    }
+                    else {
+                        Color.clear.frame(height: 30)
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    if (!showMenu) {
+                        Text("Assignment Details")
+                            .foregroundStyle(.white)
+                            .font(.title)
+                            .fontWeight(.heavy)
+                    }
+                    else {
+                        Color.clear.frame(height: 30)
+
+                    }
+                }
         }
         .toolbarBackground(color, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
@@ -523,15 +547,27 @@ struct AssignmentMasterView: View {
             }
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
-            }
-            ToolbarItem(placement: .principal) {
-                Text("Assignments")
-                    .foregroundStyle(.white)
-                    .font(.title)
-                    .fontWeight(.heavy)
-            }
+                ToolbarItem(placement: .topBarLeading) {
+                    if (!showMenu) {
+                        BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
+
+                    }
+                    else {
+                        Color.clear.frame(height: 30)
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    if (!showMenu) {
+                        Text("Assignments")
+                            .foregroundStyle(.white)
+                            .font(.title)
+                            .fontWeight(.heavy)
+                    }
+                    else {
+                        Color.clear.frame(height: 30)
+
+                    }
+                }
         }
         .background(color)
     }

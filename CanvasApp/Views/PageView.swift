@@ -122,16 +122,27 @@ struct PageView<T : PageRepresentable>: View {
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
-            }
-            ToolbarItem(placement: .principal) {
-                Text(title)
-                    .foregroundStyle(.white)
-                    .font(.title2)
-                    .fontWeight(.heavy)
-            }
+                ToolbarItem(placement: .topBarLeading) {
+                    if (!showMenu) {
+                        BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
 
+                    }
+                    else {
+                        Color.clear.frame(height: 30)
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    if (!showMenu) {
+                        Text("\(page?.title ?? "Missing Title")")
+                            .foregroundStyle(.white)
+                            .font(.title)
+                            .fontWeight(.heavy)
+                    }
+                    else {
+                        Color.clear.frame(height: 30)
+
+                    }
+                }
         }.toolbarBackground(color, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
     }

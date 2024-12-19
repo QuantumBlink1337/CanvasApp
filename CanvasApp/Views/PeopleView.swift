@@ -105,15 +105,27 @@ struct PeopleView: View {
     }
     .navigationBarBackButtonHidden(true)
     .toolbar {
-        ToolbarItem(placement: .topBarLeading) {
-            BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
-        }
-        ToolbarItem(placement: .principal) {
-            Text("People")
-                .foregroundStyle(.white)
-                .font(.title)
-                .fontWeight(.heavy)
-        }
+            ToolbarItem(placement: .topBarLeading) {
+                if (!showMenu) {
+                    BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
+
+                }
+                else {
+                    Color.clear.frame(height: 30)
+                }
+            }
+            ToolbarItem(placement: .principal) {
+                if (!showMenu) {
+                    Text("People")
+                        .foregroundStyle(.white)
+                        .font(.title)
+                        .fontWeight(.heavy)
+                }
+                else {
+                    Color.clear.frame(height: 30)
+
+                }
+            }
     }
         .toolbarBackground(color, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)

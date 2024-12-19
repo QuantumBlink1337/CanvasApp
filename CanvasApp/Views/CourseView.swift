@@ -206,7 +206,7 @@ struct CourseView: View {
                     .zIndex(1) // Make sure it overlays above the content
                     .transition(.move(edge: .leading))
                     .frame(maxHeight: .infinity) // Full screen height
-                    .ignoresSafeArea(edges: [.bottom, .trailing])
+                    .ignoresSafeArea(edges: [.trailing])
             }
         }
         .navigationBarBackButtonHidden(true)

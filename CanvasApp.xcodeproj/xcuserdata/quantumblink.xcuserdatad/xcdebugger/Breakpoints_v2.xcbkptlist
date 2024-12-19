@@ -85,22 +85,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B4707998-1060-44DB-84BA-8EF371EBD585"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CanvasApp/Views/CourseView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "554091D2-4DA2-426E-84F3-7B3858A33783"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -108,8 +92,8 @@
             filePath = "CanvasApp/Views/AssignmentMasterView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "506"
-            endingLineNumber = "506"
+            startingLineNumber = "530"
+            endingLineNumber = "530"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -124,8 +108,8 @@
             filePath = "CanvasApp/Views/AssignmentMasterView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "336"
-            endingLineNumber = "336"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
             landmarkName = "buildAssignmentGlanceView(for:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -140,8 +124,8 @@
             filePath = "CanvasApp/Views/AssignmentMasterView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "507"
-            endingLineNumber = "507"
+            startingLineNumber = "531"
+            endingLineNumber = "531"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -214,7 +198,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "87897F74-CF04-4C15-BFEE-2186C45194AD"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CanvasApp/Views/ModuleView.swift"
@@ -236,8 +220,8 @@
             filePath = "CanvasApp/Views/AssignmentMasterView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "446"
-            endingLineNumber = "446"
+            startingLineNumber = "470"
+            endingLineNumber = "470"
             landmarkName = "buildGradeHeader()"
             landmarkType = "7">
          </BreakpointContent>
@@ -252,8 +236,8 @@
             filePath = "CanvasApp/Views/AssignmentMasterView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "305"
-            endingLineNumber = "305"
+            startingLineNumber = "329"
+            endingLineNumber = "329"
             landmarkName = "init(courseWrapper:navigationPath:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -278,7 +262,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "224ECE77-FD2E-4867-845D-808DFEFDD8CB"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CanvasApp/Views/MainLanding.swift"
@@ -310,7 +294,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "4998F0AA-EFAE-49E8-BCB0-060D430E9994"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CanvasApp/CanvasApp.swift"
