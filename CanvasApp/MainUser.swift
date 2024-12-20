@@ -12,6 +12,7 @@ import Foundation
 struct MainUser {
     static var selfUser: User? = nil
     static var selfCourseWrappers: [CourseWrapper] = []
+    static var selfCourseColors: UserColorCodes? = nil
     
     
     

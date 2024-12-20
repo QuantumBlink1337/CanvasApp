@@ -42,6 +42,7 @@
 		3DE41F912D121806007FDEEA /* MainUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F902D121806007FDEEA /* MainUser.swift */; };
 		3DE41F932D1238EF007FDEEA /* CoursePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F922D1238EF007FDEEA /* CoursePanel.swift */; };
 		3DE41F952D12441C007FDEEA /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F942D12441C007FDEEA /* PeopleView.swift */; };
+		3DE41F9B2D152B42007FDEEA /* FetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F9A2D152B42007FDEEA /* FetchManager.swift */; };
 		3DEC9DD52D0E5C7200AC2564 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC9DD42D0E5C7200AC2564 /* PageView.swift */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +82,7 @@
 		3DE41F902D121806007FDEEA /* MainUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainUser.swift; sourceTree = "<group>"; };
 		3DE41F922D1238EF007FDEEA /* CoursePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoursePanel.swift; sourceTree = "<group>"; };
 		3DE41F942D12441C007FDEEA /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
+		3DE41F9A2D152B42007FDEEA /* FetchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchManager.swift; sourceTree = "<group>"; };
 		3DEC9DD42D0E5C7200AC2564 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +124,7 @@
 				3DE41F902D121806007FDEEA /* MainUser.swift */,
 				3D4E2D4F2CF6FF9F00227AC4 /* Assets.xcassets */,
 				3D4E2D512CF6FF9F00227AC4 /* Preview Content */,
+				3DE41F9A2D152B42007FDEEA /* FetchManager.swift */,
 			);
 			path = CanvasApp;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 				3DE41F952D12441C007FDEEA /* PeopleView.swift in Sources */,
 				3DC6324B2D0A8C36004D2679 /* Enrollment.swift in Sources */,
 				3D4E2D612CF9030700227AC4 /* Page.swift in Sources */,
+				3DE41F9B2D152B42007FDEEA /* FetchManager.swift in Sources */,
 				3D4E2D732CFA872D00227AC4 /* CourseView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

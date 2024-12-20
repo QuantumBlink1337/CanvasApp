@@ -7,8 +7,6 @@ import SwiftUI
 
     
     struct MainLanding: View {
-        @State private var courses: [Course] = []
-        @State private var courseWrappers: [CourseWrapper] = []
 //        @State private var user: User?
         @State private var name: String = ""
         @State private var isLoading = true
@@ -24,6 +22,12 @@ import SwiftUI
         private let assignmentClient = AssignmentClient()
         private let pageClient = PageClient()
         private let enrollmentClient = EnrollmentClient()
+        
+        @State private var fetchManager: FetchManager? = nil
+        
+        
+        
+        
         @State private var tokenEntered = !retrieveAPIToken()
         let columns: [GridItem] = [
             GridItem(.flexible()), // First column
@@ -194,12 +198,11 @@ import SwiftUI
                                         tempCourseWrappers[index].course.sortAssignmentsByDueDate()
                                     }
                                 }
-                                
+                
                             }
                             DispatchQueue.main.async {
-                                courseWrappers = tempCourseWrappers
                                 isLoading = false
-                                MainUser.selfCourseWrappers = courseWrappers
+                                MainUser.selfCourseWrappers = tempCourseWrappers
                             }
                     }
                 } 
@@ -226,7 +229,7 @@ import SwiftUI
                                 Text("Welcome \(MainUser.selfUser?.fullName ?? "FULL_NAME")")
                                 ScrollView {
                                     LazyVGrid(columns: columns, spacing: 20) {
-                                        ForEach(courseWrappers) { courseWrapper in
+                                        ForEach(MainUser.selfCourseWrappers) { courseWrapper in
                                             CoursePanel(courseWrapper: courseWrapper, userClient: userClient, navigationPath: $navigationPath)
                                                 .padding(.all, 4.0).cornerRadius(2).shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
                                         }
@@ -245,7 +248,10 @@ import SwiftUI
 
                     }
             }.task() {
-                    await fetchUserAndCourses()
+                await fetchManager?.fetchUserAndCourses()
+            }
+            .onAppear() {
+                fetchManager = FetchManager(stage: $stage, isLoading: $isLoading)
             }
         }
     }
