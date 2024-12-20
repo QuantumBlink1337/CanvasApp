@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Submission : Decodable, Identifiable {
+struct Submission : Codable, Identifiable {
     var id: Int
     var body: String?
     var grade: String?

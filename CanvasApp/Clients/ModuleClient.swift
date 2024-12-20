@@ -53,23 +53,96 @@ struct ModuleClient {
     }
     
     
-    func linkModuleItemsToPages(from course: Course, fromModules: [Module] = [], pageClient: PageClient = PageClient()) async throws -> [Module] {
+//    func linkModuleItemsToPages(from course: Course, fromModules: [Module] = [], pageClient: PageClient = PageClient()) async throws -> [Module] {
+//        var modules = fromModules.isEmpty ? course.modules : fromModules
+//        
+//        // Use a task group for parallel processing
+//        try await withThrowingTaskGroup(of: (Int, Int, ModuleItem).self) { group in
+//            for (moduleIndex, module) in modules.enumerated() {
+//                guard let items = module.items else { continue }
+//                
+//                for (itemIndex, item) in items.enumerated() {
+//                    // Skip non-page items
+//                    guard item.type == .page, let pageURL = item.pageURL else { continue }
+//                    
+//                    // Add a task for each page retrieval
+//                    group.addTask {
+//                        let linkedPage = try await pageClient.retrieveIndividualPage(from: course, pageURL: pageURL)
+//                        let body = linkedPage.body
+//                        var updatedItem = item
+//                        updatedItem.linkedPage = linkedPage
+//                        updatedItem.linkedPage?.attributedText = HTMLRenderer.makeAttributedString(from: body ?? "")
+//                        return (moduleIndex, itemIndex, updatedItem)
+//                    }
+//                }
+//            }
+//            
+//            // Collect the results
+//            for try await (moduleIndex, itemIndex, updatedItem) in group {
+//                // Update the module item in-place
+//                modules[moduleIndex].items?[itemIndex] = updatedItem
+//            }
+//        }
+//        
+//        return modules
+//    }
+
+    func linkModuleItemsToPages(
+        from course: Course,
+        fromModules: [Module] = [],
+        pageClient: PageClient = PageClient()
+    ) async throws -> [Module] {
         var modules = fromModules.isEmpty ? course.modules : fromModules
-        for moduleIndex in modules.indices {
-                if var items = modules[moduleIndex].items {
-                    for i in items.indices {
-                        guard items[i].type == .page, let pageURL = items[i].pageURL else { continue }
-                        items[i].linkedPage = try await pageClient.retrieveIndividualPage(from: course, pageURL: pageURL)
-                        let body = items[i].linkedPage?.body
-                        items[i].linkedPage?.attributedText = HTMLRenderer.makeAttributedString(from: body ?? "")
-                    }
-                    modules[moduleIndex].items = items
+
+        // A temporary storage for updated items
+        var updatedItemsByModuleIndex: [Int: [ModuleItem]] = [:]
+
+        try await withThrowingTaskGroup(of: (Int, [ModuleItem]).self) { group in
+            for (moduleIndex, module) in modules.enumerated() {
+                guard let items = module.items else {
+                    print("Skipping module \(module.id) as it has no items.")
+                    continue
                 }
-            
+
+                // Add a task for processing items in this module
+                group.addTask {
+                    var updatedItems = [ModuleItem]()
+                    for item in items {
+                        if item.type == .page, let pageURL = item.pageURL {
+                            do {
+                                // Attempt to link the page
+                                var updatedItem = item
+                                updatedItem.linkedPage = try await pageClient.retrieveIndividualPage(from: course, pageURL: pageURL)
+                                if let body = updatedItem.linkedPage?.body {
+                                    updatedItem.linkedPage?.attributedText = HTMLRenderer.makeAttributedString(from: body)
+                                }
+                                updatedItems.append(updatedItem)
+                            } catch {
+                                // Log failure but continue processing other items
+                                print("Failed to link page for item \(item.id): \(error)")
+                                updatedItems.append(item) // Preserve the original item
+                            }
+                        } else {
+                            updatedItems.append(item) // Non-page items remain unchanged
+                        }
+                    }
+                    return (moduleIndex, updatedItems)
+                }
             }
+
+            // Collect results from task group
+            for try await (moduleIndex, updatedItems) in group {
+                updatedItemsByModuleIndex[moduleIndex] = updatedItems
+            }
+        }
+
+        // Apply updated items back to modules
+        for (moduleIndex, updatedItems) in updatedItemsByModuleIndex {
+            modules[moduleIndex].items = updatedItems
+        }
+
         return modules
     }
-    
-    
+
     
 }

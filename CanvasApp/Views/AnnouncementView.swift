@@ -7,13 +7,7 @@
 
 import SwiftUI
 
-enum TimePeriod : String, CaseIterable{
-    case today = "Today"
-    case yesterday = "Yesterday"
-    case lastWeek = "Last Week"
-    case lastMonth = "Last Month"
-    case previously = "Previously"
-}
+
 struct AnnouncementView : View {
     
     

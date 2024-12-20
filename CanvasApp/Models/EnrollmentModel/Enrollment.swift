@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum EnrollmentType: String, CaseIterable, Identifiable {
+enum EnrollmentType: String, CaseIterable, Identifiable, Codable {
     var id: Int {rawValue.hashValue}
     
-    case StudentEnrollment = "StudentEnrollment"
     case TeacherEnrollment = "TeacherEnrollment"
     case TaEnrollment = "TaEnrollment"
+    case StudentEnrollment = "StudentEnrollment"
     case DesignerEnrollment = "DesignerEnrollment"
     case ObserverEnrollment = "ObserverEnrollment"
 }

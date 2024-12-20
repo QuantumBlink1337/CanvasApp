@@ -21,8 +21,15 @@ struct FetchManager {
     
     private var customColorsDict: UserColorCodes! = nil
     
+    private let cacheManager = CacheManager()
+
+    private let coursesCacheFile = "courses.json"
+    private let userCacheFile = "user.json"
+    
     @Binding private var stage: String
     @Binding private var isLoading: Bool
+    
+    
     
     init(stage: Binding<String>, isLoading: Binding<Bool>) {
         self._stage = stage
@@ -30,6 +37,8 @@ struct FetchManager {
     }
     
     private func populateUsers(wrappers: [CourseWrapper]) async {
+        let startTime = DispatchTime.now()
+
         await withTaskGroup(of: (Int, [EnrollmentType : [User]]?).self) { group in
             for (index, wrapper) in wrappers.enumerated() {
                 group.addTask {
@@ -53,10 +62,16 @@ struct FetchManager {
             }
             
         }
+        let endTime = DispatchTime.now()
+        let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+        let elapsedTime = Double(nanoTime) / 1_000_000_000
+        print("User execution time: \(elapsedTime)")
 
     }
     
     private func populatePages(wrappers: [CourseWrapper]) async {
+        let startTime = DispatchTime.now()
+
         await withTaskGroup(of: (Int, [Page]?).self) { group in
             for (index, wrapper) in wrappers.enumerated() {
                 group.addTask {
@@ -82,10 +97,16 @@ struct FetchManager {
             }
             
         }
+        let endTime = DispatchTime.now()
+        let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+        let elapsedTime = Double(nanoTime) / 1_000_000_000
+        print("Page execution time: \(elapsedTime)")
 
     }
     
     private func populateModules(wrappers: [CourseWrapper]) async {
+        let startTime = DispatchTime.now()
+
         await withTaskGroup(of: (Int, [Module]?).self) { group in
             for (index, wrapper) in wrappers.enumerated() {
                 group.addTask {
@@ -111,9 +132,15 @@ struct FetchManager {
                 }
             }
         }
+        let endTime = DispatchTime.now()
+        let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+        let elapsedTime = Double(nanoTime) / 1_000_000_000
+        print("Module execution time: \(elapsedTime)")
     }
     
     private func populateAnnouncements(wrappers: [CourseWrapper]) async {
+        let startTime = DispatchTime.now()
+
         await withTaskGroup(of: (Int, [DiscussionTopic]?).self) { group in
             for (index, wrapper) in wrappers.enumerated() {
                 group.addTask {
@@ -141,9 +168,15 @@ struct FetchManager {
             }
             
         }
+        let endTime = DispatchTime.now()
+        let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+        let elapsedTime = Double(nanoTime) / 1_000_000_000
+        print("Announcement execution time: \(elapsedTime)")
     }
     
     private func populateAssignments(wrappers: [CourseWrapper]) async {
+        let startTime = DispatchTime.now()
+
         await withTaskGroup(of: (Int, [Assignment]?).self) { group in
             for (index, wrapper) in wrappers.enumerated() {
                 group.addTask {
@@ -184,49 +217,133 @@ struct FetchManager {
             }
 
         }
+        let endTime = DispatchTime.now()
+        let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+        let elapsedTime = Double(nanoTime) / 1_000_000_000
+        print("Assignment execution time: \(elapsedTime)")
 
     }
     
     private func prepareInitialCourses() async -> [CourseWrapper] {
-        let fetchedCourses: [Course] = await courseClient.getCoursesByCurrentTerm()!
-        let tempCourseWrappers = fetchedCourses.map { course in
-            let wrappedCourse = CourseWrapper(course: course)
-            wrappedCourse.course.color = MainUser.selfCourseColors?.getHexCode(courseID: course.id) ?? "#000000"
-            wrappedCourse.course.syllabusAttributedString = HTMLRenderer.makeAttributedString(from: course.syllabusBody ?? "")
-            return wrappedCourse
+           let startTime = DispatchTime.now()
+
+           // Attempt to load cached courses
+           var courses: [Course]
+           if let cachedCourses: [Course] = try? cacheManager.load(from: coursesCacheFile) {
+               print("Loaded courses from cache")
+               courses = cachedCourses
+           } else {
+               print("Fetching courses from network")
+               courses = await courseClient.getCoursesByCurrentTerm()!
+           }
+
+           // Prepare CourseWrappers
+           let tempCourseWrappers = courses.map { course in
+               let wrappedCourse = CourseWrapper(course: course)
+               wrappedCourse.course.color = MainUser.selfCourseColors?.getHexCode(courseID: course.id) ?? "#000000"
+               wrappedCourse.course.syllabusAttributedString = HTMLRenderer.makeAttributedString(from: course.syllabusBody ?? "")
+               
+               wrappedCourse.fieldsNeedingPopulation.updateValue(wrappedCourse.course.usersInCourse.isEmpty, forKey: "users")
+               wrappedCourse.fieldsNeedingPopulation.updateValue(wrappedCourse.course.pages.isEmpty, forKey: "pages")
+               wrappedCourse.fieldsNeedingPopulation.updateValue(wrappedCourse.course.announcements.isEmpty, forKey: "announcements")
+               wrappedCourse.fieldsNeedingPopulation.updateValue(wrappedCourse.course.modules.isEmpty, forKey: "modules")
+               wrappedCourse.fieldsNeedingPopulation.updateValue(wrappedCourse.course.assignments.isEmpty, forKey: "assignments")
+               
+               return wrappedCourse
+           }
+        
+        
+        
+        
+        
+
+           let endTime = DispatchTime.now()
+           let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+           let elapsedTime = Double(nanoTime) / 1_000_000_000
+           print("Course preparation execution time: \(elapsedTime)")
+
+           return tempCourseWrappers
+       }
+    
+        
+    
+    
+    
+    private func prepareUser() async -> User {
+        var user: User?
+            // Attempt to load cached user data
+            if let cachedUser: User = try? cacheManager.load(from: userCacheFile) {
+                print("Loaded user from cache")
+                user = cachedUser
+            }
+            else {
+                print("Fetching user from network")
+                do {
+                    var networkUser = try await userClient.getSelfUser()
+                    networkUser.enrollments = try await userClient.getUserEnrollments(from: networkUser)
+                    try cacheManager.save(networkUser, to: userCacheFile)
+                    user = networkUser
+                }
+                catch {
+                    print("Failed to fetch or save user: \(error)")
+                }
+            }
+        return user!
         }
-        return tempCourseWrappers
-    }
     
     
     func fetchUserAndCourses() async {
-            do {
-                // Fetch user data
-                MainUser.selfCourseColors = try await userClient.getColorInfoFromSelf()
-                var user = try await userClient.getSelfUser()
-                user.enrollments = try await userClient.getUserEnrollments(from: user)
-                MainUser.selfUser = user
-                
-                
-                // Fetch courses data
-               
-                let tempCourseWrappers = await prepareInitialCourses()
-                        
-                await populateUsers(wrappers: tempCourseWrappers)
-                await populatePages(wrappers: tempCourseWrappers)
-                await populateModules(wrappers: tempCourseWrappers)
-                await populateAnnouncements(wrappers: tempCourseWrappers)
-                await populateAssignments(wrappers: tempCourseWrappers)
+        do {
+            let startTime = DispatchTime.now()
+            let cacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+            let fileURL = cacheDirectory.appendingPathComponent("courses.json")
+            print("Courses cache file is located at: \(fileURL.path)")
 
-                DispatchQueue.main.async {
-                    isLoading = false
-                    MainUser.selfCourseWrappers = tempCourseWrappers
+            // Prepare user
+            let user = await prepareUser()
+
+            // Fetch color info for the user
+            MainUser.selfCourseColors = try await userClient.getColorInfoFromSelf()
+            MainUser.selfUser = user
+
+            // Prepare CourseWrappers
+            let tempCourseWrappers = await prepareInitialCourses()
+            
+            var wrappersNeedingPopulation: [String : [CourseWrapper]] = ["users" : [], "pages" : [], "modules" : [], "announcements" : [], "assignments" : []]
+            
+            for wrapper in tempCourseWrappers {
+                for (field, truth) in wrapper.fieldsNeedingPopulation {
+                    if truth {
+                        wrappersNeedingPopulation[field]?.append(wrapper)
+                    }
                 }
             }
-        
-            catch {
-                print("Failed to fetch user or courses: \(error)")
+
+            // Populate data (Users, Pages, Modules, Announcements, Assignments)
+            await populateUsers(wrappers: wrappersNeedingPopulation["users"]!)
+            await populatePages(wrappers: wrappersNeedingPopulation["pages"]!)
+            await populateModules(wrappers: wrappersNeedingPopulation["modules"]!)
+            await populateAnnouncements(wrappers: wrappersNeedingPopulation["announcements"]!)
+            await populateAssignments(wrappers: wrappersNeedingPopulation["assignments"]!)
+
+            // Update UI
+            DispatchQueue.main.async {
+                do {
+                    try cacheManager.save(tempCourseWrappers.map({$0.course}), to: coursesCacheFile)
+                } catch {
+                    print("Failed to save courses to cache: \(error)")
+                }
+                isLoading = false
+                MainUser.selfCourseWrappers = tempCourseWrappers
             }
+
+            let endTime = DispatchTime.now()
+            let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+            let elapsedTime = Double(nanoTime) / 1_000_000_000
+            print("Total execution time: \(elapsedTime)")
+        } catch {
+            print("Failed to fetch user or courses: \(error)")
         }
+    }
 
 }

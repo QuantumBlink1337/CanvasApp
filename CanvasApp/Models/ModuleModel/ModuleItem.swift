@@ -6,7 +6,7 @@
 //
 
 import Foundation
-enum ModuleItemType: String {
+enum ModuleItemType: String, Codable {
     case file = "File"
     case page = "Page"
     case discussion = "Discussion"
@@ -18,7 +18,7 @@ enum ModuleItemType: String {
     
 }
 
-struct ModuleItem : ItemRepresentable, Decodable {
+struct ModuleItem : ItemRepresentable, Codable {
     var id: Int
     var title: String
     var type: ModuleItemType
@@ -37,14 +37,13 @@ struct ModuleItem : ItemRepresentable, Decodable {
         case pageURL = "page_url"
     }
     init(from decoder: Decoder) throws {
-       let container = try decoder.container(keyedBy: CodingKeys.self)
-       id = try container.decode(Int.self, forKey: .id)
-       title = try container.decode(String.self, forKey: .title)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
         let typeString = try container.decode(String.self, forKey: .type)
         type = ModuleItemType(rawValue: typeString)!
         contentID = try container.decodeIfPresent(Int.self , forKey: .contentID)
         pageURL = try container.decodeIfPresent(String.self, forKey: .pageURL)
-        
         
        }
 }

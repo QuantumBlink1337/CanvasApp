@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Module : Decodable, Identifiable {
+struct Module : Codable, Identifiable {
     var id: Int
     var position: Int
     var name: String

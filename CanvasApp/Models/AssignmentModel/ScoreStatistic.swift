@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct ScoreStatistic : Decodable {
+struct ScoreStatistic : Codable {
     var min: Float
     var max: Float
     var mean: Float

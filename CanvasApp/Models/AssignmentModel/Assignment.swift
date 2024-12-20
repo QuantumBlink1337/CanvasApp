@@ -3,13 +3,13 @@
 import Foundation
 // https://canvas.instructure.com/doc/api/assignments.html#method.assignments_api.index
 
-enum DatePriority : Int, CaseIterable, Identifiable {
+enum DatePriority : Int, CaseIterable, Identifiable, Codable {
     var id: RawValue { rawValue }
     case dueSoon = 3
     case upcoming = 9
     case past = -1
 }
-enum SubmissionTypes : String, Decodable {
+enum SubmissionTypes : String, Codable {
     case discussionTopic = "discussion_topic"
     case onlineQuiz = "online_quiz"
     case onPaper = "on_paper"
@@ -22,7 +22,7 @@ enum SubmissionTypes : String, Decodable {
     case studentAnnotation = "student_annotation"
 }
 
-struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentable, Hashable {
+struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable, Hashable {
 
     var id: Int
     var title: String
@@ -58,6 +58,8 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
         case scoreStatistic = "score_statistics"
         case currentSubmission = "submission"
         case submissionTypes = "submission_types"
+        case submissions
+        case attributedText
     }
     
     init(from decoder: Decoder) throws {
@@ -77,12 +79,37 @@ struct Assignment : Decodable, Identifiable, ItemRepresentable, PageRepresentabl
            self.pointsPossible = try container.decodeIfPresent(Float.self, forKey: .pointsPossible)
            self.scoreStatistic = try container.decodeIfPresent(ScoreStatistic.self, forKey: .scoreStatistic)
            self.currentSubmission = try container.decodeIfPresent(Submission.self, forKey: .currentSubmission)
+           self.attributedText = try container.decodeIfPresent(AttributedString.self, forKey: .attributedText)
            
            // Decode arrays with default value fallback
            self.submissionTypes = (try container.decodeIfPresent([SubmissionTypes].self, forKey: .submissionTypes)) ?? []
        }
 
-    
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        // Encode required properties
+        try container.encode(id, forKey: .id)
+        try container.encode(title, forKey: .title)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(courseID, forKey: .courseID)
+        
+        // Encode optional properties
+        try container.encodeIfPresent(body, forKey: .body)
+        try container.encodeIfPresent(dueAt, forKey: .dueAt)
+        try container.encodeIfPresent(lockedAt, forKey: .lockedAt)
+        try container.encodeIfPresent(pointsPossible, forKey: .pointsPossible)
+        try container.encodeIfPresent(scoreStatistic, forKey: .scoreStatistic)
+        try container.encodeIfPresent(currentSubmission, forKey: .currentSubmission)
+        
+        // Encode arrays
+        try container.encode(submissionTypes, forKey: .submissionTypes)
+        try container.encode(submissions, forKey: .submissions)
+        
+        try container.encode(attributedText, forKey: .attributedText)
+    }
     
     
     static func == (lhs: Assignment, rhs: Assignment) -> Bool {

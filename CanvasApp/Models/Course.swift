@@ -21,10 +21,12 @@ class CourseWrapper: ObservableObject, Identifiable, Hashable {
     init(course: Course) {
         self.course = course
     }
+    var fieldsNeedingPopulation: [String : Bool] = [ : ]
+
 }
 
 
-struct Course: Decodable, Encodable, Identifiable {
+struct Course: Codable, Identifiable {
     var name: String?
     var courseCode: String
     var syllabusBody: String? = nil
@@ -58,6 +60,47 @@ struct Course: Decodable, Encodable, Identifiable {
             return nil
         }
     }
+    private enum CodingKeys: String, CodingKey {
+          case name, id, courseCode = "course_code", syllabusBody = "syllabus_body", totalStudents = "total_students", image_download_url, term, color, pages, modules, announcements, datedAnnouncements, assignments, datedAssignments, usersInCourse
+      }
+    
+    init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.name = try container.decodeIfPresent(String.self, forKey: .name)
+            self.courseCode = try container.decode(String.self, forKey: .courseCode)
+            self.syllabusBody = try container.decodeIfPresent(String.self, forKey: .syllabusBody)
+            self.totalStudents = try container.decode(Int.self, forKey: .totalStudents)
+            self.id = try container.decode(Int.self, forKey: .id)
+            self.image_download_url = try container.decodeIfPresent(String.self, forKey: .image_download_url)
+            self.term = try container.decodeIfPresent(Term.self, forKey: .term)
+            self.pages = try container.decodeIfPresent([Page].self, forKey: .pages) ?? []
+            self.modules = try container.decodeIfPresent([Module].self, forKey: .modules) ?? []
+            self.announcements = try container.decodeIfPresent([DiscussionTopic].self, forKey: .announcements) ?? []
+            self.datedAnnouncements = try container.decodeIfPresent([TimePeriod: [DiscussionTopic]].self, forKey: .datedAnnouncements) ?? [ : ]
+            self.assignments = try container.decodeIfPresent([Assignment].self, forKey: .assignments) ?? []
+        self.datedAssignments = try container.decodeIfPresent([DatePriority: [Assignment]].self, forKey: .datedAssignments) ?? [ : ]
+            self.usersInCourse = try container.decodeIfPresent([EnrollmentType: [User]].self, forKey: .usersInCourse) ?? [ : ]
+        }
+    
+    func encode(to encoder: Encoder) throws {
+         var container = encoder.container(keyedBy: CodingKeys.self)
+         try container.encodeIfPresent(name, forKey: .name)
+         try container.encode(courseCode, forKey: .courseCode)
+         try container.encodeIfPresent(syllabusBody, forKey: .syllabusBody)
+         try container.encode(totalStudents, forKey: .totalStudents)
+         try container.encode(id, forKey: .id)
+         try container.encodeIfPresent(image_download_url, forKey: .image_download_url)
+         try container.encodeIfPresent(term, forKey: .term)
+         try container.encode(color, forKey: .color)
+         try container.encode(pages, forKey: .pages)
+         try container.encode(modules, forKey: .modules)
+         try container.encode(announcements, forKey: .announcements)
+         try container.encode(datedAnnouncements, forKey: .datedAnnouncements)
+         try container.encode(assignments, forKey: .assignments)
+         try container.encodeIfPresent(datedAssignments, forKey: .datedAssignments)
+         try container.encode(usersInCourse, forKey: .usersInCourse)
+     }
+    
     /*
         Prepares a secondary Assignments grouping in the form of a Dictionary with prioritized assignments.
         Useful for displaying initial Assignment grouping or on the main status page.
@@ -233,16 +276,7 @@ struct Course: Decodable, Encodable, Identifiable {
         }
 
 
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case image_download_url
-        case term
-        case courseCode = "course_code"
-        case syllabusBody = "syllabus_body"
-        case totalStudents = "total_students"
-//        case color = "color"
-    }
+
           
         
 
@@ -251,7 +285,7 @@ struct Course: Decodable, Encodable, Identifiable {
    
     
 
-struct Term: Decodable, Encodable {
+struct Term: Codable {
     let id: Int
     let name: String
     let startAt: Date?
