@@ -94,52 +94,15 @@ struct CourseView: View {
                     }
                     
                 }
+
                 
-                Button(action:  {
-                    if  (frontPageLoaded) {
-                        navigateToHomePage = true
-                    }
-                    else if (!courseWrapper.course.modules.isEmpty) {
-                        navigateToModuleView = true
-                    }
-                }) {
-                    HStack() {
-                        VStack {
-                            Text("Home")
-                                .font(.headline)
-                                .fontWeight(.heavy)
-                                .padding(/*@START_MENU_TOKEN@*/.trailing, 40.0/*@END_MENU_TOKEN@*/)
-                            let page = if (frontPageLoaded) {
-                                "Welcome Page"
-                            }
-                            else {
-                                "Modules"
-                            }
-                            Text(page)
-                                .font(.subheadline)
-                                .padding(.trailing, 40.0)
-                        }
-                        
-                        
-                        
-                        Image(systemName: "arrowshape.turn.up.right.fill")
-                            .padding(.leading, 40.0)
-                        
-                    }
-                    .frame(width: geometry.size.width / 1.15)
-                    .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.gray, lineWidth: 2).shadow(radius: 50))
-                }
-                .alert("Page not available", isPresented: $showAlert) {
-                    Button("OK", role: .cancel) {}
-                } message: {
-                    Text("Requested page could not be found")
-                }
-                .navigationDestination(isPresented: $navigateToHomePage) {
-                    if (courseWrapper.course.frontPage != nil) {
-                        PageView(courseWrapper: courseWrapper, page: courseWrapper.course.frontPage!, navigationPath: $navigationPath, textAlignment: .center)
-                    }
-                }
                 ScrollView {
+                    if (frontPageLoaded) {
+                        CourseSectionButton(buttonTitle: "Home Page", buttonImageIcon: "house.fill", color: HexToColor(courseWrapper.course.color) ?? .black) {
+                            navigateToHomePage = true
+                            
+                        }
+                    }
                     CourseSectionButton(buttonTitle: "Announcements", buttonImageIcon: "megaphone", color: HexToColor(courseWrapper.course.color) ?? .black) {
                         navigateToAnnouncementView = true
                         
@@ -168,11 +131,14 @@ struct CourseView: View {
                     CourseSectionButton(buttonTitle: "People", buttonImageIcon: "person.fill", color: HexToColor(courseWrapper.course.color) ?? .black) {
                         navigateToPeopleView = true
                     }
-                    
-//                        CourseSectionButton(buttonTitle: "Grades", buttonImageIcon: "scroll", color: HexToColor(courseWrapper.course.color) ?? .black) {
-//                            print("Test button")
-//                        }
-                }.navigationDestination(isPresented: $navigateToModuleView) {
+
+                }
+                .navigationDestination(isPresented: $navigateToHomePage) {
+                    if (courseWrapper.course.frontPage != nil) {
+                        PageView(courseWrapper: courseWrapper, page: courseWrapper.course.frontPage!, navigationPath: $navigationPath, textAlignment: .center)
+                    }
+                }
+                .navigationDestination(isPresented: $navigateToModuleView) {
                     
                     ModuleView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
                 }
