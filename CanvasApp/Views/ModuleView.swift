@@ -52,32 +52,44 @@ struct ModuleView: View {
                     }
                 ),
                 content: {
+                    if (item.linkedAssignment != nil) {
+                        let assignmentView = AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
+                        assignmentView.buildAssignmentGlanceView(for: item.linkedAssignment!)
+                    }
                     if item.linkedPage != nil {
                         preparePageDisplay(page: item.linkedPage!)
                     }
-//                    preparePageDisplay(page: item)
                 },
                 label: {
                     let icon = iconTypeLookup[item.type]
                     VStack(alignment: .leading) {
-                        HStack {
+                        HStack() {
                             Image(systemName: icon!)
-                                .frame(width: 30, height: 30)
-                            Text("\(item.title)")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                            VStack(alignment: .leading) {
+                                Text("\(item.title)")
+                                    .font(.body)
+                                if (item.linkedAssignment != nil) {
+                                    Text("Due on \(formattedDate(for: item.linkedAssignment?.dueAt ?? Date(), format: formatDate.shortForm))")
+                                        .font(.footnote)
+                                }
+                               
+                            }
+                            Spacer()
                             if (item.linkedAssignment != nil) {
-                                Spacer()
-                                Text("Points: \(item.linkedAssignment?.pointsPossible?.clean ?? "0")")
-                                    .font(.footnote)
+                                ZStack(alignment: .center) {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .foregroundStyle(color)
+//                                        .stroke(color, lineWidth: 3)
+                                        .frame(width: 75, height: 40)
+
+                                    Text("\(item.linkedAssignment?.currentSubmission?.score?.clean ?? "") / \(item.linkedAssignment?.pointsPossible?.clean ?? "0")")
+                                        .foregroundStyle(.white)
+                                }
                             }
                         }
-                        if (item.linkedAssignment != nil) {
-                            Text("Due on \(formattedDate(for: item.linkedAssignment?.dueAt ?? Date(), format: formatDate.shortForm))")
-                                .font(.footnote)
-                                .padding(.leading, 32)
-                        }
                     }
-                    
-                    
                 }
                 )
                 .simultaneousGesture(LongPressGesture().onEnded {_ in

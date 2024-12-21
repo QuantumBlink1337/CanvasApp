@@ -202,8 +202,12 @@ struct FetchManager {
                             for moduleIndex in wrappers[index].course.modules.indices {
                                 guard var moduleItems = wrappers[index].course.modules[moduleIndex].items else { continue }
                                 
-                                for itemIndex in moduleItems.indices where moduleItems[itemIndex].type == .assignment && moduleItems[itemIndex].contentID == assignments[i].id {
+                                for itemIndex in moduleItems.indices 
+                                where (moduleItems[itemIndex].type == .assignment && moduleItems[itemIndex].contentID == assignments[i].id)
+                                || (moduleItems[itemIndex].type == .quiz && moduleItems[itemIndex].contentID == assignments[i].quizID) {
                                     moduleItems[itemIndex].linkedAssignment = assignments[i]
+                                    let isQuiz = moduleItems[itemIndex].type == .quiz ? true : false
+                                    moduleItems[itemIndex].linkedAssignment?.isQuiz = isQuiz
                                 }
                                 
                                 // Write the modified items back to the module

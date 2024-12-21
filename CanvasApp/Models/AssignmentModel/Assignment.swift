@@ -36,9 +36,10 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
     var lockedAt: Date?
     
     var courseID: Int
+    var quizID: Int?
 
     var pointsPossible: Float?
-    
+    var isQuiz: Bool = false
     
     var submissions: [Submission] = []
     var submissionTypes: [SubmissionTypes]
@@ -54,36 +55,45 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
         case dueAt = "due_at"
         case lockedAt = "lock_at"
         case courseID = "course_id"
+        
+        case quizID = "quiz_id"
+        
+        
         case pointsPossible = "points_possible"
         case scoreStatistic = "score_statistics"
         case currentSubmission = "submission"
         case submissionTypes = "submission_types"
         case submissions
         case attributedText
+        case isQuiz = "is_quiz_assignment"
     }
     
     init(from decoder: Decoder) throws {
-           let container = try decoder.container(keyedBy: CodingKeys.self)
-           
-           // Decode required properties
-           self.id = try container.decode(Int.self, forKey: .id)
-           self.title = try container.decode(String.self, forKey: .title)
-           self.createdAt = try container.decode(Date.self, forKey: .createdAt)
-           self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
-           self.courseID = try container.decode(Int.self, forKey: .courseID)
-           
-           // Decode optional properties
-           self.body = try container.decodeIfPresent(String.self, forKey: .body)
-           self.dueAt = try container.decodeIfPresent(Date.self, forKey: .dueAt)
-           self.lockedAt = try container.decodeIfPresent(Date.self, forKey: .lockedAt)
-           self.pointsPossible = try container.decodeIfPresent(Float.self, forKey: .pointsPossible)
-           self.scoreStatistic = try container.decodeIfPresent(ScoreStatistic.self, forKey: .scoreStatistic)
-           self.currentSubmission = try container.decodeIfPresent(Submission.self, forKey: .currentSubmission)
-           self.attributedText = try container.decodeIfPresent(AttributedString.self, forKey: .attributedText)
-           
-           // Decode arrays with default value fallback
-           self.submissionTypes = (try container.decodeIfPresent([SubmissionTypes].self, forKey: .submissionTypes)) ?? []
-       }
+       let container = try decoder.container(keyedBy: CodingKeys.self)
+       
+       // Decode required properties
+       self.id = try container.decode(Int.self, forKey: .id)
+       self.title = try container.decode(String.self, forKey: .title)
+       self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+       self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+       self.courseID = try container.decode(Int.self, forKey: .courseID)
+       
+       // Decode optional properties
+       self.body = try container.decodeIfPresent(String.self, forKey: .body)
+       self.dueAt = try container.decodeIfPresent(Date.self, forKey: .dueAt)
+       self.lockedAt = try container.decodeIfPresent(Date.self, forKey: .lockedAt)
+       self.pointsPossible = try container.decodeIfPresent(Float.self, forKey: .pointsPossible)
+       self.quizID = try container.decodeIfPresent(Int.self, forKey: .quizID)
+    
+       self.isQuiz = try container.decode(Bool.self, forKey: .isQuiz)
+    
+       self.scoreStatistic = try container.decodeIfPresent(ScoreStatistic.self, forKey: .scoreStatistic)
+       self.currentSubmission = try container.decodeIfPresent(Submission.self, forKey: .currentSubmission)
+       self.attributedText = try container.decodeIfPresent(AttributedString.self, forKey: .attributedText)
+       
+       // Decode arrays with default value fallback
+       self.submissionTypes = (try container.decodeIfPresent([SubmissionTypes].self, forKey: .submissionTypes)) ?? []
+    }
 
 
     func encode(to encoder: Encoder) throws {
@@ -103,6 +113,7 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
         try container.encodeIfPresent(pointsPossible, forKey: .pointsPossible)
         try container.encodeIfPresent(scoreStatistic, forKey: .scoreStatistic)
         try container.encodeIfPresent(currentSubmission, forKey: .currentSubmission)
+        try container.encodeIfPresent(isQuiz, forKey: .isQuiz)
         
         // Encode arrays
         try container.encode(submissionTypes, forKey: .submissionTypes)
