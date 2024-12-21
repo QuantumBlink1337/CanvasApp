@@ -37,7 +37,7 @@ struct CoursePanel: View {
 //        print(String(describing: courseWrapper.course.modules))
         self._navigationPath = navigationPath
         
-        let assignments = courseWrapper.course.datedAssignments![.dueSoon]!
+        let assignments = courseWrapper.course.datedAssignments![.dueSoon] ?? []
         for assignment in assignments {
             let formattedDate = formattedDate(for: assignment.dueAt ?? Date(), format: .shortForm)
             assignmentDates.updateValue(formattedDate, forKey: assignment)
@@ -128,6 +128,7 @@ struct CoursePanel: View {
                     }.background()
 
                 }.buttonStyle(PlainButtonStyle()).tint(.white)
+                
 
                 Menu {
                     Button() {

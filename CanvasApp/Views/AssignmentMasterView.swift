@@ -335,7 +335,7 @@ struct AssignmentMasterView: View {
     }
     
     @ViewBuilder
-    private func buildAssignmentGlanceView(for assignment: Assignment) -> some View {
+    func buildAssignmentGlanceView(for assignment: Assignment) -> some View {
 //        GeometryReader { geometry in
         if (assignment.currentSubmission?.score == nil) {
             VStack(alignment: .center) {

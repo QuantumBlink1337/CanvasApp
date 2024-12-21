@@ -17,7 +17,7 @@ enum EnrollmentType: String, CaseIterable, Identifiable, Codable {
     case ObserverEnrollment = "ObserverEnrollment"
 }
 
-struct Enrollment: Decodable, Identifiable {
+struct Enrollment: Codable, Identifiable {
     
     
     var id: Int
@@ -43,6 +43,20 @@ struct Enrollment: Decodable, Identifiable {
         self.enrollmentType = enrollmentType
         self.grade = grade
     }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.courseID, forKey: .courseID)
+        try container.encode(self.enrollmentState, forKey: .enrollmentState)
+        try container.encode(self.enrollmentType, forKey: .enrollmentType)
+        try container.encode(self.grade, forKey: .grade)
+        
+        
+    }
+    
+    
+    
     
     init(from decoder: Decoder) throws {
        let container = try decoder.container(keyedBy: CodingKeys.self)

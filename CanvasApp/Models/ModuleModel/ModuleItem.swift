@@ -35,6 +35,8 @@ struct ModuleItem : ItemRepresentable, Codable {
         case type
         case contentID = "content_id"
         case pageURL = "page_url"
+        case linkedAssignment
+        case linkedPage
     }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -44,6 +46,21 @@ struct ModuleItem : ItemRepresentable, Codable {
         type = ModuleItemType(rawValue: typeString)!
         contentID = try container.decodeIfPresent(Int.self , forKey: .contentID)
         pageURL = try container.decodeIfPresent(String.self, forKey: .pageURL)
-        
+        linkedAssignment = try container.decodeIfPresent(Assignment.self, forKey: .linkedAssignment)
+        linkedPage = try container.decodeIfPresent(Page.self, forKey: .linkedPage)
        }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.title, forKey: .title)
+        try container.encode(self.type, forKey: .type)
+        try container.encodeIfPresent(self.contentID, forKey: .contentID)
+        try container.encodeIfPresent(self.pageURL, forKey: .pageURL)
+        
+        try container.encodeIfPresent(self.linkedPage, forKey: .linkedPage)
+        try container.encodeIfPresent(self.linkedAssignment, forKey: .linkedAssignment)
+    }
+    
+    
 }

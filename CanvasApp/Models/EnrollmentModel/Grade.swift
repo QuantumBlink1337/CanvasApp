@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Grade : Decodable {
+struct Grade : Codable {
      
     
     var currentGrade: String?
@@ -22,5 +22,10 @@ struct Grade : Decodable {
        self.currentGrade = currentGrade
        self.currentScore = currentScore
    }
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(self.currentGrade, forKey: .currentGrade)
+        try container.encodeIfPresent(self.currentScore, forKey: .currentScore)
+    }
     
 }
