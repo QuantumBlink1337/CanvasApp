@@ -11,7 +11,7 @@ import SwiftUI
 struct ModuleView: View {
     var courseWrapper: CourseWrapper
     
-    let iconTypeLookup: [ModuleItemType : String] = [ModuleItemType.assignment : "pencil.and.list.clipboard.rtl", ModuleItemType.discussion : "person.wave.2.fill", ModuleItemType.externalTool : "book.and.wrench.fill", ModuleItemType.externalURL : "globe", ModuleItemType.file : "folder.fill", ModuleItemType.page : "book.pages.fill", ModuleItemType.subheader : "list.dash.header.rectangle", ModuleItemType.quiz : "list.bullet.rectangle.portrait.fill"]
+    let iconTypeLookup: [ModuleItemType : String] = [ModuleItemType.assignment : "pencil.and.list.clipboard.rtl", ModuleItemType.discussion : "person.wave.2.fill", ModuleItemType.externalTool : "book.and.wrench.fill", ModuleItemType.externalURL : "globe", ModuleItemType.file : "folder.fill", ModuleItemType.page : "book.pages.fill", ModuleItemType.subheader : "list.dash.header.rectangle", ModuleItemType.quiz : "filemenu.and.cursorarrow"]
         
     @State private var moduleSectionIsExpanded: Set<Int>
     @State private var moduleItemSectionIsExpanded: Set<Int>
@@ -38,19 +38,22 @@ struct ModuleView: View {
     }
     private func buildModuleItems(module: Module) -> some View {
         ForEach(module.items!) { item in
-                DisclosureGroup(isExpanded: Binding<Bool> (
-                    get: {
-                        return moduleItemSectionIsExpanded.contains(item.id)
-                    },
-                    set: { isExpanding in
-                        if (isExpanding) {
-                            moduleItemSectionIsExpanded.insert(item.id)
-                        }
-                        else {
-                            moduleItemSectionIsExpanded.remove(item.id)
-                        }
+            let isExpanded = Binding<Bool>(
+                get: {
+                    return moduleItemSectionIsExpanded.contains(item.id)
+                },
+                set: { isExpanding in
+                    if (isExpanding) {
+                        moduleItemSectionIsExpanded.insert(item.id)
                     }
-                ),
+                    else {
+                        moduleItemSectionIsExpanded.remove(item.id)
+                    }
+                }
+            )
+
+                DisclosureGroup(
+                    isExpanded: isExpanded,
                 content: {
                     if (item.linkedAssignment != nil) {
                         let assignmentView = AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
@@ -66,7 +69,8 @@ struct ModuleView: View {
                         HStack() {
                             Image(systemName: icon!)
                                 .resizable()
-                                .frame(width: 25, height: 25)
+                                .frame(width: 30, height: 30)
+                                .foregroundStyle(color)
                             VStack(alignment: .leading) {
                                 Text("\(item.title)")
                                     .font(.body)
@@ -77,20 +81,32 @@ struct ModuleView: View {
                                
                             }
                             Spacer()
-                            if (item.linkedAssignment != nil) {
-                                ZStack(alignment: .center) {
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .foregroundStyle(color)
-//                                        .stroke(color, lineWidth: 3)
-                                        .frame(width: 75, height: 40)
-
-                                    Text("\(item.linkedAssignment?.currentSubmission?.score?.clean ?? "") / \(item.linkedAssignment?.pointsPossible?.clean ?? "0")")
-                                        .foregroundStyle(.white)
+                            VStack {
+                                if (item.linkedAssignment?.currentSubmission?.score != nil) {
+                                    ZStack {
+                                        Circle()
+                                            .stroke(color, lineWidth: 3)
+                                            .frame(width: 30, height: 30)
+                                            
+                                        Image(systemName: "person.fill.checkmark")
+                                            .resizable()
+                                            .frame(width: 15, height: 10)
+                                            .foregroundStyle(color)
+                                    }.padding(.top, 8)
+                                        .padding(.trailing, 10)
                                 }
                             }
+
+                        }
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation {
+                            isExpanded.wrappedValue.toggle()
                         }
                     }
                 }
+                   
                 )
                 .simultaneousGesture(LongPressGesture().onEnded {_ in
                     

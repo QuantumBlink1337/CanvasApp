@@ -395,7 +395,7 @@ struct AssignmentMasterView: View {
     private func buildAssignmentSection(datePriority: DatePriority) -> some View {
         let assignments = courseWrapper.course.datedAssignments![datePriority]!
             ForEach(assignments) { assignment in
-                DisclosureGroup(isExpanded: Binding<Bool> (
+                let isExpanded = Binding<Bool> (
                     get: {
                         return assignIsExpanded.contains("\(assignment.title)")
                     },
@@ -407,7 +407,9 @@ struct AssignmentMasterView: View {
                             assignIsExpanded.remove("\(assignment.title)")
                         }
                     }
-                ),
+                )
+                DisclosureGroup(
+                    isExpanded: isExpanded,
                                 content: {
                     VStack(alignment: .center) {
                         buildAssignmentGlanceView(for: assignment)
@@ -433,24 +435,28 @@ struct AssignmentMasterView: View {
                             Spacer()
                             Spacer()
                             VStack {
-                                    if (assignment.currentSubmission?.score != nil) {
-                                        ZStack {
-                                            Circle()
-                                                .stroke(Color.green, lineWidth: 5)
-                                                .frame(width: 40, height: 40)
-                                                
-                                            Image(systemName: "person.fill.checkmark")
-                                                .resizable()
-                                                .frame(width: 20, height: 15)                                        
-                                                .foregroundStyle(.green)
-                                        }.padding(.top, 8)
-                                            .padding(.trailing, 10)
-                                    }
+                                if (assignment.currentSubmission?.score != nil) {
+                                    ZStack {
+                                        Circle()
+                                            .stroke(Color.green, lineWidth: 5)
+                                            .frame(width: 40, height: 40)
+                                            
+                                        Image(systemName: "person.fill.checkmark")
+                                            .resizable()
+                                            .frame(width: 20, height: 15)
+                                            .foregroundStyle(.green)
+                                    }.padding(.top, 8)
+                                        .padding(.trailing, 10)
+                                }
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    
+                    .onTapGesture {
+                        withAnimation {
+                            isExpanded.wrappedValue.toggle()
+                        }
+                    }
                 }
                 ).simultaneousGesture(LongPressGesture().onEnded {_ in
                     selectedAssignment = assignment
