@@ -19,8 +19,6 @@ struct CoursePanel: View {
     @State var showColorPicker = false
     @State var selectedColor: Color = .blue
     
-    
-    
     @State var showTextbox = false
     @State var selectedNickname = ""
     
@@ -28,12 +26,12 @@ struct CoursePanel: View {
 
     @Binding private var navigationPath: NavigationPath
     
-    init(courseWrapper: CourseWrapper, userClient: UserClient, navigationPath: Binding<NavigationPath>) {
+    init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
         let initialColor = (HexToColor(courseWrapper.course.color) ?? .black)
         _color = State(initialValue: initialColor)
         _selectedColor = State(initialValue: initialColor)
-        self.userClient = userClient
+        self.userClient = UserClient()
 //        print(String(describing: courseWrapper.course.modules))
         self._navigationPath = navigationPath
         
@@ -80,12 +78,8 @@ struct CoursePanel: View {
                                     }.padding(.leading, 5)
                                         .padding(.top,8.0)
                                 }
-                                
-                                
                             }
-                    
-                                
-                            
+                                     
                             Text(courseWrapper.course.name ?? "Missing name")
                                 .font(.subheadline) // Display course name
                                 .multilineTextAlignment(.leading)

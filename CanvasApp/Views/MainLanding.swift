@@ -14,18 +14,7 @@ import SwiftUI
         
         @State private var navigationPath = NavigationPath()
         
-        
-        private let courseClient = CourseClient()
-        private let userClient = UserClient()
-        private let moduleClient = ModuleClient()
-        private let discussionTopicClient = DiscussionTopicClient()
-        private let assignmentClient = AssignmentClient()
-        private let pageClient = PageClient()
-        private let enrollmentClient = EnrollmentClient()
-        
         @State private var fetchManager: FetchManager? = nil
-        
-        
         
         
         @State private var tokenEntered = !retrieveAPIToken()
@@ -54,7 +43,7 @@ import SwiftUI
                                 ScrollView {
                                     LazyVGrid(columns: columns, spacing: 20) {
                                         ForEach(MainUser.selfCourseWrappers) { courseWrapper in
-                                            CoursePanel(courseWrapper: courseWrapper, userClient: userClient, navigationPath: $navigationPath)
+                                            CoursePanel(courseWrapper: courseWrapper, navigationPath: $navigationPath)
                                                 .padding(.all, 4.0).cornerRadius(2).shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
                                         }
                                     }
