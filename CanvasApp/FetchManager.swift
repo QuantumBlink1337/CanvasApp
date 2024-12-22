@@ -228,6 +228,23 @@ struct FetchManager {
 
     }
     
+    private func filterGroups() {
+        guard let groups = MainUser.selfUser?.groups else {
+            print("No groups available for filtering")
+            return
+        }
+        let validCourseIDs = Set(MainUser.selfCourseWrappers.map{$0.course.id})
+        
+        let filteredGroups = groups.filter { group in
+            if let groupID = group.courseID {
+                return validCourseIDs.contains(groupID)
+            }
+            return false
+        }
+        MainUser.selfUser?.groups = filteredGroups
+    }
+    
+    
     private func prepareInitialCourses() async -> [CourseWrapper] {
            let startTime = DispatchTime.now()
 
@@ -282,6 +299,10 @@ struct FetchManager {
                     var networkUser = try await userClient.getSelfUser()
                     networkUser.enrollments = try await userClient.getUserEnrollments(from: networkUser)
                     networkUser.groups = try await userClient.getGroupsFromSelf()
+                    
+                    
+                    
+                    
                     try cacheManager.save(networkUser, to: userCacheFile)
                     user = networkUser
                 }
@@ -326,6 +347,8 @@ struct FetchManager {
             await populateModules(wrappers: wrappersNeedingPopulation["modules"]!)
             await populateAnnouncements(wrappers: wrappersNeedingPopulation["announcements"]!)
             await populateAssignments(wrappers: wrappersNeedingPopulation["assignments"]!)
+            
+            filterGroups()
 
             // Update UI
             DispatchQueue.main.async {
