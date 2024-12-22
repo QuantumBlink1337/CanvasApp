@@ -65,7 +65,7 @@ struct ModuleView: View {
                 },
                 label: {
                     let icon = iconTypeLookup[item.type]
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .center) {
                         HStack() {
                             Image(systemName: icon!)
                                 .resizable()
@@ -81,7 +81,7 @@ struct ModuleView: View {
                                
                             }
                             Spacer()
-                            VStack {
+                            VStack(alignment: .center) {
                                 if (item.linkedAssignment?.currentSubmission?.score != nil) {
                                     ZStack {
                                         Circle()
@@ -90,10 +90,9 @@ struct ModuleView: View {
                                             
                                         Image(systemName: "person.fill.checkmark")
                                             .resizable()
-                                            .frame(width: 15, height: 10)
+                                            .frame(width: 15, height: 15)
                                             .foregroundStyle(color)
-                                    }.padding(.top, 8)
-                                        .padding(.trailing, 10)
+                                    }
                                 }
                             }
 

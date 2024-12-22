@@ -15,83 +15,82 @@ struct ScoreDataPoint : Identifiable{
 }
 @ViewBuilder
 func buildScoreStatistic(for assignment: Assignment, color: Color = .black) -> some View {
-        let scoreStatistic = assignment.scoreStatistic!
-        
+    let scoreStatistic = assignment.scoreStatistic!
+    
     let data: [ScoreDataPoint] = [
-            ScoreDataPoint(id: UUID(), name: "Max", value: scoreStatistic.max, type: "Computed"),
-            ScoreDataPoint(id: UUID(), name: "Min", value: scoreStatistic.min, type: "Computed"),
-            ScoreDataPoint(id: UUID(), name: "Mean", value: scoreStatistic.mean, type: "Computed"),
-            ScoreDataPoint(id: UUID(), name: "LowerQuart", value: scoreStatistic.lowerQuartile, type: "Quartile"),
-            ScoreDataPoint(id: UUID(), name: "UpperQuart", value: scoreStatistic.upperQuartile, type: "Quartile"),
-            ScoreDataPoint(id: UUID(), name: "Zero", value: 0, type: "Computed"),
-            
-            ScoreDataPoint(id: UUID(), name: "Score", value: Float((assignment.currentSubmission?.score)!), type: "Real")]
-            Chart(data) {
-               
-                if let maxValue = data.first(where: { $0.name == "Max" })?.value {
-                        RuleMark(
-                            xStart: .value("Min Value", 0),
-                            xEnd: .value("Max Value", maxValue),
-                            y: .value("Fixed", 0)
-                        )
-                        .foregroundStyle(Color.gray)
-                        .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
-                    }
-                if let minValue = data.first(where: { $0.name == "Min" })?.value,
-                       let maxValue = data.first(where: { $0.name == "Max" })?.value {
-                        RuleMark(
-                            xStart: .value("Min Value", minValue),
-                            xEnd: .value("Max Value", maxValue),
-                            y: .value("Fixed", 0)
-                        )
-                        .foregroundStyle(Color.black)
-                        .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
-                    }
-                if let minValue = data.first(where: { $0.name == "LowerQuart" })?.value,
-                       let maxValue = data.first(where: { $0.name == "UpperQuart" })?.value {
-                        RuleMark(
-                            xStart: .value("Min Value", minValue),
-                            xEnd: .value("Max Value", maxValue),
-                            y: .value("Fixed", 0)
-                        )
-                        .foregroundStyle(Color.blue)
-                        .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
-                    }
-                if ($0.type == "Computed") {
-                    PointMark(
-                        x: .value($0.name, $0.value)
-                    )
-                    .foregroundStyle(color)
-                    .symbol(.plus)
-                    .symbolSize(100)
-
-                }
-                else if ($0.type == "Quartile") {
-                    PointMark(
-                        x: .value($0.name, $0.value)
-                    )
-                    .foregroundStyle(.blue)
-                    .symbol(.diamond)
-                    .symbolSize(100)
-                }
-                else {
-                    PointMark(
-                        x: .value($0.name, $0.value)
-                    )
-                    .foregroundStyle(color)
-                    .symbolSize(150)
-                }
-                
-            }.frame(height: 40)
-            .chartYAxis(.hidden)
-            .chartXScale(domain: 0...scoreStatistic.max)
-            .chartXAxis {
-                AxisMarks(values: [scoreStatistic.min, scoreStatistic.mean, scoreStatistic.max]) { value in
-
-                    AxisTick()
-                        
-                }
+        ScoreDataPoint(id: UUID(), name: "Max", value: scoreStatistic.max, type: "Computed"),
+        ScoreDataPoint(id: UUID(), name: "Min", value: scoreStatistic.min, type: "Computed"),
+        ScoreDataPoint(id: UUID(), name: "Mean", value: scoreStatistic.mean, type: "Computed"),
+        ScoreDataPoint(id: UUID(), name: "LowerQuart", value: scoreStatistic.lowerQuartile, type: "Quartile"),
+        ScoreDataPoint(id: UUID(), name: "UpperQuart", value: scoreStatistic.upperQuartile, type: "Quartile"),
+        ScoreDataPoint(id: UUID(), name: "Zero", value: 0, type: "Computed"),
+        
+        ScoreDataPoint(id: UUID(), name: "Score", value: Float((assignment.currentSubmission?.score)!), type: "Real")]
+    Chart(data) {
+       
+        if let maxValue = data.first(where: { $0.name == "Max" })?.value {
+                RuleMark(
+                    xStart: .value("Min Value", 0),
+                    xEnd: .value("Max Value", maxValue),
+                    y: .value("Fixed", 0)
+                )
+                .foregroundStyle(Color.gray)
+                .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
             }
+        if let minValue = data.first(where: { $0.name == "Min" })?.value,
+               let maxValue = data.first(where: { $0.name == "Max" })?.value {
+                RuleMark(
+                    xStart: .value("Min Value", minValue),
+                    xEnd: .value("Max Value", maxValue),
+                    y: .value("Fixed", 0)
+                )
+                .foregroundStyle(Color.black)
+                .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
+            }
+        if let minValue = data.first(where: { $0.name == "LowerQuart" })?.value,
+               let maxValue = data.first(where: { $0.name == "UpperQuart" })?.value {
+                RuleMark(
+                    xStart: .value("Min Value", minValue),
+                    xEnd: .value("Max Value", maxValue),
+                    y: .value("Fixed", 0)
+                )
+                .foregroundStyle(Color.blue)
+                .lineStyle(StrokeStyle(lineWidth: 2)) // Dashed line for emphasis
+            }
+        if ($0.type == "Computed") {
+            PointMark(
+                x: .value($0.name, $0.value)
+            )
+            .foregroundStyle(color)
+            .symbol(.plus)
+            .symbolSize(100)
+
+        }
+        else if ($0.type == "Quartile") {
+            PointMark(
+                x: .value($0.name, $0.value)
+            )
+            .foregroundStyle(.blue)
+            .symbol(.diamond)
+            .symbolSize(100)
+        }
+        else {
+            PointMark(
+                x: .value($0.name, $0.value)
+            )
+            .foregroundStyle(color)
+            .symbolSize(150)
+        }
+        
+    }
+    .frame(height: 40)
+    .chartYAxis(.hidden)
+    .chartXScale(domain: 0...scoreStatistic.max)
+    .chartXAxis {
+        AxisMarks(values: [scoreStatistic.min, scoreStatistic.mean, scoreStatistic.max]) { value in
+            AxisTick()
+        }
+    }
     HStack {
         Text("Min: \(scoreStatistic.min.clean)")
             .font(.caption)
@@ -334,6 +333,71 @@ struct AssignmentMasterView: View {
         
     }
     
+    struct ScorePoint {
+        var category: String
+        var points: Float
+    }
+    
+    @ViewBuilder
+    func buildAssignmentScoreChart(for assignment: Assignment, color: Color) -> some View {
+        HStack() {
+            ZStack {
+                let scorePoints: [ScorePoint] = [
+                    .init(category: "PointsGained", points: assignment.currentSubmission?.score ?? 0),
+                    .init(category: "PointsMissed", points: (assignment.pointsPossible ?? 0) - (assignment.currentSubmission?.score ?? 0))
+                    
+                ]
+                Chart(scorePoints, id: \.category) { item in
+                    SectorMark (
+                        angle: .value("Points", item.points),
+                        innerRadius: .ratio(0.8),
+                        angularInset: 2
+                        
+                    )
+                    .foregroundStyle(by: .value("Category", item.category))
+                }
+                .chartForegroundStyleScale([
+                    "PointsGained": color,
+                    "PointsMissed": .white
+                ])
+                .chartXAxis(.hidden)
+                .chartYAxis(.hidden)
+                .chartLegend(.hidden)
+                .frame(width: 80, height: 80)
+                Text("\(assignment.currentSubmission?.score?.clean ?? "0")")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(color)
+                
+                Spacer()
+            }
+            Text("Out of \(assignment.pointsPossible?.clean ?? "0")")
+
+        }
+    }
+     
+    
+    @ViewBuilder
+    func buildAssignmentScoreReport(for assignment: Assignment, color: Color) -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Text("Attempt: \(assignment.currentSubmission?.attempt ?? 0)")
+                    .font(.footnote)
+
+                Spacer()
+                Text(formattedDate(for: assignment.currentSubmission?.submittedAt ?? Date(), format: .mediuMFormWithTime))
+                    .font(.footnote)
+
+            }
+            buildAssignmentScoreChart(for: assignment, color: color)
+            
+            if assignment.scoreStatistic != nil {
+                buildScoreStatistic(for: assignment, color: color)
+            }
+        }
+    }
+    
+    
     @ViewBuilder
     func buildAssignmentGlanceView(for assignment: Assignment) -> some View {
 //        GeometryReader { geometry in
@@ -357,38 +421,7 @@ struct AssignmentMasterView: View {
             }
         }
         else {
-            VStack {
-                HStack {
-                    Text("Attempt: \(assignment.currentSubmission?.attempt ?? 0)")
-                        .font(.footnote)
-
-                    Spacer()
-                    Text(formattedDate(for: assignment.currentSubmission?.submittedAt ?? Date(), format: .mediuMFormWithTime))
-                        .font(.footnote)
-
-                }
-                HStack {
-                    ZStack(alignment: .center) {
-                        Circle()
-                            .stroke(color, lineWidth: 5)
-                            .frame(width: 50, height: 50)
-                        Text(String(assignment.currentSubmission?.score?.clean ?? "0"))
-                    }
-                    .contextMenu(ContextMenu(menuItems: {
-                        /*@START_MENU_TOKEN@*/Text("Menu Item 1")/*@END_MENU_TOKEN@*/
-                        
-                    }))
-                    Text("Out of \(assignment.pointsPossible?.clean ?? "0")")
-                    Spacer()
-                }
-                
-                if assignment.scoreStatistic != nil {
-                    buildScoreStatistic(for: assignment, color: color)
-                    
-
-                }
-
-            }
+            buildAssignmentScoreReport(for: assignment, color: color)
         }
     }
     @ViewBuilder
@@ -418,7 +451,7 @@ struct AssignmentMasterView: View {
                                 label: {
                     VStack(alignment: .leading) {
                         
-                        HStack(alignment: .top) {
+                        HStack(alignment: .center) {
                             Image(systemName: "list.clipboard.fill")
                                 .resizable()
                                 .frame(width: 25, height: 40)
@@ -434,19 +467,18 @@ struct AssignmentMasterView: View {
                             }
                             Spacer()
                             Spacer()
-                            VStack {
+                            VStack() {
                                 if (assignment.currentSubmission?.score != nil) {
                                     ZStack {
                                         Circle()
-                                            .stroke(Color.green, lineWidth: 5)
-                                            .frame(width: 40, height: 40)
-                                            
+                                            .stroke(color, lineWidth: 3)
+                                            .frame(width: 30, height: 30)
                                         Image(systemName: "person.fill.checkmark")
                                             .resizable()
                                             .frame(width: 20, height: 15)
-                                            .foregroundStyle(.green)
-                                    }.padding(.top, 8)
-                                        .padding(.trailing, 10)
+                                            .foregroundStyle(color)
+                                    }
+                                    .padding(.trailing)
                                 }
                             }
                         }
