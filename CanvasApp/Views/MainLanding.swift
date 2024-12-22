@@ -24,6 +24,50 @@ import SwiftUI
             
         ]
         
+        
+        @ViewBuilder
+        func buildCourseList() -> some View {
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(MainUser.selfCourseWrappers) { courseWrapper in
+                        CoursePanel(courseWrapper: courseWrapper, navigationPath: $navigationPath)
+                            .padding(.all, 4.0).cornerRadius(2).shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                    }
+                }
+                .padding()
+                    
+                }
+        }
+        
+        @ViewBuilder
+        func buildGroupList() -> some View {
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(MainUser.selfUser?.groups ??   []) { group in
+                       Rectangle()
+                    }
+                }
+                .padding()
+                    
+                }
+        }
+        
+        @ViewBuilder
+        func buildHeader() -> some View {
+            HStack {
+                let authorURL: String = MainUser.selfUser?.avatarURL ?? "Missing"
+                buildAsyncImage(urlString: authorURL, imageWidth: 65, imageHeight: 65, shape: .circle)
+                    .padding(.leading)
+                Spacer()
+                Text("Welcome, \(MainUser.selfUser?.fullName ?? "FULL_NAME")")
+                    .font(.title)
+                    .fontWeight(.semibold)
+                Spacer()
+
+            }
+        }
+        
+        
         var body: some View {
             VStack {
                 if !tokenEntered {
@@ -35,22 +79,36 @@ import SwiftUI
                     }
                     else {
                         CustomNavigationStack(content: {
-                            VStack {
-                                Text("Courses")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                Text("Welcome \(MainUser.selfUser?.fullName ?? "FULL_NAME")")
+                            VStack() {
+                                buildHeader()
                                 ScrollView {
-                                    LazyVGrid(columns: columns, spacing: 20) {
-                                        ForEach(MainUser.selfCourseWrappers) { courseWrapper in
-                                            CoursePanel(courseWrapper: courseWrapper, navigationPath: $navigationPath)
-                                                .padding(.all, 4.0).cornerRadius(2).shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                                        }
+                                    HStack() {
+                                        Text("Courses")
+                                            .font(.headline)
+                                            .fontWeight(.heavy)
+                                            .padding(.leading)
+                                            .foregroundStyle(.gray)
+                                        Spacer()
                                     }
-                                    .padding()
-                                        
+                                    
+                                    Divider()
+
+                                    buildCourseList()
+                                    HStack() {
+                                        Text("Groups")
+                                            .font(.headline)
+                                            .fontWeight(.heavy)
+                                            .padding(.leading)
+                                            .foregroundStyle(.gray)
+                                        Spacer()
                                     }
+                                    Divider()
+                                    buildGroupList()
                                 }
+                                
+                                
+                                
+                            }
                             .navigationDestination(for: CourseWrapper.self) { course in
                                     CourseView(courseWrapper: course, navigationPath: $navigationPath)
                                 }
