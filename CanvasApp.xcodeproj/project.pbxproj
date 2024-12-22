@@ -11,6 +11,7 @@
 		3D08DBD92D0D546600CCB89E /* ModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBD82D0D546600CCB89E /* ModuleView.swift */; };
 		3D08DBDB2D0E054C00CCB89E /* AnnouncementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */; };
 		3D33EB7B2D18006D007325E0 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB7A2D18006D007325E0 /* Group.swift */; };
+		3D33EB7F2D18BB64007325E0 /* GroupPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB7E2D18BB64007325E0 /* GroupPanel.swift */; };
 		3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */; };
 		3D4E2D4E2CF6FF9E00227AC4 /* MainLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */; };
 		3D4E2D502CF6FF9F00227AC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4F2CF6FF9F00227AC4 /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		3D08DBD82D0D546600CCB89E /* ModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleView.swift; sourceTree = "<group>"; };
 		3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementView.swift; sourceTree = "<group>"; };
 		3D33EB7A2D18006D007325E0 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		3D33EB7E2D18BB64007325E0 /* GroupPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPanel.swift; sourceTree = "<group>"; };
 		3D4E2D482CF6FF9E00227AC4 /* CanvasApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CanvasApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasApp.swift; sourceTree = "<group>"; };
 		3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLanding.swift; sourceTree = "<group>"; };
@@ -102,6 +104,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3D33EB802D18BB6B007325E0 /* Panels */ = {
+			isa = PBXGroup;
+			children = (
+				3DE41F922D1238EF007FDEEA /* CoursePanel.swift */,
+				3D33EB7E2D18BB64007325E0 /* GroupPanel.swift */,
+			);
+			path = Panels;
+			sourceTree = "<group>";
+		};
 		3D4E2D3F2CF6FF9E00227AC4 = {
 			isa = PBXGroup;
 			children = (
@@ -178,13 +189,13 @@
 			children = (
 				3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */,
 				3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */,
+				3D33EB802D18BB6B007325E0 /* Panels */,
 				3D4E2D722CFA872D00227AC4 /* CourseView.swift */,
 				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
 				3DC632462D094408004D2679 /* UIColorEx.swift */,
 				3D08DBD82D0D546600CCB89E /* ModuleView.swift */,
 				3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */,
 				3DEC9DD42D0E5C7200AC2564 /* PageView.swift */,
-				3DE41F922D1238EF007FDEEA /* CoursePanel.swift */,
 				3DE41F942D12441C007FDEEA /* PeopleView.swift */,
 			);
 			path = Views;
@@ -331,6 +342,7 @@
 				3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */,
 				3DC632472D094408004D2679 /* UIColorEx.swift in Sources */,
 				3D33EB7B2D18006D007325E0 /* Group.swift in Sources */,
+				3D33EB7F2D18BB64007325E0 /* GroupPanel.swift in Sources */,
 				3D08DBDB2D0E054C00CCB89E /* AnnouncementView.swift in Sources */,
 				3DEC9DD52D0E5C7200AC2564 /* PageView.swift in Sources */,
 				3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */,
