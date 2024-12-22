@@ -255,11 +255,7 @@ struct FetchManager {
                
                return wrappedCourse
            }
-        
-        
-        
-        
-        
+
 
            let endTime = DispatchTime.now()
            let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
@@ -285,6 +281,7 @@ struct FetchManager {
                 do {
                     var networkUser = try await userClient.getSelfUser()
                     networkUser.enrollments = try await userClient.getUserEnrollments(from: networkUser)
+                    networkUser.groups = try await userClient.getGroupsFromSelf()
                     try cacheManager.save(networkUser, to: userCacheFile)
                     user = networkUser
                 }

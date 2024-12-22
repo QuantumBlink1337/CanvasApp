@@ -21,6 +21,7 @@ struct User: Codable, Identifiable {
     var avatarURL: String?
     
     var enrollments: [Enrollment] = []
+    var groups: [Group] = []
     
     
     private enum CodingKeys: String, CodingKey {
@@ -32,6 +33,7 @@ struct User: Codable, Identifiable {
         case avatarURL = "avatar_url"
         case name = "name"
         case enrollments
+        case groups
     }
     
     
@@ -45,6 +47,7 @@ struct User: Codable, Identifiable {
         self.avatarURL = try container.decodeIfPresent(String.self, forKey: .avatarURL)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
         self.enrollments = try container.decodeIfPresent([Enrollment].self, forKey: .enrollments) ?? []
+        self.groups = try container.decodeIfPresent([Group].self, forKey: .groups) ?? []
     }
     func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -56,6 +59,7 @@ struct User: Codable, Identifiable {
         try container.encodeIfPresent(self.avatarURL    , forKey: .avatarURL)
         try container.encodeIfPresent(self.name, forKey: .name)
         try container.encode(self.enrollments, forKey: .enrollments)
+        try container.encode(self.groups, forKey: .groups)
     }
     
     
