@@ -154,7 +154,7 @@ struct UserClient {
     
     
     func getGroupsFromSelf() async throws -> [Group] {
-        guard let url = URL(string: baseURL + "users/self/groups") else {
+        guard let url = URL(string: baseURL + "users/self/groups?per_page=100") else {
             throw NetworkError.badURL
 
         }

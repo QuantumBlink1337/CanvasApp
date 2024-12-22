@@ -228,12 +228,12 @@ struct FetchManager {
 
     }
     
-    private func filterGroups() {
+    private func filterGroups(temp: [CourseWrapper]) {
         guard let groups = MainUser.selfUser?.groups else {
             print("No groups available for filtering")
             return
         }
-        let validCourseIDs = Set(MainUser.selfCourseWrappers.map{$0.course.id})
+        let validCourseIDs = Set(temp.map{$0.course.id})
         
         let filteredGroups = groups.filter { group in
             if let groupID = group.courseID {
@@ -348,7 +348,7 @@ struct FetchManager {
             await populateAnnouncements(wrappers: wrappersNeedingPopulation["announcements"]!)
             await populateAssignments(wrappers: wrappersNeedingPopulation["assignments"]!)
             
-            filterGroups()
+            filterGroups(temp: tempCourseWrappers)
 
             // Update UI
             DispatchQueue.main.async {
