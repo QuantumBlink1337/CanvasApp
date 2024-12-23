@@ -29,6 +29,7 @@ struct Group: Codable, Identifiable {
     var accountID: Int?
     
     var users: [User]
+    var announcements: [DiscussionTopic]
     
     enum CodingKeys : String, CodingKey {
         case id

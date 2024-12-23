@@ -18,6 +18,7 @@ struct FetchManager {
     private let assignmentClient = AssignmentClient()
     private let pageClient = PageClient()
     private let enrollmentClient = EnrollmentClient()
+    private let groupClient = GroupClient()
     
     private var customColorsDict: UserColorCodes! = nil
     
@@ -298,8 +299,14 @@ struct FetchManager {
                 do {
                     var networkUser = try await userClient.getSelfUser()
                     networkUser.enrollments = try await userClient.getUserEnrollments(from: networkUser)
-                    networkUser.groups = try await userClient.getGroupsFromSelf()
+                    var groups = try await groupClient.getGroupsFromSelf()
+                    for index in groups.indices {
+                        let users = try await groupClient.getUsersFromGroup(from: groups[index])
+                        groups[index].users = users
+                    }
+                    networkUser.groups = groups
                     
+                        
                     
                     
                     
