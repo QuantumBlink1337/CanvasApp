@@ -43,6 +43,7 @@ struct Group: Codable, Identifiable {
         case contextName = "context_name"
         case accountID = "account_id"
         case users
+        case announcements
     }
     
     init(from decoder: any Decoder) throws {
@@ -60,6 +61,7 @@ struct Group: Codable, Identifiable {
         self.contextName = try container.decodeIfPresent(String.self, forKey: .contextName)
         self.accountID  = try container.decodeIfPresent(Int.self, forKey:   .accountID)
         self.users = try container.decodeIfPresent([User].self, forKey: .users) ?? []
+        self.announcements = try container.decodeIfPresent([DiscussionTopic].self, forKey: .announcements) ?? []
         
         
     }
@@ -75,6 +77,7 @@ struct Group: Codable, Identifiable {
         try container.encodeIfPresent(self.contextName, forKey: .contextName)
         try container.encodeIfPresent(self.accountID, forKey: .accountID)
         try container.encode(self.users, forKey: .users)
+        try container.encode(self.announcements, forKey: .announcements)
     }
     
     
