@@ -69,8 +69,18 @@ struct CoursePanel: View {
                         
                                 let grade = enrollment?.grade
                                 if (grade != nil && grade?.currentGrade != nil && grade?.currentScore != nil) {
-                                    Text("\(grade?.currentGrade ?? "X") \(grade?.currentScore?.clean ?? "0")%")
+                                    HStack {
+                                        Text("\(grade?.currentGrade ?? "X")")
+                                            .font(.headline)
+                                            .fontWeight(.semibold)
+                                            .foregroundStyle(color)
+                                        Text("\(grade?.currentScore?.clean ?? "0")%")
+                                            .font(.subheadline)
+                                            .foregroundStyle(color)
+                                    }
                                         .padding(4)
+                                        .padding(.leading, 2)
+                                        .padding(.trailing, 2)
                                         .background {
                                         RoundedRectangle(cornerRadius: 10)
                                             .foregroundStyle(.white)
@@ -79,17 +89,18 @@ struct CoursePanel: View {
                                         .padding(.top,8.0)
                                 }
                             }
+                            .clipShape(RoundedRectangle(cornerRadius: 2))
                                      
                             Text(courseWrapper.course.name ?? "Missing name")
                                 .font(.subheadline) // Display course name
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(2, reservesSpace: true)
-                                .padding(.leading, 1.0)
+                                .padding(.leading, 4.0)
                                 .foregroundStyle(color)
                             Text("Due Soon")
                                 .font(.footnote)
                                 .multilineTextAlignment(.leading)
-                                .padding(.leading, 1.0)
+                                .padding(.leading, 4.0)
                                 .foregroundStyle(color)
                         let assignments = courseWrapper.course.datedAssignments?[DatePriority.dueSoon] ?? []
                         if (assignments.isEmpty) {
@@ -98,7 +109,7 @@ struct CoursePanel: View {
                                     .font(.footnote)
                                     .fontWeight(.thin)
                                     .lineLimit(2, reservesSpace: true)
-                            }
+                            }.padding(.leading, 4.0)
                         }
                         
                         ForEach(assignments, id: \.id) { assignment in
@@ -114,12 +125,15 @@ struct CoursePanel: View {
                                     .lineLimit(2, reservesSpace: true)
 
 
-                            }
+                            }.padding(.leading, 4.0)
                         }
                         
                         
 
-                    }.background()
+                    }.background {
+                        RoundedRectangle(cornerRadius: 2, style: .continuous)
+                            .fill(Color(uiColor: UIColor.systemBackground))
+                    }
 
                 }.buttonStyle(PlainButtonStyle()).tint(.white)
                 
@@ -144,7 +158,11 @@ struct CoursePanel: View {
                     
                 }
                  label: {
-                    Image(systemName: "paintpalette.fill").padding(.top, 20.0).foregroundStyle(.white).rotationEffect(.degrees(90))
+                     Image(systemName: "paintpalette.fill")
+                         .foregroundStyle(.white)
+                         .rotationEffect(.degrees(180))
+                         .padding(.top, 8.0)
+                         .padding(.trailing, 4.0)
                  }.padding(1)
                 
                 if showColorPicker {
@@ -218,6 +236,7 @@ struct CoursePanel: View {
                     }
 
                 }
+           
             
             
     }

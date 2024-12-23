@@ -44,7 +44,8 @@ import SwiftUI
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(MainUser.selfUser?.groups ??   []) { group in
-                       Rectangle()
+                       GroupPanel(group: group)
+                            .padding(.all, 4.0).cornerRadius(2).shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
                     }
                 }
                 .padding()
@@ -59,7 +60,7 @@ import SwiftUI
                 buildAsyncImage(urlString: authorURL, imageWidth: 65, imageHeight: 65, shape: .circle)
                     .padding(.leading)
                 Spacer()
-                Text("Welcome, \(MainUser.selfUser?.fullName ?? "FULL_NAME")")
+                Text("\(MainUser.selfUser?.fullName ?? "FULL_NAME")")
                     .font(.title)
                     .fontWeight(.semibold)
                 Spacer()
