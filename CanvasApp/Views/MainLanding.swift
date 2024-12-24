@@ -121,6 +121,7 @@ import SwiftUI
                     }
             }.task() {
                 await fetchManager?.fetchUserAndCourses()
+                
             }
             .onAppear() {
                 fetchManager = FetchManager(stage: $stage, isLoading: $isLoading)

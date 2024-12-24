@@ -68,6 +68,21 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
         case isQuiz = "is_quiz_assignment"
     }
     
+    
+    init(id: Int, title: String, dueAt: Date? = nil, body: String? = nil, quizID: Int? = nil, isQuiz: Bool = false, attributedText: AttributedString? = nil) {
+            self.id = id
+            self.title = title
+            self.dueAt = dueAt
+        self.createdAt = dueAt!
+        self.updatedAt = dueAt!
+            self.body = body
+            self.quizID = quizID
+            self.isQuiz = isQuiz
+            self.attributedText = attributedText
+        self.courseID = id
+        self.submissionTypes = []
+        }
+    
     init(from decoder: Decoder) throws {
        let container = try decoder.container(keyedBy: CodingKeys.self)
        

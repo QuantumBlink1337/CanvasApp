@@ -58,7 +58,51 @@ struct DiscussionTopicClient {
                 throw NetworkError.badDecode
             }
     }
+//    func getDiscussionTopicsFromGroup(from group: Group, getAnnouncements getAnn: Bool, loadFullAuthorData: Bool = true) async throws -> [DiscussionTopic] {
+//        let groupID = group.id
+//        guard let url = URL(string: baseURL + "courses/" + String(groupID) + "/discussion_topics?only_announcements=" + String(getAnn)) else {
+//            throw NetworkError.badURL
+//        }
+//        let decoder = JSONDecoder()
+//        decoder.dateDecodingStrategy = .iso8601
+//        var request = URLRequest(url: url)
+//        request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
+//        let (data, response) = try await URLSession.shared.data(for: request)
+//        guard let httpResponse = response as? HTTPURLResponse,
+//              httpResponse.statusCode == 200 else {
+//            throw NetworkError.invalidResponse
+//            }
+//        do {
+//                var discussionTopics =  try decoder.decode([DiscussionTopic].self, from: data)
+//                if loadFullAuthorData {
+//                    discussionTopics = discussionTopics.map { topic in
+//                        var updatedTopic = topic
+//                        if let authorID = topic.author?.id {
+//                            for (type, users) in group.users {
+//                                if let author = users.first(where: { $0.id == authorID }) {
+//                                    updatedTopic.author = author
+//                                    updatedTopic.authorRole = type
+//                                    break
+//                                }
+//                            }
+//                        }
+//                        return updatedTopic
+//                    }
+//                }
+//                
+//                return discussionTopics
+//            
+//                
+//            }
+//        catch {
+//                print("Decoding error: \(error)")
+//                throw NetworkError.badDecode
+//            }
+//    }
+
 
 }
+
+
 
 

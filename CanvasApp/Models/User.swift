@@ -35,6 +35,30 @@ struct User: Codable, Identifiable {
         case enrollments
         case groups
     }
+
+        init(
+            id: Int? = nil,
+            firstName: String? = nil,
+            lastName: String? = nil,
+            name: String? = nil,
+            displayName: String? = nil,
+            pronouns: String? = nil,
+            avatarURL: String? = nil,
+            enrollments: [Enrollment] = [],
+            groups: [Group] = []
+        ) {
+            self.id = id
+            self.firstName = firstName
+            self.lastName = lastName
+            self.name = name
+            self.displayName = displayName
+            self.pronouns = pronouns
+            self.avatarURL = avatarURL
+            self.enrollments = enrollments
+            self.groups = groups
+        }
+
+    
     
     
     init(from decoder: any Decoder) throws {
