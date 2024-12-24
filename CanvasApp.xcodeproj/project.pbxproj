@@ -136,11 +136,11 @@
 				3D4E2D5D2CF703D500227AC4 /* Clients */,
 				3D4E2D592CF6FFE000227AC4 /* Models */,
 				3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */,
+				3DE41F9C2D155C86007FDEEA /* CacheManager.swift */,
 				3DE41F9A2D152B42007FDEEA /* FetchManager.swift */,
 				3DE41F902D121806007FDEEA /* MainUser.swift */,
 				3D4E2D4F2CF6FF9F00227AC4 /* Assets.xcassets */,
 				3D4E2D512CF6FF9F00227AC4 /* Preview Content */,
-				3DE41F9C2D155C86007FDEEA /* CacheManager.swift */,
 			);
 			path = CanvasApp;
 			sourceTree = "<group>";
