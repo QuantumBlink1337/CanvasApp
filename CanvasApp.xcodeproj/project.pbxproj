@@ -12,6 +12,8 @@
 		3D08DBDB2D0E054C00CCB89E /* AnnouncementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */; };
 		3D33EB7B2D18006D007325E0 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB7A2D18006D007325E0 /* Group.swift */; };
 		3D33EB7F2D18BB64007325E0 /* GroupPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB7E2D18BB64007325E0 /* GroupPanel.swift */; };
+		3D33EB872D1B4945007325E0 /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB862D1B4945007325E0 /* GroupView.swift */; };
+		3D33EB892D1B4956007325E0 /* GroupClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB882D1B4956007325E0 /* GroupClient.swift */; };
 		3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */; };
 		3D4E2D4E2CF6FF9E00227AC4 /* MainLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */; };
 		3D4E2D502CF6FF9F00227AC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4F2CF6FF9F00227AC4 /* Assets.xcassets */; };
@@ -55,6 +57,8 @@
 		3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementView.swift; sourceTree = "<group>"; };
 		3D33EB7A2D18006D007325E0 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		3D33EB7E2D18BB64007325E0 /* GroupPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPanel.swift; sourceTree = "<group>"; };
+		3D33EB862D1B4945007325E0 /* GroupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
+		3D33EB882D1B4956007325E0 /* GroupClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupClient.swift; sourceTree = "<group>"; };
 		3D4E2D482CF6FF9E00227AC4 /* CanvasApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CanvasApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasApp.swift; sourceTree = "<group>"; };
 		3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLanding.swift; sourceTree = "<group>"; };
@@ -137,10 +141,10 @@
 				3D4E2D592CF6FFE000227AC4 /* Models */,
 				3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */,
 				3DE41F9A2D152B42007FDEEA /* FetchManager.swift */,
+				3DE41F9C2D155C86007FDEEA /* CacheManager.swift */,
 				3DE41F902D121806007FDEEA /* MainUser.swift */,
 				3D4E2D4F2CF6FF9F00227AC4 /* Assets.xcassets */,
 				3D4E2D512CF6FF9F00227AC4 /* Preview Content */,
-				3DE41F9C2D155C86007FDEEA /* CacheManager.swift */,
 			);
 			path = CanvasApp;
 			sourceTree = "<group>";
@@ -174,6 +178,7 @@
 			children = (
 				3D4E2D5E2CF703E900227AC4 /* CourseClient.swift */,
 				3D4E2D622CF9048100227AC4 /* PageClient.swift */,
+				3D33EB882D1B4956007325E0 /* GroupClient.swift */,
 				3DB65E3F2D03E3A900BF734D /* DiscussionTopicClient.swift */,
 				3D4E2D662CF904B600227AC4 /* ClientUtilities.swift */,
 				3D4E2D6C2CF9927000227AC4 /* UserClient.swift */,
@@ -191,6 +196,7 @@
 				3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */,
 				3D33EB802D18BB6B007325E0 /* Panels */,
 				3D4E2D722CFA872D00227AC4 /* CourseView.swift */,
+				3D33EB862D1B4945007325E0 /* GroupView.swift */,
 				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
 				3DC632462D094408004D2679 /* UIColorEx.swift */,
 				3D08DBD82D0D546600CCB89E /* ModuleView.swift */,
@@ -316,6 +322,7 @@
 			files = (
 				3D4E2D5B2CF6FFF200227AC4 /* Course.swift in Sources */,
 				3DB65E402D03E3A900BF734D /* DiscussionTopicClient.swift in Sources */,
+				3D33EB892D1B4956007325E0 /* GroupClient.swift in Sources */,
 				3DB88AB22D02599A00EEF069 /* ModuleClient.swift in Sources */,
 				3DB65E3E2D03E1DF00BF734D /* DiscussionTopic.swift in Sources */,
 				3DC6324F2D0B2461004D2679 /* Grade.swift in Sources */,
@@ -350,6 +357,7 @@
 				3DC6324B2D0A8C36004D2679 /* Enrollment.swift in Sources */,
 				3D4E2D612CF9030700227AC4 /* Page.swift in Sources */,
 				3DE41F9B2D152B42007FDEEA /* FetchManager.swift in Sources */,
+				3D33EB872D1B4945007325E0 /* GroupView.swift in Sources */,
 				3D4E2D732CFA872D00227AC4 /* CourseView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
