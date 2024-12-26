@@ -73,7 +73,7 @@ struct PeopleView: View {
                 ),
                     
                 content: {
-                    buildUserView(users: courseWrapper.course.usersInCourse[enrollmentType]!)
+                    buildUserView(users: courseWrapper.course.usersInCourse[enrollmentType] ?? [])
                 },
                 header:
                     {
