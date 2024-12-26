@@ -69,7 +69,7 @@ struct AnnouncementView : View {
         let announcements = courseWrapper.course.datedAnnouncements[timePeriod]!
             ForEach(announcements) { announcement in
                 let loadAuthorData = announcement.author != nil
-                DisclosureGroup(isExpanded: Binding<Bool> (
+                let isExpanded = Binding<Bool> (
                     get: {
                         return individalAnnouncementIsExpanded.contains(announcement.id)
                     },
@@ -81,8 +81,10 @@ struct AnnouncementView : View {
                             individalAnnouncementIsExpanded.remove(announcement.id)
                         }
                     }
-                ),
-                                content: {
+                )
+                DisclosureGroup(isExpanded: isExpanded,
+                                
+                            content: {
                     VStack(alignment: .center) {
                         buildAnnouncementGlanceView(announcement: announcement)
                     }
@@ -114,6 +116,11 @@ struct AnnouncementView : View {
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture {
+                            withAnimation {
+                                isExpanded.wrappedValue.toggle()
+                            }
+                        }
                     }
                     .simultaneousGesture(LongPressGesture().onEnded {_ in 
                         selectedAnnouncement = announcement
