@@ -13,7 +13,7 @@ enum NetworkError: Error {
     case badDecode
 }
 var APIToken: String = ""
-let baseURL: String = "https://umsystem.instructure.com/api/v1/"
+let baseURL: String = "https://marlin-cosmic-simply.ngrok-free.app/api/v1/"
 
 var localSettingsFile: URL = Foundation.URL.documentsDirectory.appendingPathComponent("/portrait.txt")
 
@@ -33,6 +33,7 @@ private func createFileIfNeeded() {
 
 func retrieveAPIToken() -> Bool {
     createFileIfNeeded()
+    print(localSettingsFile)
     do {
         APIToken = try String(contentsOf: localSettingsFile)
     }

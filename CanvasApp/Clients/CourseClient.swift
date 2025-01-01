@@ -12,7 +12,7 @@ import Foundation
 
 struct CourseClient {
     private func getActiveCourses() async throws -> [Course] {
-        guard let url = URL(string: "https://umsystem.instructure.com/api/v1/courses?per_page=400&enrollment_state=active&include[]=term&include[]=course_image&include[]=syllabus_body&include[]=total_students") else {
+        guard let url = URL(string: "\(baseURL)courses?per_page=400&enrollment_state=active&include[]=term&include[]=course_image&include[]=syllabus_body&include[]=total_students") else {
             throw NetworkError.badURL
         }
         let decoder = JSONDecoder()

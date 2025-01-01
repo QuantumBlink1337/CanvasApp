@@ -119,13 +119,18 @@ import SwiftUI
                         }
 
                     }
-            }.task() {
-                await fetchManager?.fetchUserAndCourses()
-                
             }
-            .onAppear() {
-                fetchManager = FetchManager(stage: $stage, isLoading: $isLoading)
-            }
+            
+            .task(id: tokenEntered) {
+                    // Only run the async fetch if we have a token
+                    if tokenEntered {
+                        // If fetchManager isn't set yet, set it now
+                        if fetchManager == nil {
+                            fetchManager = FetchManager(stage: $stage, isLoading: $isLoading)
+                        }
+                        await fetchManager?.fetchUserAndCourses()
+                    }
+                }
         }
     }
 struct TokenManip: View {
