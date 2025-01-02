@@ -296,8 +296,11 @@ enum ShapeType {
 }
 
 
+
+
+
 @ViewBuilder
-func buildAsyncImage(urlString: String, imageWidth width: CGFloat, imageHeight height: CGFloat, color: Color = .clear, shape: ShapeType = .rectangle, colorOpacity opacity: Double = 1.0, placeShapeOnTop: Bool = false) -> some View {
+func buildAsyncImage(urlString: String, imageWidth width: CGFloat, imageHeight height: CGFloat, color: Color = .clear, shape: ShapeType = .rectangle, colorOpacity opacity: Double = 1.0, placeShapeOnTop: Bool = false, isAvatar: Bool = false) -> some View {
  
     if let url = URL(string: urlString) {
         AsyncImage(url: url) { phase in
@@ -337,8 +340,33 @@ func buildAsyncImage(urlString: String, imageWidth width: CGFloat, imageHeight h
                 }
                 
             case .failure:
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .frame(width: width, height: height)
+                switch shape {
+                case .rectangle:
+                    Rectangle()
+                        .frame(width: width, height: height)
+                        .foregroundStyle(color)
+
+                case .circle:
+                    if (isAvatar) {
+                        
+                        Image(systemName: "person.crop.circle")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: width , height: height)
+                        .clipShape(Circle())
+                        if placeShapeOnTop {
+                            Circle()
+                                .frame(width: width , height: height)
+                                .foregroundStyle(color).opacity(opacity)
+                            
+                        }
+                    }
+                    else {
+                        Circle()
+                            .frame(width: width, height: height)
+                            .foregroundStyle(color)
+                    }
+                }
             @unknown default:
                 EmptyView()
             }
@@ -357,6 +385,27 @@ func buildAsyncImage(urlString: String, imageWidth width: CGFloat, imageHeight h
                 .foregroundStyle(color)
 
         }
+    }
+}
+@ViewBuilder
+func buildMenuButton(buttonTitle: String, buttonImageIcon: String, color: Color, action: (() -> Void)?) -> some View {
+    Button(action: {
+        action?()
+    }) {
+        HStack {
+            Image(systemName: buttonImageIcon)
+                .padding(.trailing, 40)
+                .padding(.leading, 50)
+                .foregroundStyle(color)
+                .frame(width: 40, height: 40)
+            Text(buttonTitle)
+                .font(.title3)
+                .fontWeight(.semibold)
+                .foregroundStyle(color)
+                .padding(.leading, 10)
+        }
+        .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
+        
     }
 }
 

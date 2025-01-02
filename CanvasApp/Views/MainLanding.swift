@@ -44,7 +44,7 @@ import SwiftUI
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(MainUser.selfUser?.groups ??   []) { group in
-                       GroupPanel(group: group)
+                       GroupPanel(group: group, navigationPath: $navigationPath)
                             .padding(.all, 4.0).cornerRadius(2).shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
                     }
                 }
@@ -57,7 +57,7 @@ import SwiftUI
         func buildHeader() -> some View {
             HStack {
                 let authorURL: String = MainUser.selfUser?.avatarURL ?? "Missing"
-                buildAsyncImage(urlString: authorURL, imageWidth: 65, imageHeight: 65, shape: .circle)
+                buildAsyncImage(urlString: authorURL, imageWidth: 65, imageHeight: 65, shape: .circle, isAvatar: true)
                     .padding(.leading)
                 Spacer()
                 Text("\(MainUser.selfUser?.fullName ?? "FULL_NAME")")
