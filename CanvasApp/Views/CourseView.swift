@@ -135,7 +135,7 @@ struct CourseView: View {
                 }
                 .navigationDestination(isPresented: $navigateToHomePage) {
                     if (courseWrapper.course.frontPage != nil) {
-                        PageView(courseWrapper: courseWrapper, page: courseWrapper.course.frontPage!, navigationPath: $navigationPath, textAlignment: .center)
+                        PageView(contextRep: courseWrapper.course, page: courseWrapper.course.frontPage!, navigationPath: $navigationPath, textAlignment: .center)
                     }
                 }
                 .navigationDestination(isPresented: $navigateToModuleView) {
@@ -143,7 +143,7 @@ struct CourseView: View {
                     ModuleView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
                 }
                 .navigationDestination(isPresented: $navigateToAnnouncementView) {
-                    AnnouncementView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
+                    AnnouncementView(contextRep: courseWrapper.course, navigationPath: $navigationPath)
                 }
                 .navigationDestination(isPresented: $navigateToAssignmentView) {
                     AssignmentMasterView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
@@ -154,7 +154,7 @@ struct CourseView: View {
                     
                 }
                 .navigationDestination(isPresented: $navigateToSyllabusView) {
-                    PageView<Page>(courseWrapper: courseWrapper, attributedText: courseWrapper.course.syllabusAttributedString, title: "Syllabus", navigationPath: $navigationPath, textAlignment: .leading)
+                    PageView<Page>(contextRep: courseWrapper.course, attributedText: courseWrapper.course.syllabusAttributedString, title: "Syllabus", navigationPath: $navigationPath, textAlignment: .leading)
                     
                 }
             }

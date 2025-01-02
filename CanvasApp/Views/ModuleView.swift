@@ -176,7 +176,7 @@ struct ModuleView: View {
         })
         .navigationDestination(isPresented: $loadPage, destination: {
             if (selectedPage != nil) {
-                PageView(courseWrapper: courseWrapper, page: selectedPage!, navigationPath: $navigationPath, textAlignment: .leading)
+                PageView(contextRep: courseWrapper.course, page: selectedPage!, navigationPath: $navigationPath, textAlignment: .leading)
 
             }
         })

@@ -11,13 +11,15 @@ import SwiftUI
 struct AnnouncementView : View {
     
     
-    var courseWrapper: CourseWrapper
     
     let avatarWidth: CGFloat = 40
     let avatarHeight: CGFloat = 40
+    let contextRepresentable: any ContextRepresentable
     
     @State private var announcementGroupIsExpanded: Set<Int>
     @State private var individalAnnouncementIsExpanded: Set<Int>
+    
+
 
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -25,11 +27,11 @@ struct AnnouncementView : View {
     
     let color: Color
     
-    init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
-        self.courseWrapper = courseWrapper
+    init(contextRep: any ContextRepresentable, navigationPath: Binding<NavigationPath>) {
+        self.contextRepresentable = contextRep
         _announcementGroupIsExpanded = State(initialValue: Set(TimePeriod.allCases.map{$0.hashValue}))
         _individalAnnouncementIsExpanded = State(initialValue: Set())
-        self.color = HexToColor(courseWrapper.course.color) ?? .black
+        self.color = HexToColor(contextRepresentable.color) ?? .black
         self._navigationPath = navigationPath
      
     }
@@ -45,7 +47,7 @@ struct AnnouncementView : View {
     private func buildAnnouncementFullView() -> some View {
         if let announcement = selectedAnnouncement {
             VStack {
-                PageView(courseWrapper: courseWrapper, page: announcement, navigationPath: $navigationPath, textAlignment: .leading)
+                PageView(contextRep: contextRepresentable, page: announcement, navigationPath: $navigationPath, textAlignment: .leading)
             }
         }
         
@@ -66,7 +68,7 @@ struct AnnouncementView : View {
     
     @ViewBuilder
     private func buildAnnouncement(timePeriod: TimePeriod) -> some View {
-        let announcements = courseWrapper.course.datedAnnouncements[timePeriod]!
+        let announcements = contextRepresentable.datedAnnouncements[timePeriod]!
             ForEach(announcements) { announcement in
                 let loadAuthorData = announcement.author != nil
                 let isExpanded = Binding<Bool> (
@@ -129,7 +131,7 @@ struct AnnouncementView : View {
                     
                 }
                 )
-                .tint(HexToColor(courseWrapper.course.color))
+                .tint(color)
             }
     }
     

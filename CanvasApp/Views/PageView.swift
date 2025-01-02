@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct PageView<T : PageRepresentable>: View {
-    var courseWrapper: CourseWrapper
     var page: T? = nil
     var discussionTopic: DiscussionTopic?
-    
+    let contextRepresentable: any ContextRepresentable
     var author: User? = nil
     let alignment: TextAlignment
     let disableTitle: Bool
@@ -31,10 +30,10 @@ struct PageView<T : PageRepresentable>: View {
     @State private var showMenu = false
 
     
-    init(courseWrapper: CourseWrapper, page: T, navigationPath: Binding<NavigationPath>, textAlignment alignment: TextAlignment, disableTitle: Bool) {
-        self.courseWrapper = courseWrapper
+    init(contextRep: any ContextRepresentable, page: T, navigationPath: Binding<NavigationPath>, textAlignment alignment: TextAlignment, disableTitle: Bool) {
+        self.contextRepresentable = contextRep
         self.page = page
-        self.color = HexToColor(courseWrapper.course.color)!
+        self.color = HexToColor(contextRepresentable.color)!
         self._navigationPath = navigationPath
         self.title = page.title
         if (page is DiscussionTopic) {
@@ -46,12 +45,12 @@ struct PageView<T : PageRepresentable>: View {
         self.attributedText = page.attributedText ?? AttributedString()
         
     }
-    init(courseWrapper: CourseWrapper, page: T, navigationPath: Binding<NavigationPath>, textAlignment: TextAlignment) {
-        self.init(courseWrapper: courseWrapper, page: page, navigationPath: navigationPath, textAlignment: textAlignment, disableTitle: false)
+    init(contextRep: any ContextRepresentable, page: T, navigationPath: Binding<NavigationPath>, textAlignment: TextAlignment) {
+        self.init(contextRep: contextRep, page: page, navigationPath: navigationPath, textAlignment: textAlignment, disableTitle: false)
     }
-    init(courseWrapper: CourseWrapper, attributedText: AttributedString, title: String, navigationPath: Binding<NavigationPath>, textAlignment: TextAlignment, disableTitle: Bool = false) {
-        self.courseWrapper = courseWrapper
-        self.color = HexToColor(courseWrapper.course.color)!
+    init(contextRep: any ContextRepresentable, attributedText: AttributedString, title: String, navigationPath: Binding<NavigationPath>, textAlignment: TextAlignment, disableTitle: Bool = false) {
+        self.contextRepresentable = contextRep
+        self.color = HexToColor(contextRepresentable.color)!
         self._navigationPath = navigationPath
         self.title = title
         self.alignment = textAlignment

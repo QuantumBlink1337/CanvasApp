@@ -35,7 +35,7 @@ struct GroupPanel : View {
                  ZStack(alignment: .topLeading) {
                      Rectangle()
                          .frame(width: image_width, height: image_height)
-                         .foregroundStyle(HexToColor(courseWrapper?.course.color ?? "#000000") ?? .accentColor)
+                         .foregroundStyle(HexToColor(group.color) ?? .accentColor)
                      
                  }
                  Text(group.name ?? "Missing Name")

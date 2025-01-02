@@ -19,6 +19,10 @@ struct GroupView : View {
     private var courseWrapper: CourseWrapper?
     private let color: Color
     
+    @State private var navigateToAnnouncementView = false
+
+    
+    
     var image_width: CGFloat = 200
     var image_height: CGFloat = 200
     
@@ -61,7 +65,7 @@ struct GroupView : View {
                 }
                 ScrollView {
                     buildMenuButton(buttonTitle: "Announcements", buttonImageIcon: "megaphone", color: HexToColor(courseWrapper?.course.color ?? "#FFFFFF") ?? .black) {
-//                        navigateToAnnouncementView = true
+                        navigateToAnnouncementView = true
                     }
                     buildMenuButton(buttonTitle: "People", buttonImageIcon: "person.fill", color: HexToColor(courseWrapper?.course.color ?? "#FFFFFF") ?? .black) {
 //                        navigateToPeopleView = true
@@ -72,6 +76,9 @@ struct GroupView : View {
            
             
             
+        }
+        .navigationDestination(isPresented: $navigateToAnnouncementView) {
+            AnnouncementView(contextRep: group, navigationPath: $navigationPath)
         }
         .overlay {
             if showMenu {
