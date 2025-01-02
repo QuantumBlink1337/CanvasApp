@@ -93,7 +93,7 @@ struct CourseClient {
     /// - Parameter course: A Course object.
     /// - Returns: A dictionary with Users keyed by Enrollment Type
     func getUsersEnrolledInCourse(from course: Course) async throws -> [EnrollmentType : [User]] {
-        guard let URL = URL(string: baseURL + "courses/\(course.id)/search_users?per_page=\(min(600, course.totalStudents))&include[]=avatar_url&include[]=enrollments") else {
+        guard let URL = URL(string: baseURL + "courses/\(course.id)/search_users?per_page=600)&include[]=avatar_url&include[]=enrollments") else {
             throw NetworkError.badURL
         }
         var request = URLRequest(url:URL)
