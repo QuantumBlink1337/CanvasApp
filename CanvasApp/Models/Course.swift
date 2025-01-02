@@ -26,7 +26,7 @@ class CourseWrapper: ObservableObject, Identifiable, Hashable {
 }
 
 
-struct Course: Codable, Identifiable {
+struct Course: ContextRepresentable {
     var name: String?
     var courseCode: String
     var syllabusBody: String? = nil

@@ -15,10 +15,12 @@ enum GroupContextType: String, Codable {
 
 
 
-struct Group: Codable, Identifiable {
+struct Group: ContextRepresentable {
     var id: Int
-    var name: String
+    var name: String?
     var description: String?
+    var color: String = "#000000"
+
     var membersCount: Int
     var avatarURL: String?
     var contextType: GroupContextType
@@ -30,6 +32,7 @@ struct Group: Codable, Identifiable {
     
     var users: [User]
     var announcements: [DiscussionTopic]
+    var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
     
     enum CodingKeys : String, CodingKey {
         case id
@@ -45,6 +48,82 @@ struct Group: Codable, Identifiable {
         case users
         case announcements
     }
+    
+    mutating func sortAnnouncementsByRecency()  {
+        var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [:]
+        let timePeriods: [TimePeriod] = [.today, .yesterday, .lastWeek, .lastMonth, .previously]
+        var removableAnnouncements = announcements
+        for timePeriod in timePeriods {
+            var announcementsInPeriod: [DiscussionTopic]
+            switch timePeriod {
+            case .today:
+                announcementsInPeriod = removableAnnouncements.filter { announcement in
+                    if let postedAt = announcement.postedAt {
+                        let startOfDay = Calendar.current.startOfDay(for: Date())
+                        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+//                        print("Start of day" + String(describing: startOfDay))
+//                        print("end of day" + String(describing: endOfDay))
+                        return postedAt >= startOfDay && postedAt < endOfDay
+                    }
+                    return false
+                }
+            case .yesterday:
+                announcementsInPeriod = removableAnnouncements.filter { announcement in
+                    if let postedAt = announcement.postedAt {
+                        let startOfYesterday = Calendar.current.date(byAdding: .day, value: -1, to: Calendar.current.startOfDay(for: Date()))!
+                        let endOfYesterday = Calendar.current.date(byAdding: .day, value: 1, to: startOfYesterday)!
+//                        print("start of yesterday" + String(describing: startOfYesterday))
+//                        print("end of yesterday" + String(describing: endOfYesterday))
+
+                        return postedAt >= startOfYesterday && postedAt < endOfYesterday
+                    }
+                    return false
+                }
+            case .lastWeek:
+                announcementsInPeriod = removableAnnouncements.filter { announcement in
+                    if let postedAt = announcement.postedAt {
+                        let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date()))!
+                        let startOfLastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: startOfWeek)!
+                        let endOfLastWeek = Calendar.current.date(byAdding: .day, value: -1, to: startOfWeek)!
+
+
+
+                        return postedAt >= startOfLastWeek && postedAt <= endOfLastWeek
+                    }
+                    return false
+                }
+                
+            case .lastMonth:
+                announcementsInPeriod = removableAnnouncements.filter { announcement in
+                    if let postedAt = announcement.postedAt {
+                        // Get the first day of the current month
+                        let firstOfCurrentMonth = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Date()))!
+                        // Subtract 1 month to get the first day of the previous month
+                        let firstOfPreviousMonth = Calendar.current.date(byAdding: .month, value: -1, to: firstOfCurrentMonth)!
+                        // Get the last day of the previous month by subtracting 1 day from the first of the current month
+                        let lastOfPreviousMonth = Calendar.current.date(byAdding: .day, value: -1, to: firstOfCurrentMonth)!
+//                        print("first of prev month" + String(describing: firstOfPreviousMonth))
+//                        print("last of prev month" + String(describing: lastOfPreviousMonth    ))
+
+
+                        return postedAt >= firstOfPreviousMonth && postedAt <= lastOfPreviousMonth
+                    }
+                    return false
+                }
+            case .previously:
+                announcementsInPeriod = removableAnnouncements
+            }
+            datedAnnouncements[timePeriod] = announcementsInPeriod
+                removableAnnouncements.removeAll { announcement in
+                    announcementsInPeriod.contains(where: {$0.id == announcement.id})
+                }
+            
+            
+        }
+        self.datedAnnouncements = datedAnnouncements
+    }
+
+    
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

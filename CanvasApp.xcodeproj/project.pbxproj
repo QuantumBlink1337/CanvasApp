@@ -48,6 +48,7 @@
 		3DE41F952D12441C007FDEEA /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F942D12441C007FDEEA /* PeopleView.swift */; };
 		3DE41F9B2D152B42007FDEEA /* FetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F9A2D152B42007FDEEA /* FetchManager.swift */; };
 		3DE41F9D2D155C86007FDEEA /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F9C2D155C86007FDEEA /* CacheManager.swift */; };
+		3DE4F6722D272B8F00FCE0DD /* ContextRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE4F6712D272B8F00FCE0DD /* ContextRepresentable.swift */; };
 		3DEC9DD52D0E5C7200AC2564 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC9DD42D0E5C7200AC2564 /* PageView.swift */; };
 /* End PBXBuildFile section */
 
@@ -93,6 +94,7 @@
 		3DE41F942D12441C007FDEEA /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		3DE41F9A2D152B42007FDEEA /* FetchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchManager.swift; sourceTree = "<group>"; };
 		3DE41F9C2D155C86007FDEEA /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		3DE4F6712D272B8F00FCE0DD /* ContextRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextRepresentable.swift; sourceTree = "<group>"; };
 		3DEC9DD42D0E5C7200AC2564 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,7 +142,6 @@
 				3D4E2D5D2CF703D500227AC4 /* Clients */,
 				3D4E2D592CF6FFE000227AC4 /* Models */,
 				3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */,
-				3DE41F9C2D155C86007FDEEA /* CacheManager.swift */,
 				3DE41F9A2D152B42007FDEEA /* FetchManager.swift */,
 				3DE41F9C2D155C86007FDEEA /* CacheManager.swift */,
 				3DE41F902D121806007FDEEA /* MainUser.swift */,
@@ -170,6 +171,7 @@
 				3D4E2D6A2CF9916600227AC4 /* User.swift */,
 				3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */,
 				3D33EB7A2D18006D007325E0 /* Group.swift */,
+				3DE4F6712D272B8F00FCE0DD /* ContextRepresentable.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -343,6 +345,7 @@
 				3DC632492D0A2A72004D2679 /* Submission.swift in Sources */,
 				3D4E2D6F2CF99EC800227AC4 /* ViewUtilities.swift in Sources */,
 				3DE41F912D121806007FDEEA /* MainUser.swift in Sources */,
+				3DE4F6722D272B8F00FCE0DD /* ContextRepresentable.swift in Sources */,
 				3D08DBD92D0D546600CCB89E /* ModuleView.swift in Sources */,
 				3DC632512D0B25B7004D2679 /* EnrollmentClient.swift in Sources */,
 				3DB88AB02D0257E400EEF069 /* ItemRepresentable.swift in Sources */,
