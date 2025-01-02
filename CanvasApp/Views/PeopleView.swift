@@ -10,6 +10,7 @@ import SwiftUI
 struct PeopleView: View {
     var courseWrapper: CourseWrapper
     let color: Color
+    let users: [EnrollmentType : [User]]
     
     @Binding private var navigationPath: NavigationPath
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -27,6 +28,7 @@ struct PeopleView: View {
         let set: Set = [EnrollmentType.TaEnrollment, EnrollmentType.TeacherEnrollment]
         _enrollmentTypeIsExpanded = State(initialValue: set)
         _userIsExpanded = State(initialValue: Set())
+        users = courseWrapper.course.usersInCourse
     }
     
     @ViewBuilder
@@ -58,6 +60,7 @@ struct PeopleView: View {
     private func buildPeopleList() -> some View {
         List {
             ForEach(EnrollmentType.allCases) { enrollmentType in
+                let count = users[enrollmentType]?.count ?? 0
                 Section(isExpanded: Binding<Bool> (
                     get: {
                         return enrollmentTypeIsExpanded.contains(enrollmentType)
@@ -78,7 +81,7 @@ struct PeopleView: View {
                 header:
                     {
                 
-                    Text("\(enrollmentType.rawValue.replacingOccurrences(of: "Enrollment", with: ""))")
+                    Text("\(enrollmentType.rawValue.replacingOccurrences(of: "Enrollment", with: "")) (\(count))")
                                 .font(.subheadline)
                                 .fontWeight(.heavy)
                     }
@@ -95,40 +98,39 @@ struct PeopleView: View {
         VStack {
             buildPeopleList()
         }
-    .overlay {
-        if showMenu {
-            SideMenuView(isPresented: $showMenu, navigationPath: $navigationPath)
-                .zIndex(1) // Make sure it overlays above the content
-                .transition(.move(edge: .leading))
-                .frame(maxHeight: .infinity) // Full screen height
+        .overlay {
+            if showMenu {
+                SideMenuView(isPresented: $showMenu, navigationPath: $navigationPath)
+                    .zIndex(1) // Make sure it overlays above the content
+                    .transition(.move(edge: .leading))
+                    .frame(maxHeight: .infinity) // Full screen height
+            }
         }
-    }
-    .navigationBarBackButtonHidden(true)
-    .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                if (!showMenu) {
-                    BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    if (!showMenu) {
+                        BackButton(binding: presentationMode, navigationPath: $navigationPath, action: {showMenu.toggle()})
+                    }
+                    else {
+                        Color.clear.frame(height: 30)
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    if (!showMenu) {
+                        Text("People")
+                            .foregroundStyle(.white)
+                            .font(.title)
+                            .fontWeight(.heavy)
+                    }
+                    else {
+                        Color.clear.frame(height: 30)
 
+                    }
                 }
-                else {
-                    Color.clear.frame(height: 30)
-                }
-            }
-            ToolbarItem(placement: .principal) {
-                if (!showMenu) {
-                    Text("People")
-                        .foregroundStyle(.white)
-                        .font(.title)
-                        .fontWeight(.heavy)
-                }
-                else {
-                    Color.clear.frame(height: 30)
+        }
+        .background(color)
 
-                }
-            }
-    }
-        .toolbarBackground(color, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
     }
 }
 
