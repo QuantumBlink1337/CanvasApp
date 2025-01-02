@@ -38,7 +38,7 @@ struct GroupPanel : View {
                          .foregroundStyle(HexToColor(courseWrapper?.course.color ?? "#000000") ?? .accentColor)
                      
                  }
-                 Text(group.name)
+                 Text(group.name ?? "Missing Name")
                      .font(.subheadline) // Display course name
                      .multilineTextAlignment(.leading)
                      .lineLimit(2, reservesSpace: true)

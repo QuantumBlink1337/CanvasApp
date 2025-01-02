@@ -45,7 +45,7 @@ struct GroupView : View {
                         buildAsyncImage(urlString: courseWrapper?.course.image_download_url ?? "", imageWidth: geometry.size.width, imageHeight: image_height, color: HexToColor(courseWrapper?.course.color ?? "#000000") ?? .clear, shape: .rectangle, colorOpacity: 0.5, placeShapeOnTop: true)
                     }
                     VStack {
-                        Text(group.name)
+                        Text(group.name ?? "Missing Name")
                             .font(.title)
                             .fontWeight(.bold)
                             .foregroundStyle(.white)

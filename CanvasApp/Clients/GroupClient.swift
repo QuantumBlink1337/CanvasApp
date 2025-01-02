@@ -31,6 +31,30 @@ struct GroupClient {
                 throw NetworkError.badDecode
             }
     }
+    func getDiscussionTopicsFromGroup(from group: Group, getAnnouncements: Bool = true) async throws -> [DiscussionTopic] {
+        let groupID = group.id
+        guard let url = URL(string: "\(baseURL)groups/\(groupID)/discussion_topics?only_announcements=\(getAnnouncements)") else {
+            throw NetworkError.badURL
+        }
+        var request = URLRequest(url:url)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            print("Bad response getting discussion topics from group")
+            return []
+//            throw NetworkError.invalidResponse
+        }
+        do {
+                return try decoder.decode([DiscussionTopic].self, from: data)
+            }
+        catch {
+                print("Decoding error: \(error)")
+                throw NetworkError.badDecode
+            }
+    }
     
     func getGroupsFromSelf() async throws -> [Group] {
         guard let url = URL(string: baseURL + "users/self/groups?per_page=100") else {
