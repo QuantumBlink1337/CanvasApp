@@ -245,8 +245,7 @@ struct FetchManager {
                     from: items[i].body ?? "No description was provided"
                 )
             }
-            wrappers[index].course.announcements = items
-            wrappers[index].course.sortAnnouncementsByRecency()
+            wrappers[index].course.datedAnnouncements = sortAnnouncementsByRecency(from: items)
             stage = "Preparing announcements for course \(wrappers[index].course.id)"
         }
 
@@ -357,7 +356,7 @@ struct FetchManager {
             
             wrappedCourse.fieldsNeedingPopulation["users"] = wrappedCourse.course.usersInCourse.isEmpty
             wrappedCourse.fieldsNeedingPopulation["pages"] = wrappedCourse.course.pages.isEmpty
-            wrappedCourse.fieldsNeedingPopulation["announcements"] = wrappedCourse.course.announcements.isEmpty
+            wrappedCourse.fieldsNeedingPopulation["announcements"] = wrappedCourse.course.datedAnnouncements.isEmpty
             wrappedCourse.fieldsNeedingPopulation["modules"] = wrappedCourse.course.modules.isEmpty
             wrappedCourse.fieldsNeedingPopulation["assignments"] = wrappedCourse.course.assignments.isEmpty
             
@@ -388,7 +387,9 @@ struct FetchManager {
                 var groups = try await groupClient.getGroupsFromSelf()
                 for index in groups.indices {
                     let users = try await groupClient.getUsersFromGroup(from: groups[index])
+                    let announcements = try await groupClient.getDiscussionTopicsFromGroup(from: groups[index], getAnnouncements: true)
                     groups[index].users = users
+                    groups[index].datedAnnouncements = sortAnnouncementsByRecency(from: announcements)
                 }
                 networkUser.groups = groups
                 
@@ -454,5 +455,83 @@ struct FetchManager {
         } catch {
             print("Failed to fetch user or courses: \(error)")
         }
+    }
+    
+    
+    
+    
+    
+    func sortAnnouncementsByRecency(from announcements: [DiscussionTopic]) -> [TimePeriod : [DiscussionTopic]]  {
+        var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [:]
+        let timePeriods: [TimePeriod] = [.today, .yesterday, .lastWeek, .lastMonth, .previously]
+        var removableAnnouncements = announcements
+        for timePeriod in timePeriods {
+            var announcementsInPeriod: [DiscussionTopic]
+            switch timePeriod {
+            case .today:
+                announcementsInPeriod = removableAnnouncements.filter { announcement in
+                    if let postedAt = announcement.postedAt {
+                        let startOfDay = Calendar.current.startOfDay(for: Date())
+                        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+//                        print("Start of day" + String(describing: startOfDay))
+//                        print("end of day" + String(describing: endOfDay))
+                        return postedAt >= startOfDay && postedAt < endOfDay
+                    }
+                    return false
+                }
+            case .yesterday:
+                announcementsInPeriod = removableAnnouncements.filter { announcement in
+                    if let postedAt = announcement.postedAt {
+                        let startOfYesterday = Calendar.current.date(byAdding: .day, value: -1, to: Calendar.current.startOfDay(for: Date()))!
+                        let endOfYesterday = Calendar.current.date(byAdding: .day, value: 1, to: startOfYesterday)!
+//                        print("start of yesterday" + String(describing: startOfYesterday))
+//                        print("end of yesterday" + String(describing: endOfYesterday))
+
+                        return postedAt >= startOfYesterday && postedAt < endOfYesterday
+                    }
+                    return false
+                }
+            case .lastWeek:
+                announcementsInPeriod = removableAnnouncements.filter { announcement in
+                    if let postedAt = announcement.postedAt {
+                        let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date()))!
+                        let startOfLastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: startOfWeek)!
+                        let endOfLastWeek = Calendar.current.date(byAdding: .day, value: -1, to: startOfWeek)!
+
+
+
+                        return postedAt >= startOfLastWeek && postedAt <= endOfLastWeek
+                    }
+                    return false
+                }
+                
+            case .lastMonth:
+                announcementsInPeriod = removableAnnouncements.filter { announcement in
+                    if let postedAt = announcement.postedAt {
+                        // Get the first day of the current month
+                        let firstOfCurrentMonth = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Date()))!
+                        // Subtract 1 month to get the first day of the previous month
+                        let firstOfPreviousMonth = Calendar.current.date(byAdding: .month, value: -1, to: firstOfCurrentMonth)!
+                        // Get the last day of the previous month by subtracting 1 day from the first of the current month
+                        let lastOfPreviousMonth = Calendar.current.date(byAdding: .day, value: -1, to: firstOfCurrentMonth)!
+//                        print("first of prev month" + String(describing: firstOfPreviousMonth))
+//                        print("last of prev month" + String(describing: lastOfPreviousMonth    ))
+
+
+                        return postedAt >= firstOfPreviousMonth && postedAt <= lastOfPreviousMonth
+                    }
+                    return false
+                }
+            case .previously:
+                announcementsInPeriod = removableAnnouncements
+            }
+            datedAnnouncements[timePeriod] = announcementsInPeriod
+                removableAnnouncements.removeAll { announcement in
+                    announcementsInPeriod.contains(where: {$0.id == announcement.id})
+                }
+            
+            
+        }
+        return datedAnnouncements
     }
 }

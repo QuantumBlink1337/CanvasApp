@@ -40,7 +40,6 @@ struct Course: ContextRepresentable {
     var color: String = "#000000"
     var pages: [Page] = []
     var modules: [Module] = []
-    var announcements: [DiscussionTopic] = []
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
     var assignments: [Assignment] = []
     var datedAssignments: [DatePriority : [Assignment]]? = nil
@@ -75,7 +74,6 @@ struct Course: ContextRepresentable {
             self.term = try container.decodeIfPresent(Term.self, forKey: .term)
             self.pages = try container.decodeIfPresent([Page].self, forKey: .pages) ?? []
             self.modules = try container.decodeIfPresent([Module].self, forKey: .modules) ?? []
-            self.announcements = try container.decodeIfPresent([DiscussionTopic].self, forKey: .announcements) ?? []
             self.datedAnnouncements = try container.decodeIfPresent([TimePeriod: [DiscussionTopic]].self, forKey: .datedAnnouncements) ?? [ : ]
             self.assignments = try container.decodeIfPresent([Assignment].self, forKey: .assignments) ?? []
         self.datedAssignments = try container.decodeIfPresent([DatePriority: [Assignment]].self, forKey: .datedAssignments) ?? [ : ]
@@ -94,7 +92,6 @@ struct Course: ContextRepresentable {
          try container.encode(color, forKey: .color)
          try container.encode(pages, forKey: .pages)
          try container.encode(modules, forKey: .modules)
-         try container.encode(announcements, forKey: .announcements)
          try container.encode(datedAnnouncements, forKey: .datedAnnouncements)
          try container.encode(assignments, forKey: .assignments)
          try container.encodeIfPresent(datedAssignments, forKey: .datedAssignments)
@@ -154,80 +151,6 @@ struct Course: ContextRepresentable {
         
         
         self.datedAssignments = datedAssignments
-    }
-    /// Mutating func to sort announcements into Time Period groupings. Useful for displaying Announcements in particular focused groups.
-    mutating func sortAnnouncementsByRecency()  {
-        var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [:]
-        let timePeriods: [TimePeriod] = [.today, .yesterday, .lastWeek, .lastMonth, .previously]
-        var removableAnnouncements = announcements
-        for timePeriod in timePeriods {
-            var announcementsInPeriod: [DiscussionTopic]
-            switch timePeriod {
-            case .today:
-                announcementsInPeriod = removableAnnouncements.filter { announcement in
-                    if let postedAt = announcement.postedAt {
-                        let startOfDay = Calendar.current.startOfDay(for: Date())
-                        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-//                        print("Start of day" + String(describing: startOfDay))
-//                        print("end of day" + String(describing: endOfDay))
-                        return postedAt >= startOfDay && postedAt < endOfDay
-                    }
-                    return false
-                }
-            case .yesterday:
-                announcementsInPeriod = removableAnnouncements.filter { announcement in
-                    if let postedAt = announcement.postedAt {
-                        let startOfYesterday = Calendar.current.date(byAdding: .day, value: -1, to: Calendar.current.startOfDay(for: Date()))!
-                        let endOfYesterday = Calendar.current.date(byAdding: .day, value: 1, to: startOfYesterday)!
-//                        print("start of yesterday" + String(describing: startOfYesterday))
-//                        print("end of yesterday" + String(describing: endOfYesterday))
-
-                        return postedAt >= startOfYesterday && postedAt < endOfYesterday
-                    }
-                    return false
-                }
-            case .lastWeek:
-                announcementsInPeriod = removableAnnouncements.filter { announcement in
-                    if let postedAt = announcement.postedAt {
-                        let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date()))!
-                        let startOfLastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: startOfWeek)!
-                        let endOfLastWeek = Calendar.current.date(byAdding: .day, value: -1, to: startOfWeek)!
-
-
-
-                        return postedAt >= startOfLastWeek && postedAt <= endOfLastWeek
-                    }
-                    return false
-                }
-                
-            case .lastMonth:
-                announcementsInPeriod = removableAnnouncements.filter { announcement in
-                    if let postedAt = announcement.postedAt {
-                        // Get the first day of the current month
-                        let firstOfCurrentMonth = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Date()))!
-                        // Subtract 1 month to get the first day of the previous month
-                        let firstOfPreviousMonth = Calendar.current.date(byAdding: .month, value: -1, to: firstOfCurrentMonth)!
-                        // Get the last day of the previous month by subtracting 1 day from the first of the current month
-                        let lastOfPreviousMonth = Calendar.current.date(byAdding: .day, value: -1, to: firstOfCurrentMonth)!
-//                        print("first of prev month" + String(describing: firstOfPreviousMonth))
-//                        print("last of prev month" + String(describing: lastOfPreviousMonth    ))
-
-
-                        return postedAt >= firstOfPreviousMonth && postedAt <= lastOfPreviousMonth
-                    }
-                    return false
-                }
-            case .previously:
-                announcementsInPeriod = removableAnnouncements
-            }
-            datedAnnouncements[timePeriod] = announcementsInPeriod
-                removableAnnouncements.removeAll { announcement in
-                    announcementsInPeriod.contains(where: {$0.id == announcement.id})
-                }
-            
-            
-        }
-        self.datedAnnouncements = datedAnnouncements
     }
 
     // GPT generated initalizers for use in testing Previews
