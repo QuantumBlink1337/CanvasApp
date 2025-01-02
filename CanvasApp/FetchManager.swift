@@ -329,13 +329,25 @@ struct FetchManager {
             return
         }
         let validCourseIDs = Set(temp.map { $0.course.id })
-        let filteredGroups = groups.filter { group in
-            if let groupID = group.courseID {
-                return validCourseIDs.contains(groupID)
+
+        let filteredGroups = groups.compactMap { group -> Group? in
+            // Ensure the group has a courseID and it's valid
+            guard let groupID = group.courseID, validCourseIDs.contains(groupID) else {
+                return nil
             }
-            return false
+            
+            // Find the corresponding color from temp
+            if let courseWrapper = temp.first(where: { $0.course.id == groupID }) {
+                var mutableGroup = group
+                mutableGroup.color = courseWrapper.course.color
+                return mutableGroup
+            }
+            
+            return nil
         }
+
         MainUser.selfUser?.groups = filteredGroups
+
     }
     
     // MARK: - Prepare initial courses
@@ -389,7 +401,11 @@ struct FetchManager {
                     let users = try await groupClient.getUsersFromGroup(from: groups[index])
                     let announcements = try await groupClient.getDiscussionTopicsFromGroup(from: groups[index], getAnnouncements: true)
                     groups[index].users = users
-                    groups[index].datedAnnouncements = sortAnnouncementsByRecency(from: announcements)
+                    groups[index].datedAnnouncements = sortAnnouncementsByRecency(from: announcements.map { announcement in
+                        var newAnnouncement = announcement
+                        newAnnouncement.attributedText = HTMLRenderer.makeAttributedString(from: announcement.body ?? "No text")
+                        return newAnnouncement
+                    })
                 }
                 networkUser.groups = groups
                 
