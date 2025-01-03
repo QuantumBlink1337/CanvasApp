@@ -27,6 +27,7 @@ class CourseWrapper: ObservableObject, Identifiable, Hashable {
 
 
 struct Course: ContextRepresentable {
+    
     var people: [EnrollmentType : [User]] = [ : ]
     
     var name: String?
@@ -43,6 +44,7 @@ struct Course: ContextRepresentable {
     var pages: [Page] = []
     var modules: [Module] = []
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
+    var discussionTopics: [DiscussionTopic] = []
     var assignments: [Assignment] = []
     var datedAssignments: [DatePriority : [Assignment]]? = nil
         
@@ -60,7 +62,7 @@ struct Course: ContextRepresentable {
         }
     }
     private enum CodingKeys: String, CodingKey {
-          case name, id, courseCode = "course_code", syllabusBody = "syllabus_body", totalStudents = "total_students", image_download_url, term, color, pages, modules, announcements, datedAnnouncements, assignments, datedAssignments, people
+          case name, id, courseCode = "course_code", syllabusBody = "syllabus_body", totalStudents = "total_students", image_download_url, term, color, pages, modules, announcements, datedAnnouncements, assignments, datedAssignments, people, discussionTopics
       }
     
     init(from decoder: Decoder) throws {
@@ -78,6 +80,7 @@ struct Course: ContextRepresentable {
             self.assignments = try container.decodeIfPresent([Assignment].self, forKey: .assignments) ?? []
             self.datedAssignments = try container.decodeIfPresent([DatePriority: [Assignment]].self, forKey: .datedAssignments) ?? [ : ]
             self.people = try container.decodeIfPresent([EnrollmentType: [User]].self, forKey: .people) ?? [ : ]
+            self.discussionTopics = try container.decodeIfPresent([DiscussionTopic].self, forKey: .discussionTopics) ?? []
         }
     
     func encode(to encoder: Encoder) throws {
@@ -96,6 +99,7 @@ struct Course: ContextRepresentable {
          try container.encode(assignments, forKey: .assignments)
          try container.encodeIfPresent(datedAssignments, forKey: .datedAssignments)
          try container.encode(people, forKey: .people)
+         try container.encode(discussionTopics, forKey: .discussionTopics)
      }
     
     /*
