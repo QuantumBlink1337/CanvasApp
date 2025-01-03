@@ -20,6 +20,8 @@ struct GroupView : View {
     private let color: Color
     
     @State private var navigateToAnnouncementView = false
+    @State private var navigateToPeopleView = false
+
 
     
     
@@ -68,7 +70,7 @@ struct GroupView : View {
                         navigateToAnnouncementView = true
                     }
                     buildMenuButton(buttonTitle: "People", buttonImageIcon: "person.fill", color: HexToColor(courseWrapper?.course.color ?? "#FFFFFF") ?? .black) {
-//                        navigateToPeopleView = true
+                        navigateToPeopleView = true
                     }
                 }
 
@@ -79,6 +81,9 @@ struct GroupView : View {
         }
         .navigationDestination(isPresented: $navigateToAnnouncementView) {
             AnnouncementView(contextRep: group, navigationPath: $navigationPath)
+        }
+        .navigationDestination(isPresented: $navigateToPeopleView) {
+            PeopleView(contextRep: group, navigationPath: $navigationPath)
         }
         .overlay {
             if showMenu {

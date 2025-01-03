@@ -37,7 +37,7 @@ struct DiscussionTopicClient {
                     discussionTopics = discussionTopics.map { topic in
                         var updatedTopic = topic
                         if let authorID = topic.author?.id {
-                            for (type, users) in course.usersInCourse {
+                            for (type, users) in course.people {
                                 if let author = users.first(where: { $0.id == authorID }) {
                                     updatedTopic.author = author
                                     updatedTopic.authorRole = type

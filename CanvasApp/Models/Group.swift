@@ -16,6 +16,8 @@ enum GroupContextType: String, Codable {
 
 
 struct Group: ContextRepresentable {
+    var people: [EnrollmentType : [User]] = [ : ]
+    
     var id: Int
     var name: String?
     var description: String?
@@ -30,7 +32,6 @@ struct Group: ContextRepresentable {
     
     var accountID: Int?
     
-    var users: [User]
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
     
     enum CodingKeys : String, CodingKey {
@@ -44,7 +45,7 @@ struct Group: ContextRepresentable {
         case courseID = "course_id"
         case contextName = "context_name"
         case accountID = "account_id"
-        case users
+        case people
         case datedAnnouncements
     }
     
@@ -64,7 +65,7 @@ struct Group: ContextRepresentable {
         
         self.contextName = try container.decodeIfPresent(String.self, forKey: .contextName)
         self.accountID  = try container.decodeIfPresent(Int.self, forKey:   .accountID)
-        self.users = try container.decodeIfPresent([User].self, forKey: .users) ?? []
+        self.people = try container.decodeIfPresent([EnrollmentType : [User]].self, forKey: .people) ?? [ : ]
         self.datedAnnouncements = try container.decodeIfPresent([TimePeriod: [DiscussionTopic]].self, forKey: .datedAnnouncements) ?? [ : ]
 
         
@@ -80,7 +81,7 @@ struct Group: ContextRepresentable {
         try container.encodeIfPresent(self.courseID, forKey: .courseID)
         try container.encodeIfPresent(self.contextName, forKey: .contextName)
         try container.encodeIfPresent(self.accountID, forKey: .accountID)
-        try container.encode(self.users, forKey: .users)
+        try container.encode(self.people, forKey: .people)
         try container.encode(self.datedAnnouncements, forKey: .datedAnnouncements)
     }
     

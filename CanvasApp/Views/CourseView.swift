@@ -150,7 +150,7 @@ struct CourseView: View {
                     
                 }
                 .navigationDestination(isPresented: $navigateToPeopleView) {
-                    PeopleView(courseWrapper: courseWrapper, navigationPath: $navigationPath)
+                    PeopleView(contextRep: courseWrapper.course, navigationPath: $navigationPath)
                     
                 }
                 .navigationDestination(isPresented: $navigateToSyllabusView) {

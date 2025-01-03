@@ -27,6 +27,8 @@ class CourseWrapper: ObservableObject, Identifiable, Hashable {
 
 
 struct Course: ContextRepresentable {
+    var people: [EnrollmentType : [User]] = [ : ]
+    
     var name: String?
     var courseCode: String
     var syllabusBody: String? = nil
@@ -43,9 +45,7 @@ struct Course: ContextRepresentable {
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
     var assignments: [Assignment] = []
     var datedAssignments: [DatePriority : [Assignment]]? = nil
-    
-    var usersInCourse: [EnrollmentType : [User]] = [ : ]
-    
+        
     
     /*
         For convenience, a computed property linking to a possible front page
@@ -60,7 +60,7 @@ struct Course: ContextRepresentable {
         }
     }
     private enum CodingKeys: String, CodingKey {
-          case name, id, courseCode = "course_code", syllabusBody = "syllabus_body", totalStudents = "total_students", image_download_url, term, color, pages, modules, announcements, datedAnnouncements, assignments, datedAssignments, usersInCourse
+          case name, id, courseCode = "course_code", syllabusBody = "syllabus_body", totalStudents = "total_students", image_download_url, term, color, pages, modules, announcements, datedAnnouncements, assignments, datedAssignments, people
       }
     
     init(from decoder: Decoder) throws {
@@ -76,8 +76,8 @@ struct Course: ContextRepresentable {
             self.modules = try container.decodeIfPresent([Module].self, forKey: .modules) ?? []
             self.datedAnnouncements = try container.decodeIfPresent([TimePeriod: [DiscussionTopic]].self, forKey: .datedAnnouncements) ?? [ : ]
             self.assignments = try container.decodeIfPresent([Assignment].self, forKey: .assignments) ?? []
-        self.datedAssignments = try container.decodeIfPresent([DatePriority: [Assignment]].self, forKey: .datedAssignments) ?? [ : ]
-            self.usersInCourse = try container.decodeIfPresent([EnrollmentType: [User]].self, forKey: .usersInCourse) ?? [ : ]
+            self.datedAssignments = try container.decodeIfPresent([DatePriority: [Assignment]].self, forKey: .datedAssignments) ?? [ : ]
+            self.people = try container.decodeIfPresent([EnrollmentType: [User]].self, forKey: .people) ?? [ : ]
         }
     
     func encode(to encoder: Encoder) throws {
@@ -95,7 +95,7 @@ struct Course: ContextRepresentable {
          try container.encode(datedAnnouncements, forKey: .datedAnnouncements)
          try container.encode(assignments, forKey: .assignments)
          try container.encodeIfPresent(datedAssignments, forKey: .datedAssignments)
-         try container.encode(usersInCourse, forKey: .usersInCourse)
+         try container.encode(people, forKey: .people)
      }
     
     /*

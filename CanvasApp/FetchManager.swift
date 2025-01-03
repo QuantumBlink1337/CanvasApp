@@ -114,7 +114,7 @@ struct FetchManager {
             guard let enrollments = enrollments else { continue }
             
             // Assuming `usersInCourse` is of type `[EnrollmentType: [User]]`
-            wrappers[index].course.usersInCourse = enrollments
+            wrappers[index].course.people = enrollments
             
             // Optionally, update UI stage or other properties
             stage = "Preparing user list for course \(wrappers[index].course.id)"
@@ -366,7 +366,7 @@ struct FetchManager {
                 from: course.syllabusBody ?? ""
             )
             
-            wrappedCourse.fieldsNeedingPopulation["users"] = wrappedCourse.course.usersInCourse.isEmpty
+            wrappedCourse.fieldsNeedingPopulation["users"] = wrappedCourse.course.people.isEmpty
             wrappedCourse.fieldsNeedingPopulation["pages"] = wrappedCourse.course.pages.isEmpty
             wrappedCourse.fieldsNeedingPopulation["announcements"] = wrappedCourse.course.datedAnnouncements.isEmpty
             wrappedCourse.fieldsNeedingPopulation["modules"] = wrappedCourse.course.modules.isEmpty
@@ -400,7 +400,7 @@ struct FetchManager {
                 for index in groups.indices {
                     let users = try await groupClient.getUsersFromGroup(from: groups[index])
                     let announcements = try await groupClient.getDiscussionTopicsFromGroup(from: groups[index], getAnnouncements: true)
-                    groups[index].users = users
+                    groups[index].people = users
                     groups[index].datedAnnouncements = sortAnnouncementsByRecency(from: announcements.map { announcement in
                         var newAnnouncement = announcement
                         newAnnouncement.attributedText = HTMLRenderer.makeAttributedString(from: announcement.body ?? "No text")

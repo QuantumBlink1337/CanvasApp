@@ -105,38 +105,11 @@ struct CourseClient {
         }
         do {
                 let users = try JSONDecoder().decode([User].self, from: data)
-                return Dictionary(grouping: users, by: {$0.enrollments.first!.enrollmentType})
-            }
+                return Dictionary(grouping: users, by: {$0.enrollments.first?.enrollmentType ?? .StudentEnrollment})
+        }
         catch {
                 print("Decoding error: \(error)")
                 throw NetworkError.badDecode
-            }
-        
-        
-        
-        
-//        for type in EnrollmentType.allCases {
-//            guard let URL = URL(string: baseURL + "courses/\(course.id)/search_users?include[]=avatar_url&per_page=\(min(600, course.totalStudents))&enrollment_type[]=\(type.rawValue)") else {
-//                throw NetworkError.badURL
-//            }
-//            var request = URLRequest(url:URL)
-//            request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
-//            let (data, response) = try await URLSession.shared.data(for: request)
-//            guard let httpResponse = response as? HTTPURLResponse,
-//                  httpResponse.statusCode == 200 else {
-//                throw NetworkError.invalidResponse
-//            }
-//            do {
-//                    let users = try JSONDecoder().decode([User].self, from: data)
-//                    enrolledUsers.updateValue(users, forKey: type)
-//                }
-//            catch {
-//                    print("Decoding error: \(error)")
-//                    throw NetworkError.badDecode
-//                }
-//        }
-//        return enrolledUsers
-    
-        
+        }
     }
 }

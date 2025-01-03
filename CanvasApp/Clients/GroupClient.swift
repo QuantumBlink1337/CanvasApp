@@ -9,7 +9,7 @@ import Foundation
 
 struct GroupClient {
     
-    func getUsersFromGroup(from group: Group) async throws -> [User] {
+    func getUsersFromGroup(from group: Group) async throws -> [EnrollmentType : [User]]{
         let groupID = group.id
         guard let url = URL(string: "\(baseURL)groups/\(groupID)/users?per_page=\(group.membersCount)") else {
             throw NetworkError.badURL
@@ -20,11 +20,13 @@ struct GroupClient {
         guard let httpResponse = response as? HTTPURLResponse,
               httpResponse.statusCode == 200 else {
             print("Bad response getting users from group")
-            return []
+            return [:]
 //            throw NetworkError.invalidResponse
         }
         do {
-                return try JSONDecoder().decode([User].self, from: data)
+                let users = try JSONDecoder().decode([User].self, from: data)
+                return Dictionary(grouping: users, by: {$0.enrollments.first?.enrollmentType ?? .StudentEnrollment})
+
             }
         catch {
                 print("Decoding error: \(error)")

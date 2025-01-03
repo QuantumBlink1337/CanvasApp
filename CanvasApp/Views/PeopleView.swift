@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PeopleView: View {
-    var courseWrapper: CourseWrapper
+    let contextRepresentable: any ContextRepresentable
     let color: Color
     let users: [EnrollmentType : [User]]
     
@@ -21,14 +21,14 @@ struct PeopleView: View {
     @State private var showMenu = false
 
     
-    init(courseWrapper: CourseWrapper, navigationPath: Binding<NavigationPath>) {
-        self.courseWrapper = courseWrapper
-        self.color = HexToColor(courseWrapper.course.color) ?? .black
+    init(contextRep: any ContextRepresentable, navigationPath: Binding<NavigationPath>) {
+        self.contextRepresentable = contextRep
+        self.color = HexToColor(contextRepresentable.color) ?? .black
         self._navigationPath = navigationPath
         let set: Set = [EnrollmentType.TaEnrollment, EnrollmentType.TeacherEnrollment]
         _enrollmentTypeIsExpanded = State(initialValue: set)
         _userIsExpanded = State(initialValue: Set())
-        users = courseWrapper.course.usersInCourse
+        users = contextRepresentable.people
     }
     
     @ViewBuilder
@@ -51,7 +51,7 @@ struct PeopleView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                .tint(HexToColor(courseWrapper.course.color))
+                .tint(color)
             }
     }
     
@@ -76,7 +76,7 @@ struct PeopleView: View {
                 ),
                     
                 content: {
-                    buildUserView(users: courseWrapper.course.usersInCourse[enrollmentType] ?? [])
+                    buildUserView(users: users[enrollmentType] ?? [])
                 },
                 header:
                     {

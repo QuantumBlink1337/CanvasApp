@@ -204,8 +204,8 @@
             filePath = "CanvasApp/Views/PeopleView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "buildUserView(users:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -346,8 +346,8 @@
             filePath = "CanvasApp/Views/PeopleView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "buildPeopleList()"
             landmarkType = "7">
          </BreakpointContent>
@@ -394,8 +394,8 @@
             filePath = "CanvasApp/Views/PeopleView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "buildUserView(users:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -404,7 +404,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "A45504EA-7DFA-428C-BE9C-64FB5F79A4FD"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CanvasApp/Clients/CourseClient.swift"
@@ -414,43 +414,13 @@
             endingLineNumber = "108"
             landmarkName = "getUsersEnrolledInCourse(from:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "A45504EA-7DFA-428C-BE9C-64FB5F79A4FD - 9170addfdf7aca6e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for CanvasApp.CourseClient.getUsersEnrolledInCourse(from: CanvasApp.Course) async throws -&gt; Swift.Dictionary&lt;CanvasApp.EnrollmentType, Swift.Array&lt;CanvasApp.User&gt;&gt;"
-                  moduleName = "CanvasApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/quantumblink/Documents/Swift%20quantumblink/CanvasApp/CanvasApp/Clients/CourseClient.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "108"
-                  endingLineNumber = "108">
-               </Location>
-               <Location
-                  uuid = "A45504EA-7DFA-428C-BE9C-64FB5F79A4FD - 354bf8087aba969d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (CanvasApp.User) -&gt; CanvasApp.EnrollmentType in CanvasApp.CourseClient.getUsersEnrolledInCourse(from: CanvasApp.Course) async throws -&gt; Swift.Dictionary&lt;CanvasApp.EnrollmentType, Swift.Array&lt;CanvasApp.User&gt;&gt;"
-                  moduleName = "CanvasApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/quantumblink/Documents/Swift%20quantumblink/CanvasApp/CanvasApp/Clients/CourseClient.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "108"
-                  endingLineNumber = "108">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "48ED43A0-A72B-4022-9417-A6A3EDF78785"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CanvasApp/FetchManager.swift"
@@ -459,6 +429,38 @@
             startingLineNumber = "108"
             endingLineNumber = "108"
             landmarkName = "populateUsers(wrappers:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CB82FBB3-9114-4971-84D5-A543755A07E3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CanvasApp/FetchManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
+            landmarkName = "populateAnnouncements(wrappers:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5A099710-0AB1-4946-AA72-C3D9A50FC03C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CanvasApp/FetchManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
+            landmarkName = "populateAnnouncements(wrappers:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
