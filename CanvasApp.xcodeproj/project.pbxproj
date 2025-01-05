@@ -195,17 +195,13 @@
 		3D4E2D742CFA874100227AC4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3DE4F6752D2A36F000FCE0DD /* Lists */,
 				3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */,
 				3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */,
 				3D33EB802D18BB6B007325E0 /* Panels */,
 				3D4E2D722CFA872D00227AC4 /* CourseView.swift */,
 				3D33EB862D1B4945007325E0 /* GroupView.swift */,
-				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
-				3D08DBD82D0D546600CCB89E /* ModuleView.swift */,
-				3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */,
 				3DEC9DD42D0E5C7200AC2564 /* IndividualPageView.swift */,
-				3DE41F942D12441C007FDEEA /* PeopleView.swift */,
-				3DE4F6732D279EA300FCE0DD /* DiscussionTopicView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -245,6 +241,18 @@
 				3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		3DE4F6752D2A36F000FCE0DD /* Lists */ = {
+			isa = PBXGroup;
+			children = (
+				3D08DBD82D0D546600CCB89E /* ModuleView.swift */,
+				3DE4F6732D279EA300FCE0DD /* DiscussionTopicView.swift */,
+				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
+				3DE41F942D12441C007FDEEA /* PeopleView.swift */,
+				3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */,
+			);
+			path = Lists;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
