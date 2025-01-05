@@ -16,7 +16,8 @@ enum GroupContextType: String, Codable {
 
 
 struct Group: ContextRepresentable {
-    var people: [EnrollmentType : [User]] = [ : ]
+    
+    
     
     var id: Int
     var name: String?
@@ -33,6 +34,9 @@ struct Group: ContextRepresentable {
     var accountID: Int?
     
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
+    var discussionTopics: [CommentState : [DiscussionTopic]] = [:]
+    var people: [EnrollmentType : [User]] = [ : ]
+
     
     enum CodingKeys : String, CodingKey {
         case id

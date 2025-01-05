@@ -56,6 +56,7 @@ struct CourseView: View {
     @State private var navigateToAssignmentView = false
     @State private var navigateToSyllabusView = false
     @State private var navigateToPeopleView = false
+    @State private var navigateToDiscussionTopicView = false
     
     @State private var showMenu = false
 
@@ -131,6 +132,9 @@ struct CourseView: View {
                     CourseSectionButton(buttonTitle: "People", buttonImageIcon: "person.fill", color: HexToColor(courseWrapper.course.color) ?? .black) {
                         navigateToPeopleView = true
                     }
+                    CourseSectionButton(buttonTitle: "Discussions", buttonImageIcon: "bubble.fill", color: HexToColor(courseWrapper.course.color) ?? .black) {
+                        navigateToDiscussionTopicView = true
+                    }
 
                 }
                 .navigationDestination(isPresented: $navigateToHomePage) {
@@ -153,9 +157,11 @@ struct CourseView: View {
                     PeopleView(contextRep: courseWrapper.course, navigationPath: $navigationPath)
                     
                 }
+                .navigationDestination(isPresented: $navigateToDiscussionTopicView) {
+                    DiscussionTopicView(contextRep: courseWrapper.course, navigationPath: $navigationPath)
+                }
                 .navigationDestination(isPresented: $navigateToSyllabusView) {
                     PageView<Page>(contextRep: courseWrapper.course, attributedText: courseWrapper.course.syllabusAttributedString, title: "Syllabus", navigationPath: $navigationPath, textAlignment: .leading)
-                    
                 }
             }
             .task {

@@ -14,7 +14,7 @@ protocol ContextRepresentable: Codable, Identifiable {
     var color: String { get set }
     
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] { get set }
-    var discussionTopics: [DiscussionTopic] {get set }
+    var discussionTopics: [CommentState : [DiscussionTopic]] {get set }
     var people: [EnrollmentType : [User]] {get set}
 
 

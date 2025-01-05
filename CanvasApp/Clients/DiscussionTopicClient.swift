@@ -19,7 +19,7 @@ struct DiscussionTopicClient {
     /// - Returns: An array of DiscussionTopics.
     func getDiscussionTopicsFromCourse(from course: Course, getAnnouncements getAnn: Bool, loadFullAuthorData: Bool = true) async throws -> [DiscussionTopic] {
         let courseID = course.id
-        guard let url = URL(string: baseURL + "courses/" + String(courseID) + "/discussion_topics?only_announcements=" + String(getAnn)) else {
+        guard let url = URL(string: "\(baseURL)courses/\(courseID)/discussion_topics\(getAnn ? "only_announcements=true" : "")") else {
             throw NetworkError.badURL
         }
         let decoder = JSONDecoder()

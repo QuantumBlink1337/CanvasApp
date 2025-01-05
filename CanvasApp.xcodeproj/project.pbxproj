@@ -37,7 +37,6 @@
 		3DC6323F2D06CFCA004D2679 /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC6323E2D06CFCA004D2679 /* Assignment.swift */; };
 		3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632402D07755C004D2679 /* AssignmentClient.swift */; };
 		3DC632452D078BF9004D2679 /* AssignmentMasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */; };
-		3DC632472D094408004D2679 /* UIColorEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632462D094408004D2679 /* UIColorEx.swift */; };
 		3DC632492D0A2A72004D2679 /* Submission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC632482D0A2A72004D2679 /* Submission.swift */; };
 		3DC6324B2D0A8C36004D2679 /* Enrollment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC6324A2D0A8C36004D2679 /* Enrollment.swift */; };
 		3DC6324F2D0B2461004D2679 /* Grade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC6324E2D0B2461004D2679 /* Grade.swift */; };
@@ -49,6 +48,7 @@
 		3DE41F9B2D152B42007FDEEA /* FetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F9A2D152B42007FDEEA /* FetchManager.swift */; };
 		3DE41F9D2D155C86007FDEEA /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F9C2D155C86007FDEEA /* CacheManager.swift */; };
 		3DE4F6722D272B8F00FCE0DD /* ContextRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE4F6712D272B8F00FCE0DD /* ContextRepresentable.swift */; };
+		3DE4F6742D279EA300FCE0DD /* DiscussionTopicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE4F6732D279EA300FCE0DD /* DiscussionTopicView.swift */; };
 		3DEC9DD52D0E5C7200AC2564 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC9DD42D0E5C7200AC2564 /* PageView.swift */; };
 /* End PBXBuildFile section */
 
@@ -84,7 +84,6 @@
 		3DC6323E2D06CFCA004D2679 /* Assignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
 		3DC632402D07755C004D2679 /* AssignmentClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentClient.swift; sourceTree = "<group>"; };
 		3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentMasterView.swift; sourceTree = "<group>"; };
-		3DC632462D094408004D2679 /* UIColorEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorEx.swift; sourceTree = "<group>"; };
 		3DC632482D0A2A72004D2679 /* Submission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Submission.swift; sourceTree = "<group>"; };
 		3DC6324A2D0A8C36004D2679 /* Enrollment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enrollment.swift; sourceTree = "<group>"; };
 		3DC6324E2D0B2461004D2679 /* Grade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grade.swift; sourceTree = "<group>"; };
@@ -95,6 +94,7 @@
 		3DE41F9A2D152B42007FDEEA /* FetchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchManager.swift; sourceTree = "<group>"; };
 		3DE41F9C2D155C86007FDEEA /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		3DE4F6712D272B8F00FCE0DD /* ContextRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextRepresentable.swift; sourceTree = "<group>"; };
+		3DE4F6732D279EA300FCE0DD /* DiscussionTopicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionTopicView.swift; sourceTree = "<group>"; };
 		3DEC9DD42D0E5C7200AC2564 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -201,11 +201,11 @@
 				3D4E2D722CFA872D00227AC4 /* CourseView.swift */,
 				3D33EB862D1B4945007325E0 /* GroupView.swift */,
 				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
-				3DC632462D094408004D2679 /* UIColorEx.swift */,
 				3D08DBD82D0D546600CCB89E /* ModuleView.swift */,
 				3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */,
 				3DEC9DD42D0E5C7200AC2564 /* PageView.swift */,
 				3DE41F942D12441C007FDEEA /* PeopleView.swift */,
+				3DE4F6732D279EA300FCE0DD /* DiscussionTopicView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -333,6 +333,7 @@
 				3DE41F9D2D155C86007FDEEA /* CacheManager.swift in Sources */,
 				3D08DBD72D0BAF3600CCB89E /* ScoreStatistic.swift in Sources */,
 				3DB88AAE2D02578D00EEF069 /* ModuleItem.swift in Sources */,
+				3DE4F6742D279EA300FCE0DD /* DiscussionTopicView.swift in Sources */,
 				3DB65E3C2D03E1B400BF734D /* PageRepresentable.swift in Sources */,
 				3D4E2D5F2CF703E900227AC4 /* CourseClient.swift in Sources */,
 				3DC6323F2D06CFCA004D2679 /* Assignment.swift in Sources */,
@@ -351,7 +352,6 @@
 				3DB88AB02D0257E400EEF069 /* ItemRepresentable.swift in Sources */,
 				3D4E2D632CF9048100227AC4 /* PageClient.swift in Sources */,
 				3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */,
-				3DC632472D094408004D2679 /* UIColorEx.swift in Sources */,
 				3D33EB7B2D18006D007325E0 /* Group.swift in Sources */,
 				3D33EB7F2D18BB64007325E0 /* GroupPanel.swift in Sources */,
 				3D08DBDB2D0E054C00CCB89E /* AnnouncementView.swift in Sources */,

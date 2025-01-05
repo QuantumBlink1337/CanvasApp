@@ -14,6 +14,10 @@ enum TimePeriod : String, CaseIterable, Codable{
     case lastMonth = "Last Month"
     case previously = "Previously"
 }
+enum CommentState : String, CaseIterable, Codable {
+    case locked = "Locked for Comments"
+    case unlocked = "Open for Comments"
+}
 
 struct DiscussionTopic : Codable, Identifiable, PageRepresentable {
     var id: Int

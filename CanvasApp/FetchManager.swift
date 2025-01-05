@@ -321,6 +321,49 @@ struct FetchManager {
         let elapsed = Double(DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000_000
         print("Assignment execution time: \(elapsed)")
     }
+    private func populateDiscussionTopics(wrappers: [CourseWrapper]) async {
+        guard !wrappers.isEmpty else { return }
+        let startTime = DispatchTime.now()
+
+        let results = await parallelFetchInChunks(
+            inputs: wrappers,
+            chunkSize: chunkSize
+        ) { wrapper in
+            let courseID = wrapper.course.id
+            
+            // Cache check
+            if let cachedTopics: [DiscussionTopic] =
+                try? cacheManager.loadCourseData(courseID: courseID, fileName: "discussionTopics.json"),
+               !cachedTopics.isEmpty {
+                return cachedTopics
+            }
+            
+            // Fetch
+            let discussionTopics = try await discussionTopicClient.getDiscussionTopicsFromCourse(
+                from: wrapper.course,
+                getAnnouncements: false
+            )
+            // Save
+            try? cacheManager.saveCourseData(discussionTopics, courseID: courseID, fileName: "discussionTopics.json")
+            return discussionTopics
+        }
+        
+        // Assign
+        for (index, discussionTopics) in results.enumerated() {
+            guard var items = discussionTopics else { continue }
+            for i in items.indices {
+                items[i].attributedText = HTMLRenderer.makeAttributedString(
+                    from: items[i].body ?? "No description was provided"
+                )
+            }
+            wrappers[index].course.discussionTopics = sortDiscussionTopicsByComments(from: items)
+            stage = "Preparing discussion topics for course \(wrappers[index].course.id)"
+        }
+
+        let elapsed = Double(DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000_000
+        print("Discussion topic execution time: \(elapsed)")
+    }
+
 
     // Filter groups that match valid course IDs
     private func filterGroups(temp: [CourseWrapper]) {
@@ -371,6 +414,7 @@ struct FetchManager {
             wrappedCourse.fieldsNeedingPopulation["announcements"] = wrappedCourse.course.datedAnnouncements.isEmpty
             wrappedCourse.fieldsNeedingPopulation["modules"] = wrappedCourse.course.modules.isEmpty
             wrappedCourse.fieldsNeedingPopulation["assignments"] = wrappedCourse.course.assignments.isEmpty
+            wrappedCourse.fieldsNeedingPopulation["discussionTopics"] = wrappedCourse.course.discussionTopics.isEmpty
             
             return wrappedCourse
         }
@@ -440,7 +484,8 @@ struct FetchManager {
                 "pages": [],
                 "modules": [],
                 "announcements": [],
-                "assignments": []
+                "assignments": [],
+                "discussionTopics": []
             ]
             for wrapper in tempCourseWrappers {
                 for (field, needed) in wrapper.fieldsNeedingPopulation where needed {
@@ -454,6 +499,7 @@ struct FetchManager {
             await populateModules(wrappers: wrappersNeedingPopulation["modules"] ?? [])
             await populateAnnouncements(wrappers: wrappersNeedingPopulation["announcements"] ?? [])
             await populateAssignments(wrappers: wrappersNeedingPopulation["assignments"] ?? [])
+            await populateDiscussionTopics(wrappers: wrappersNeedingPopulation["discussionTopics"] ?? [])
             
             // 5. Filter groups
             filterGroups(temp: tempCourseWrappers)
@@ -549,5 +595,15 @@ struct FetchManager {
             
         }
         return datedAnnouncements
+    }
+    func sortDiscussionTopicsByComments(from discussionTopics: [DiscussionTopic]) -> [CommentState : [DiscussionTopic]] {
+        var topicsDict: [CommentState : [DiscussionTopic]] = [ : ]
+        topicsDict[.locked] = discussionTopics.filter { discussionTopic in
+            discussionTopic.lockedForComments
+        }
+        topicsDict[.unlocked] = discussionTopics.filter { discussionTopic in
+            !discussionTopic.lockedForComments
+        }
+        return topicsDict
     }
 }

@@ -44,8 +44,8 @@ struct Course: ContextRepresentable {
     var pages: [Page] = []
     var modules: [Module] = []
     var datedAnnouncements: [TimePeriod : [DiscussionTopic]] = [ : ]
-    var discussionTopics: [DiscussionTopic] = []
     var assignments: [Assignment] = []
+    var discussionTopics: [CommentState : [DiscussionTopic]] = [ : ]
     var datedAssignments: [DatePriority : [Assignment]]? = nil
         
     
@@ -80,7 +80,7 @@ struct Course: ContextRepresentable {
             self.assignments = try container.decodeIfPresent([Assignment].self, forKey: .assignments) ?? []
             self.datedAssignments = try container.decodeIfPresent([DatePriority: [Assignment]].self, forKey: .datedAssignments) ?? [ : ]
             self.people = try container.decodeIfPresent([EnrollmentType: [User]].self, forKey: .people) ?? [ : ]
-            self.discussionTopics = try container.decodeIfPresent([DiscussionTopic].self, forKey: .discussionTopics) ?? []
+        self.discussionTopics = try container.decodeIfPresent([CommentState : [DiscussionTopic]] .self, forKey: .discussionTopics) ?? [:]
         }
     
     func encode(to encoder: Encoder) throws {
