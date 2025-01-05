@@ -49,7 +49,7 @@
 		3DE41F9D2D155C86007FDEEA /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE41F9C2D155C86007FDEEA /* CacheManager.swift */; };
 		3DE4F6722D272B8F00FCE0DD /* ContextRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE4F6712D272B8F00FCE0DD /* ContextRepresentable.swift */; };
 		3DE4F6742D279EA300FCE0DD /* DiscussionTopicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE4F6732D279EA300FCE0DD /* DiscussionTopicView.swift */; };
-		3DEC9DD52D0E5C7200AC2564 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC9DD42D0E5C7200AC2564 /* PageView.swift */; };
+		3DEC9DD52D0E5C7200AC2564 /* IndividualPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC9DD42D0E5C7200AC2564 /* IndividualPageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,7 +95,7 @@
 		3DE41F9C2D155C86007FDEEA /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		3DE4F6712D272B8F00FCE0DD /* ContextRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextRepresentable.swift; sourceTree = "<group>"; };
 		3DE4F6732D279EA300FCE0DD /* DiscussionTopicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionTopicView.swift; sourceTree = "<group>"; };
-		3DEC9DD42D0E5C7200AC2564 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
+		3DEC9DD42D0E5C7200AC2564 /* IndividualPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndividualPageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,7 +203,7 @@
 				3DC632442D078BF9004D2679 /* AssignmentMasterView.swift */,
 				3D08DBD82D0D546600CCB89E /* ModuleView.swift */,
 				3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */,
-				3DEC9DD42D0E5C7200AC2564 /* PageView.swift */,
+				3DEC9DD42D0E5C7200AC2564 /* IndividualPageView.swift */,
 				3DE41F942D12441C007FDEEA /* PeopleView.swift */,
 				3DE4F6732D279EA300FCE0DD /* DiscussionTopicView.swift */,
 			);
@@ -355,7 +355,7 @@
 				3D33EB7B2D18006D007325E0 /* Group.swift in Sources */,
 				3D33EB7F2D18BB64007325E0 /* GroupPanel.swift in Sources */,
 				3D08DBDB2D0E054C00CCB89E /* AnnouncementView.swift in Sources */,
-				3DEC9DD52D0E5C7200AC2564 /* PageView.swift in Sources */,
+				3DEC9DD52D0E5C7200AC2564 /* IndividualPageView.swift in Sources */,
 				3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */,
 				3DE41F952D12441C007FDEEA /* PeopleView.swift in Sources */,
 				3DC6324B2D0A8C36004D2679 /* Enrollment.swift in Sources */,

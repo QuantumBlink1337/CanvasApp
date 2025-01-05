@@ -139,7 +139,7 @@ struct CourseView: View {
                 }
                 .navigationDestination(isPresented: $navigateToHomePage) {
                     if (courseWrapper.course.frontPage != nil) {
-                        PageView(contextRep: courseWrapper.course, page: courseWrapper.course.frontPage!, navigationPath: $navigationPath, textAlignment: .center)
+                        IndividualPageView(contextRep: courseWrapper.course, page: courseWrapper.course.frontPage!, navigationPath: $navigationPath, textAlignment: .center)
                     }
                 }
                 .navigationDestination(isPresented: $navigateToModuleView) {
@@ -161,7 +161,7 @@ struct CourseView: View {
                     DiscussionTopicView(contextRep: courseWrapper.course, navigationPath: $navigationPath)
                 }
                 .navigationDestination(isPresented: $navigateToSyllabusView) {
-                    PageView<Page>(contextRep: courseWrapper.course, attributedText: courseWrapper.course.syllabusAttributedString, title: "Syllabus", navigationPath: $navigationPath, textAlignment: .leading)
+                    IndividualPageView<Page>(contextRep: courseWrapper.course, attributedText: courseWrapper.course.syllabusAttributedString, title: "Syllabus", navigationPath: $navigationPath, textAlignment: .leading)
                 }
             }
             .task {

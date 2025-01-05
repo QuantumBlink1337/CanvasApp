@@ -45,7 +45,7 @@ struct DiscussionTopicView: View {
     private func buildDiscussionTopicFullView() -> some View {
         if let discussionTopic = selectedDiscussionTopic {
             VStack {
-                PageView(contextRep: contextRepresentable, page: discussionTopic, navigationPath: $navigationPath, textAlignment: .leading)
+                IndividualPageView(contextRep: contextRepresentable, page: discussionTopic, navigationPath: $navigationPath, textAlignment: .leading)
             }
         }
         

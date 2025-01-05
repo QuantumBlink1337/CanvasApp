@@ -47,7 +47,7 @@ struct AnnouncementView : View {
     private func buildAnnouncementFullView() -> some View {
         if let announcement = selectedAnnouncement {
             VStack {
-                PageView(contextRep: contextRepresentable, page: announcement, navigationPath: $navigationPath, textAlignment: .leading)
+                IndividualPageView(contextRep: contextRepresentable, page: announcement, navigationPath: $navigationPath, textAlignment: .leading)
             }
         }
         

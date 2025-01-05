@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PageView<T : PageRepresentable>: View {
+struct IndividualPageView<T : PageRepresentable>: View {
     var page: T? = nil
     var discussionTopic: DiscussionTopic?
     let contextRepresentable: any ContextRepresentable
