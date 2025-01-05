@@ -71,6 +71,8 @@ struct FetchManager {
     @Binding private var stage: String
     @Binding private var isLoading: Bool
     
+    let dueSoonThreshold = 3
+    
     let fetchManagerLogger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "FetchManager")
     
     // If you want to throttle concurrency, adjust chunkSize:
@@ -312,9 +314,7 @@ struct FetchManager {
                 // 2. Write back the updated local modules array
                 wrappers[index].course.modules = localModules
             }
-            
-            wrappers[index].course.assignments = items
-            wrappers[index].course.sortAssignmentsByDueDate()
+            wrappers[index].course.datedAssignments = sortAssignmentsByDueDate(from: items)
             stage = "Preparing assignments for course \(wrappers[index].course.id)"
         }
 
@@ -606,4 +606,69 @@ struct FetchManager {
         }
         return topicsDict
     }
+    func sortAssignmentsByDueDate(from assignments: [Assignment]) -> [DatePriority : [Assignment]] {
+           // Initialize dictionary with empty arrays for each priority
+           var categorizedAssignments: [DatePriority: [Assignment]] = [
+               .dueSoon: [],
+               .upcoming: [],
+               .past: [],
+               .noDueDate: []
+           ]
+           
+           let today = Calendar.current.startOfDay(for: Date())
+           let calendar = Calendar.current
+           
+           for assignment in assignments {
+               guard let dueAt = assignment.dueAt else {
+                   // Assignments without a due date
+                   categorizedAssignments[.noDueDate]?.append(assignment)
+                   continue
+               }
+               
+               let dueDate = calendar.startOfDay(for: dueAt)
+               
+               if dueDate < today {
+                   // Past assignments
+                   categorizedAssignments[.past]?.append(assignment)
+               } else {
+                   // Calculate the number of days until due
+                   let components = calendar.dateComponents([.day], from: today, to: dueDate)
+                   let daysUntilDue = components.day ?? Int.max
+                   
+                   if daysUntilDue <= dueSoonThreshold {
+                       // Due Soon: within the threshold
+                       categorizedAssignments[.dueSoon]?.append(assignment)
+                   } else {
+                       // Upcoming: beyond the threshold
+                       categorizedAssignments[.upcoming]?.append(assignment)
+                   }
+               }
+           }
+           
+           // Sort the 'past' assignments: most recent due dates first
+           categorizedAssignments[.past]?.sort { first, second in
+               switch (first.dueAt, second.dueAt) {
+               case let (firstDate?, secondDate?):
+                   return firstDate > secondDate
+               case (_?, nil):
+                   return true
+               case (nil, _?):
+                   return false
+               default:
+                   return false
+               }
+           }
+           
+           // Sort 'dueSoon' and 'upcoming' assignments by earliest due dates first
+           categorizedAssignments[.dueSoon]?.sort { ($0.dueAt ?? Date()) < ($1.dueAt ?? Date()) }
+           categorizedAssignments[.upcoming]?.sort { ($0.dueAt ?? Date()) < ($1.dueAt ?? Date()) }
+           
+           // Optionally, sort 'noDueDate' assignments as needed
+           // For example, by creation date or any other criteria
+           // Here, we'll sort them by title alphabetically
+           categorizedAssignments[.noDueDate]?.sort { $0.title < $1.title }
+           
+           // Assign the sorted and categorized assignments back
+           return categorizedAssignments
+       }
 }

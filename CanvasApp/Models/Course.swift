@@ -102,60 +102,7 @@ struct Course: ContextRepresentable {
          try container.encode(discussionTopics, forKey: .discussionTopics)
      }
     
-    /*
-        Prepares a secondary Assignments grouping in the form of a Dictionary with prioritized assignments.
-        Useful for displaying initial Assignment grouping or on the main status page.
-     */
-    mutating func sortAssignmentsByDueDate() {
-        var datedAssignments: [DatePriority : [Assignment]] = [ : ]
-        var removableAssignments = self.assignments
-        for datePriority in DatePriority.allCases {
-            var assignmentsInPeriod: [Assignment]
-            switch datePriority {
-            case .dueSoon:
-                assignmentsInPeriod = removableAssignments.filter {
-                    assignment in
-                    if let dueAt = assignment.dueAt {
-                        let today = Date()
-                        let daysFromNow = Calendar.current.date(byAdding: .day, value: datePriority.rawValue, to: today)!
-                        return dueAt >= today && dueAt <= daysFromNow
-                    }
-                    return false
-    
-                }
-            case .upcoming:
-                assignmentsInPeriod = removableAssignments.filter {
-                    assignment in
-                    if let dueAt = assignment.dueAt {
-                        let today = Date()
-                        let daysFromNow = Calendar.current.date(byAdding: .day, value: datePriority.rawValue, to: today)!
-                        return dueAt >= today && dueAt <= daysFromNow
-                    }
-                    return false
-    
-                }
-            case .past:
-                assignmentsInPeriod = removableAssignments
-            }
-            datedAssignments[datePriority] = assignmentsInPeriod
-            removableAssignments.removeAll {
-                assignment in assignmentsInPeriod.contains(where: {$0.id == assignment.id})
-            }
-        }
-        datedAssignments[.past]?.sort {first,second in
-            if let firstDate = first.dueAt, let secondDate = second.dueAt {
-                    return firstDate > secondDate // Sort by the soonest date first
-                } else if first.dueAt == nil && second.dueAt != nil {
-                    return false // Assignments without a due date go to the bottom
-                } else if first.dueAt != nil && second.dueAt == nil {
-                    return true // Assignments without a due date go to the bottom
-                } else {
-                    return false // Both are nil, no change in order
-                }        }
-        
-        
-        self.datedAssignments = datedAssignments
-    }
+   
 
     // GPT generated initalizers for use in testing Previews
     

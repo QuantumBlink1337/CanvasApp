@@ -3,12 +3,28 @@
 import Foundation
 // https://canvas.instructure.com/doc/api/assignments.html#method.assignments_api.index
 
-enum DatePriority : Int, CaseIterable, Identifiable, Codable {
-    var id: RawValue { rawValue }
-    case dueSoon = 3
-    case upcoming = 9
-    case past = -1
+enum DatePriority: CaseIterable, Identifiable, Codable {
+    var id: String { self.description }
+    
+    case dueSoon
+    case upcoming
+    case past
+    case noDueDate
+    
+    var description: String {
+        switch self {
+        case .dueSoon:
+            return "Due Soon"
+        case .upcoming:
+            return "Upcoming"
+        case .past:
+            return "Past"
+        case .noDueDate:
+            return "No Due Date"
+        }
+    }
 }
+
 enum SubmissionTypes : String, Codable {
     case discussionTopic = "discussion_topic"
     case onlineQuiz = "online_quiz"
