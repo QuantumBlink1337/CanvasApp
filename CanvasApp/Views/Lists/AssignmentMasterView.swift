@@ -320,8 +320,9 @@ struct AssignmentMasterView: View {
         _assignIsExpanded = State(initialValue: Set())
         color = HexToColor(courseWrapper.course.color) ?? .black
         self._navigationPath = navigationPath
+        let assignments = courseWrapper.course.datedAssignments?.values.flatMap {$0} ?? []
         
-        for assignment in courseWrapper.course.assignments {
+        for assignment in  assignments{
             let formattedDate = formattedDate(for: assignment.dueAt ?? Date(), format: .longFormWithTime)
             assignmentDates.updateValue(formattedDate, forKey: assignment)
         }
@@ -547,11 +548,7 @@ struct AssignmentMasterView: View {
                 },
                 header:
                     {
-                        let prioString = if (datePriority == .dueSoon) {"Due Soon"}
-                        else if (datePriority == .past) {"Past"}
-                        else if (datePriority == .upcoming) {"Upcoming"}
-                        else {"Could not load priority"}
-                                Text("\(prioString)")
+                    Text("\(datePriority.description)")
                                 .font(.subheadline)
                                 .fontWeight(.heavy)
                     }
