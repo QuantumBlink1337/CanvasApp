@@ -38,14 +38,14 @@ enum SubmissionTypes : String, Codable {
     case studentAnnotation = "student_annotation"
 }
 
-struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable, Hashable {
+struct Assignment : Assignable {
 
     var id: Int
     var title: String
     
     var body: String?
     var attributedText: AttributedString? = nil
-    
+
     var createdAt: Date
     var updatedAt: Date
     var dueAt: Date?
@@ -55,12 +55,12 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
     var quizID: Int?
 
     var pointsPossible: Float?
-    var isQuiz: Bool = false
     
     var submissions: [Submission] = []
     var submissionTypes: [SubmissionTypes]
     var currentSubmission: Submission?
     var scoreStatistic: ScoreStatistic?
+    var quiz: Quiz?
 
     private enum CodingKeys : String, CodingKey {
         case id = "id"
@@ -71,10 +71,7 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
         case dueAt = "due_at"
         case lockedAt = "lock_at"
         case courseID = "course_id"
-        
         case quizID = "quiz_id"
-        
-        
         case pointsPossible = "points_possible"
         case scoreStatistic = "score_statistics"
         case currentSubmission = "submission"
@@ -82,6 +79,7 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
         case submissions
         case attributedText
         case isQuiz = "is_quiz_assignment"
+        case quiz
     }
     
     
@@ -93,7 +91,6 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
         self.updatedAt = dueAt!
             self.body = body
             self.quizID = quizID
-            self.isQuiz = isQuiz
             self.attributedText = attributedText
         self.courseID = id
         self.submissionTypes = []
@@ -116,7 +113,6 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
        self.pointsPossible = try container.decodeIfPresent(Float.self, forKey: .pointsPossible)
        self.quizID = try container.decodeIfPresent(Int.self, forKey: .quizID)
     
-       self.isQuiz = try container.decode(Bool.self, forKey: .isQuiz)
     
        self.scoreStatistic = try container.decodeIfPresent(ScoreStatistic.self, forKey: .scoreStatistic)
        self.currentSubmission = try container.decodeIfPresent(Submission.self, forKey: .currentSubmission)
@@ -124,6 +120,8 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
        
        // Decode arrays with default value fallback
        self.submissionTypes = (try container.decodeIfPresent([SubmissionTypes].self, forKey: .submissionTypes)) ?? []
+        self.quiz = try container.decodeIfPresent(Quiz.self, forKey: .quiz)
+    
     }
 
 
@@ -144,7 +142,7 @@ struct Assignment : Codable, Identifiable, ItemRepresentable, PageRepresentable,
         try container.encodeIfPresent(pointsPossible, forKey: .pointsPossible)
         try container.encodeIfPresent(scoreStatistic, forKey: .scoreStatistic)
         try container.encodeIfPresent(currentSubmission, forKey: .currentSubmission)
-        try container.encodeIfPresent(isQuiz, forKey: .isQuiz)
+        try container.encodeIfPresent(quiz, forKey: .quiz)
         
         // Encode arrays
         try container.encode(submissionTypes, forKey: .submissionTypes)

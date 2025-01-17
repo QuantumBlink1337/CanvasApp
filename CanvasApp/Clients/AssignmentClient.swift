@@ -68,6 +68,27 @@ struct AssignmentClient {
             throw NetworkError.badDecode
         }
     }
+    func getQuizFromAssignment(from assignment: Assignment) async throws -> Quiz {
+        guard let url = URL(string: "\(baseURL)/courses/\(assignment.courseID)/quizzes/\(assignment.quizID ?? 0)") else {
+            throw NetworkError.badURL
+        }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        var request = URLRequest(url: url)
+        request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw NetworkError.invalidResponse
+            }
+        do {
+                return try decoder.decode(Quiz.self, from: data)
+            }
+        catch {
+                print("Decoding error: \(error)")
+                throw NetworkError.badDecode
+            }
+    }
 
     
 }

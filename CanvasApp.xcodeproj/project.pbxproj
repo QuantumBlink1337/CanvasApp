@@ -27,6 +27,8 @@
 		3D4E2D6D2CF9927000227AC4 /* UserClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D6C2CF9927000227AC4 /* UserClient.swift */; };
 		3D4E2D6F2CF99EC800227AC4 /* ViewUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */; };
 		3D4E2D732CFA872D00227AC4 /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D722CFA872D00227AC4 /* CourseView.swift */; };
+		3D90C7F02D2BC335007C4AF6 /* Assignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90C7EF2D2BC335007C4AF6 /* Assignable.swift */; };
+		3D90C7F32D2C6EA2007C4AF6 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90C7F22D2C6EA2007C4AF6 /* Quiz.swift */; };
 		3DB65E3C2D03E1B400BF734D /* PageRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */; };
 		3DB65E3E2D03E1DF00BF734D /* DiscussionTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */; };
 		3DB65E402D03E3A900BF734D /* DiscussionTopicClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB65E3F2D03E3A900BF734D /* DiscussionTopicClient.swift */; };
@@ -74,6 +76,8 @@
 		3D4E2D6C2CF9927000227AC4 /* UserClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserClient.swift; sourceTree = "<group>"; };
 		3D4E2D6E2CF99EC800227AC4 /* ViewUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewUtilities.swift; sourceTree = "<group>"; };
 		3D4E2D722CFA872D00227AC4 /* CourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseView.swift; sourceTree = "<group>"; };
+		3D90C7EF2D2BC335007C4AF6 /* Assignable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assignable.swift; sourceTree = "<group>"; };
+		3D90C7F22D2C6EA2007C4AF6 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
 		3DB65E3B2D03E1B400BF734D /* PageRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageRepresentable.swift; sourceTree = "<group>"; };
 		3DB65E3D2D03E1DF00BF734D /* DiscussionTopic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionTopic.swift; sourceTree = "<group>"; };
 		3DB65E3F2D03E3A900BF734D /* DiscussionTopicClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionTopicClient.swift; sourceTree = "<group>"; };
@@ -206,12 +210,22 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		3D90C7F12D2C6E90007C4AF6 /* QuizModel */ = {
+			isa = PBXGroup;
+			children = (
+				3D90C7F22D2C6EA2007C4AF6 /* Quiz.swift */,
+			);
+			path = QuizModel;
+			sourceTree = "<group>";
+		};
 		3DC6324C2D0B2445004D2679 /* AssignmentModel */ = {
 			isa = PBXGroup;
 			children = (
+				3D90C7F12D2C6E90007C4AF6 /* QuizModel */,
 				3DC6323E2D06CFCA004D2679 /* Assignment.swift */,
 				3D08DBD62D0BAF3600CCB89E /* ScoreStatistic.swift */,
 				3DC632482D0A2A72004D2679 /* Submission.swift */,
+				3D90C7EF2D2BC335007C4AF6 /* Assignable.swift */,
 			);
 			path = AssignmentModel;
 			sourceTree = "<group>";
@@ -333,6 +347,7 @@
 			files = (
 				3D4E2D5B2CF6FFF200227AC4 /* Course.swift in Sources */,
 				3DB65E402D03E3A900BF734D /* DiscussionTopicClient.swift in Sources */,
+				3D90C7F32D2C6EA2007C4AF6 /* Quiz.swift in Sources */,
 				3D33EB892D1B4956007325E0 /* GroupClient.swift in Sources */,
 				3DB88AB22D02599A00EEF069 /* ModuleClient.swift in Sources */,
 				3DB65E3E2D03E1DF00BF734D /* DiscussionTopic.swift in Sources */,
@@ -354,6 +369,7 @@
 				3DC632492D0A2A72004D2679 /* Submission.swift in Sources */,
 				3D4E2D6F2CF99EC800227AC4 /* ViewUtilities.swift in Sources */,
 				3DE41F912D121806007FDEEA /* MainUser.swift in Sources */,
+				3D90C7F02D2BC335007C4AF6 /* Assignable.swift in Sources */,
 				3DE4F6722D272B8F00FCE0DD /* ContextRepresentable.swift in Sources */,
 				3D08DBD92D0D546600CCB89E /* ModuleView.swift in Sources */,
 				3DC632512D0B25B7004D2679 /* EnrollmentClient.swift in Sources */,
