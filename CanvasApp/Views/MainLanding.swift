@@ -23,6 +23,9 @@ import SwiftUI
             GridItem(.flexible()), // Second column
             
         ]
+        func fetchData() async {
+            await fetchManager?.fetchUserAndCourses()
+        }
         
         
         @ViewBuilder
@@ -115,10 +118,15 @@ import SwiftUI
                                 }
                                 
                             }, path: $navigationPath)
-                        
+                        .refreshable {
+                            if (!isLoading) {
+                                print("Beginning refresh")
+                                await fetchManager?.fetchUserAndCourses(invalidateCache: true)
+                                print("End refresh")
+                            }
                         }
-
                     }
+                }
             }
             
             .task(id: tokenEntered) {
@@ -130,7 +138,7 @@ import SwiftUI
                         }
                         await fetchManager?.fetchUserAndCourses()
                     }
-                }
+            }
         }
     }
 struct TokenManip: View {

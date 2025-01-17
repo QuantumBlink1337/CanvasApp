@@ -78,6 +78,25 @@ struct CacheManager {
         try? FileManager.default.removeItem(at: fileURL)
     }
     
+    func clearAllCache() throws {
+        let fm = FileManager.default
+        
+        // Make sure the directory exists
+        guard fm.fileExists(atPath: cacheDirectory.path) else {
+            return
+        }
+        
+        // Remove everything in this directory
+        try fm.removeItem(at: cacheDirectory)
+        
+        // Recreate an empty directory so future saves don’t fail
+        try fm.createDirectory(at: cacheDirectory,
+                               withIntermediateDirectories: true,
+                               attributes: nil)
+    }
+
+    
+    
     // MARK: - Legacy (or Shared) User Cache
     func save<T: Codable>(_ object: T, to fileName: String) throws {
         let fileURL = cacheDirectory.appendingPathComponent(fileName)

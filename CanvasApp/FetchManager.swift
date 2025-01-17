@@ -274,7 +274,16 @@ struct FetchManager {
             }
             
             // Otherwise fetch
-            let assignments = try await assignmentClient.getAssignmentsFromCourse(from: wrapper.course)
+            var assignments = try await assignmentClient.getAssignmentsFromCourse(from: wrapper.course)
+            
+            
+            for i in assignments.indices {
+                if assignments[i].quizID != nil {
+                    assignments[i].quiz = try await assignmentClient.getQuizFromAssignment(from: assignments[i])
+
+                }
+            }
+            
             
             // Cache them
             try? cacheManager.saveCourseData(assignments, courseID: courseID, fileName: "assignments.json")
@@ -302,7 +311,7 @@ struct FetchManager {
                             && moduleItems[itemIndex].contentID == items[i].id)
                            || (moduleItems[itemIndex].type == .quiz
                                && moduleItems[itemIndex].contentID == items[i].quizID) {
-                            items[i].isQuiz = (moduleItems[itemIndex].type == .quiz)
+//                            items[i].isQuiz = (moduleItems[itemIndex].type == .quiz)
                             moduleItems[itemIndex].linkedAssignment = items[i]
                         }
                     }
@@ -464,9 +473,12 @@ struct FetchManager {
     }
     
     // MARK: - Main Fetch
-    func fetchUserAndCourses() async {
+    func fetchUserAndCourses(invalidateCache: Bool = false) async {
         do {
             let startTime = DispatchTime.now()
+            DispatchQueue.main.async {
+                self.isLoading = true
+            }
             
             // 1. Prepare user
             let user = await prepareUser()
@@ -491,6 +503,10 @@ struct FetchManager {
                 for (field, needed) in wrapper.fieldsNeedingPopulation where needed {
                     wrappersNeedingPopulation[field]?.append(wrapper)
                 }
+            }
+            
+            if invalidateCache {
+                try cacheManager.clearAllCache()
             }
             
             // 4. Populate Data
