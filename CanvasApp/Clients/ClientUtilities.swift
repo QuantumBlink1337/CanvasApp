@@ -12,9 +12,11 @@ enum NetworkError: Error {
     case invalidResponse
     case badDecode
 }
+enum DataError: Error {
+    case missingData
+}
 var APIToken: String = ""
 let baseURL: String = "https://marlin-cosmic-simply.ngrok-free.app/api/v1/"
-
 var localSettingsFile: URL = Foundation.URL.documentsDirectory.appendingPathComponent("/portrait.txt")
 
 

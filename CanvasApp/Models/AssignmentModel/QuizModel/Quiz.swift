@@ -8,12 +8,26 @@
 import Foundation
 
 struct Quiz : Assignable {
+    static func == (lhs: Quiz, rhs: Quiz) -> Bool {
+        lhs.id == rhs.id && lhs.title == rhs.title && lhs.dueAt == rhs.dueAt && lhs.lockedAt == rhs.lockedAt && lhs.attributedText == rhs.attributedText
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(title)
+        hasher.combine(dueAt)
+        hasher.combine(lockedAt)
+        hasher.combine(attributedText)
+    }
+    
+   
     var id: Int
     var title: String
     var body: String?
     var dueAt: Date?
     var lockedAt: Date?
+    var allowedAttempts: Int
     var attributedText: AttributedString?
+    var submissions: [QuizSubmission] = []
 
     
     
@@ -24,6 +38,8 @@ struct Quiz : Assignable {
         case dueAt = "due_at"
         case lockedAt = "lock_at"
         case attributedText
+        case quizSubmissions
+        case allowedAttempts = "allowed_attempts"
     }
     
     
@@ -33,6 +49,8 @@ struct Quiz : Assignable {
        // Decode required properties
        self.id = try container.decode(Int.self, forKey: .id)
        self.title = try container.decode(String.self, forKey: .title)
+       self.allowedAttempts = try container.decode(Int.self, forKey: .allowedAttempts)
+
 
        
        // Decode optional properties
@@ -40,7 +58,7 @@ struct Quiz : Assignable {
        self.dueAt = try container.decodeIfPresent(Date.self, forKey: .dueAt)
        self.lockedAt = try container.decodeIfPresent(Date.self, forKey: .lockedAt)
     
-    
+        self.submissions = try container.decodeIfPresent([QuizSubmission].self, forKey: .quizSubmissions) ?? []
        self.attributedText = try container.decodeIfPresent(AttributedString.self, forKey: .attributedText)
 
     }
@@ -52,6 +70,8 @@ struct Quiz : Assignable {
         try container.encodeIfPresent(self.dueAt, forKey: .dueAt)
         try container.encodeIfPresent(self.lockedAt, forKey: .lockedAt)
         try container.encodeIfPresent(self.attributedText, forKey: .attributedText)
+        try container.encodeIfPresent(self.submissions, forKey: .quizSubmissions)
+        try container.encodeIfPresent(self.allowedAttempts, forKey: .allowedAttempts)
     }
     
     

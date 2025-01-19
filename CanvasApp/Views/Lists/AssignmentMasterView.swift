@@ -160,7 +160,13 @@ struct AssignmentPageView : View {
                     Text("Graded")
                         .font(.subheadline)
                 }
-            
+                if assignment.quiz != nil {
+                    
+                    Text("Allowed Attempts: \((assignment.quiz?.allowedAttempts ?? 0) == -1 ? "Unlimited" : String(assignment.quiz?.allowedAttempts ?? 0))")
+                        .font(.subheadline)
+
+                }
+ 
             }
         }
         .padding(.top)
@@ -226,7 +232,18 @@ struct AssignmentPageView : View {
         }
         .padding(.leading)
     }
-    
+    @ViewBuilder
+    private func buildQuizInformation(for assignment: Assignment) -> some View {
+        let quiz = assignment.quiz!
+        VStack {
+            if quiz.submissions.isEmpty {
+                Text("Start a new submission")
+            }
+            else {
+                Text("Submissions: \(quiz.submissions.count)")
+            }
+        }
+    }
         
     var body: some View {
         VStack {
@@ -251,6 +268,9 @@ struct AssignmentPageView : View {
                 .padding(.top)
                 .padding(.horizontal)
             Spacer()
+            if (assignment.quizID != nil) {
+                buildQuizInformation(for: assignment)
+            }
             
         }
         .overlay {
@@ -560,7 +580,8 @@ struct AssignmentMasterView: View {
         .background(color)
         .padding(.top)
     }
-    
+   
+ 
     
     var body: some View {
             VStack {

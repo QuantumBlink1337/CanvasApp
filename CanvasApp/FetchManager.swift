@@ -279,8 +279,9 @@ struct FetchManager {
             
             for i in assignments.indices {
                 if assignments[i].quizID != nil {
-                    assignments[i].quiz = try await assignmentClient.getQuizFromAssignment(from: assignments[i])
-
+                    var quiz: Quiz = try await assignmentClient.getQuizFromAssignment(from: assignments[i])
+                    quiz.submissions = try await assignmentClient.getQuizSubmissions(from: assignments[i])
+                    assignments[i].quiz = quiz
                 }
             }
             
@@ -330,6 +331,7 @@ struct FetchManager {
         let elapsed = Double(DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000_000
         print("Assignment execution time: \(elapsed)")
     }
+
     private func populateDiscussionTopics(wrappers: [CourseWrapper]) async {
         guard !wrappers.isEmpty else { return }
         let startTime = DispatchTime.now()

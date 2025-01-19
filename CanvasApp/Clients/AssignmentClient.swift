@@ -89,6 +89,32 @@ struct AssignmentClient {
                 throw NetworkError.badDecode
             }
     }
+    func getQuizSubmissions(from assignment: Assignment) async throws -> [QuizSubmission] {
+        if assignment.quizID == nil {
+            print("Requested Quiz Submissions does not have a quiz ID from which to search")
+            throw DataError.missingData
+        }
+        guard let url = URL(string: "\(baseURL)/courses/\(assignment.courseID)/quizzes/\(assignment.quizID ?? 0)/submissions") else {
+            throw NetworkError.badURL
+        }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        var request = URLRequest(url: url)
+        request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw NetworkError.invalidResponse
+            }
+        do {
+            let dict: [String : [QuizSubmission]] = try decoder.decode([String : [QuizSubmission]].self, from: data)
+            return dict.values.first ?? []
+            }
+        catch {
+                print("Decoding error: \(error)")
+                throw NetworkError.badDecode
+            }
+    }
 
     
 }
