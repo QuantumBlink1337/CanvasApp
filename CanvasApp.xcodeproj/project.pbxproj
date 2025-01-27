@@ -17,6 +17,7 @@
 		3D420AEB2D3DA2BF008043D7 /* Submittable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D420AEA2D3DA2BF008043D7 /* Submittable.swift */; };
 		3D420AED2D3DA5C1008043D7 /* QuizSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D420AEC2D3DA5C1008043D7 /* QuizSubmission.swift */; };
 		3D420AEF2D470D64008043D7 /* AssignmentPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D420AEE2D470D64008043D7 /* AssignmentPageView.swift */; };
+		3D420AF12D4751F6008043D7 /* QuizQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D420AF02D4751F6008043D7 /* QuizQuestionView.swift */; };
 		3D4E2D4C2CF6FF9E00227AC4 /* CanvasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */; };
 		3D4E2D4E2CF6FF9E00227AC4 /* MainLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */; };
 		3D4E2D502CF6FF9F00227AC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D4E2D4F2CF6FF9F00227AC4 /* Assets.xcassets */; };
@@ -68,6 +69,7 @@
 		3D420AEA2D3DA2BF008043D7 /* Submittable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Submittable.swift; sourceTree = "<group>"; };
 		3D420AEC2D3DA5C1008043D7 /* QuizSubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizSubmission.swift; sourceTree = "<group>"; };
 		3D420AEE2D470D64008043D7 /* AssignmentPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AssignmentPageView.swift; path = CanvasApp/Views/AssignmentPageView.swift; sourceTree = SOURCE_ROOT; };
+		3D420AF02D4751F6008043D7 /* QuizQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizQuestionView.swift; sourceTree = "<group>"; };
 		3D4E2D482CF6FF9E00227AC4 /* CanvasApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CanvasApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D4E2D4B2CF6FF9E00227AC4 /* CanvasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasApp.swift; sourceTree = "<group>"; };
 		3D4E2D4D2CF6FF9E00227AC4 /* MainLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLanding.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 				3D4E2D722CFA872D00227AC4 /* CourseView.swift */,
 				3D33EB862D1B4945007325E0 /* GroupView.swift */,
 				3DEC9DD42D0E5C7200AC2564 /* IndividualPageView.swift */,
+				3D420AF02D4751F6008043D7 /* QuizQuestionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				3DB88AB02D0257E400EEF069 /* ItemRepresentable.swift in Sources */,
 				3D4E2D632CF9048100227AC4 /* PageClient.swift in Sources */,
 				3DC632412D07755C004D2679 /* AssignmentClient.swift in Sources */,
+				3D420AF12D4751F6008043D7 /* QuizQuestionView.swift in Sources */,
 				3D420AED2D3DA5C1008043D7 /* QuizSubmission.swift in Sources */,
 				3D33EB7B2D18006D007325E0 /* Group.swift in Sources */,
 				3D33EB7F2D18BB64007325E0 /* GroupPanel.swift in Sources */,

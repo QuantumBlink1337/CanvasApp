@@ -21,6 +21,8 @@ struct AssignmentPageView : View {
     @State private var showMenu = false
     
     @Binding private var navigationPath: NavigationPath
+	
+	@State private var navigateToQuizSession = false
     
     init(courseWrapper: CourseWrapper, assignment: Assignment, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
@@ -128,8 +130,9 @@ struct AssignmentPageView : View {
 		var quiz: Quiz
 		var buttonAllowed: Bool
 		var color: Color
+		@Binding var navigateToQuiz: Bool
 		
-		init(quiz: Quiz, color: Color) {
+		init(quiz: Quiz, color: Color, navigateToQuiz: Binding<Bool>) {
 			self.quiz = quiz
 			self.task = {
 				print("test")
@@ -137,6 +140,8 @@ struct AssignmentPageView : View {
 			self.buttonText = ""
 			self.buttonAllowed = false
 			self.color = color
+			self._navigateToQuiz = navigateToQuiz
+			
 			
 			if quiz.submissions.allSatisfy({
 				$0.workflowState == WorkflowState.Complete
@@ -146,11 +151,17 @@ struct AssignmentPageView : View {
 					self.buttonText = "Start a New Quiz Session"
 				}
 			}
+			if quiz.submissions.count == 1 && quiz.submissions.first?.workflowState == WorkflowState.Untaken {
+				self.buttonAllowed = true
+				self.buttonText = "Resume Quiz Session"
+				
+			}
 		}
+		
 		var body : some View {
 			if (buttonAllowed) {
 				Button(action: {
-					task()
+					navigateToQuiz = true
 				}, label: {
 					ZStack {
 						RoundedRectangle(cornerRadius: 10)
@@ -168,22 +179,13 @@ struct AssignmentPageView : View {
 			}
 		}
 	}
-	struct Attempt : Identifiable {
-		var attempt: String
-		var score: String
-		var id = UUID()
-		var isKept: Bool
-	}
     @ViewBuilder
     private func buildQuizInformation(for assignment: Assignment) -> some View {
         let quiz = assignment.quiz!
-		
-		let attempts = quiz.submissions.map({
-			return Attempt(attempt: String($0.attempt ?? 0), score: String($0.score ?? 0.0), isKept: $0.isKept)
-		})
+
 		
         VStack {
-			QuizSessionStart(quiz: quiz, color: color)
+			QuizSessionStart(quiz: quiz, color: color, navigateToQuiz: $navigateToQuizSession)
 			VStack {
 				// Header Row
 				HStack {
@@ -195,17 +197,14 @@ struct AssignmentPageView : View {
 						.fontWeight(.bold)
 				}
 				.padding(.vertical, 8)
-				Divider()
 				
 				let keptSubmission = quiz.submissions.max {
-					a, b in a.keptScore > b.keptScore
+					a, b in a.keptScore < b.keptScore
 				}
 				
 				
-				
-				
 				// Data Rows
-				ForEach(quiz.submissions) { submission in
+				ForEach(quiz.submissions, id: \.attempt) { submission in
 					HStack {
 						Text(String(submission.attempt ?? 0))
 						if submission == keptSubmission {
@@ -213,7 +212,7 @@ struct AssignmentPageView : View {
 								.font(.footnote)
 						}
 						Spacer()
-						Text(submission.score)
+						Text(String(submission.score ?? 0.0))
 					}
 					.padding(.vertical, 4)
 				}
@@ -250,9 +249,13 @@ struct AssignmentPageView : View {
             Divider()
             if (assignment.quizID != nil) {
                 buildQuizInformation(for: assignment)
+					.padding(.top)
             }
             
         }
+		.navigationDestination(isPresented: $navigateToQuizSession) {
+			QuizQuestionView()
+		}
         .overlay {
             if showMenu {
                 SideMenuView(isPresented: $showMenu, navigationPath: $navigationPath)
