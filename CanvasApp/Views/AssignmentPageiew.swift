@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct AssignmentPageView : View {
     var courseWrapper: CourseWrapper
