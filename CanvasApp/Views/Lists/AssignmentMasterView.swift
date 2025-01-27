@@ -161,8 +161,8 @@ struct AssignmentPageView : View {
                         .font(.subheadline)
                 }
                 if assignment.quiz != nil {
-                    
-                    Text("Allowed Attempts: \((assignment.quiz?.allowedAttempts ?? 0) == -1 ? "Unlimited" : String(assignment.quiz?.allowedAttempts ?? 0))")
+                    Spacer()
+                    Text("Allowed Attempts: \((assignment.quiz?.allowedAttempts ?? 0) == -1 ? "∞" : String(assignment.quiz?.allowedAttempts ?? 0))")
                         .font(.subheadline)
 
                 }
@@ -240,7 +240,19 @@ struct AssignmentPageView : View {
                 Text("Start a new submission")
             }
             else {
-                Text("Submissions: \(quiz.submissions.count)")
+                ForEach(quiz.submissions, id: \.attempt) { submission in
+                    HStack {
+                        Text("Attempt \(submission.attempt ?? 0)")
+                            .font(.caption)
+                        Spacer()
+                        Text("Score: \(submission.score?.clean ?? "0.0")")
+                            .font(.caption)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    Divider()
+
+                }
             }
         }
     }
@@ -267,7 +279,7 @@ struct AssignmentPageView : View {
             preparePageDisplay(page: assignment)
                 .padding(.top)
                 .padding(.horizontal)
-            Spacer()
+            Divider()
             if (assignment.quizID != nil) {
                 buildQuizInformation(for: assignment)
             }
