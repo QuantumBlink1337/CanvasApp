@@ -121,29 +121,108 @@ struct AssignmentPageView : View {
         }
         .padding(.leading)
     }
+	
+	private struct QuizSessionStart : View {
+		var buttonText: String
+		var task: () -> Void
+		var quiz: Quiz
+		var buttonAllowed: Bool
+		var color: Color
+		
+		init(quiz: Quiz, color: Color) {
+			self.quiz = quiz
+			self.task = {
+				print("test")
+			}
+			self.buttonText = ""
+			self.buttonAllowed = false
+			self.color = color
+			
+			if quiz.submissions.allSatisfy({
+				$0.workflowState == WorkflowState.Complete
+			}) {
+				if quiz.allowedAttempts > quiz.submissions.count || quiz.allowedAttempts == -1{
+					self.buttonAllowed = true
+					self.buttonText = "Start a New Quiz Session"
+				}
+			}
+		}
+		var body : some View {
+			if (buttonAllowed) {
+				Button(action: {
+					task()
+				}, label: {
+					ZStack {
+						RoundedRectangle(cornerRadius: 10)
+							.frame(width: 200, height: 40)
+							.foregroundStyle(color)
+						Text("\(buttonText)")
+							.foregroundStyle(.white)
+							.multilineTextAlignment(.leading)
+							.lineLimit(2)
+							.font(.subheadline)
+							.padding(.horizontal)
+							
+					}
+				})
+			}
+		}
+	}
+	struct Attempt : Identifiable {
+		var attempt: String
+		var score: String
+		var id = UUID()
+		var isKept: Bool
+	}
     @ViewBuilder
     private func buildQuizInformation(for assignment: Assignment) -> some View {
         let quiz = assignment.quiz!
+		
+		let attempts = quiz.submissions.map({
+			return Attempt(attempt: String($0.attempt ?? 0), score: String($0.score ?? 0.0), isKept: $0.isKept)
+		})
+		
         VStack {
-            if quiz.submissions.isEmpty {
-                Text("Start a new submission")
-            }
-            else {
-                ForEach(quiz.submissions, id: \.attempt) { submission in
-                    HStack {
-                        Text("Attempt \(submission.attempt ?? 0)")
-                            .font(.caption)
-                        Spacer()
-                        Text("Score: \(submission.score?.clean ?? "0.0")")
-                            .font(.caption)
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    Divider()
-
-                }
-            }
+			QuizSessionStart(quiz: quiz, color: color)
+			VStack {
+				// Header Row
+				HStack {
+					Text("Attempt")
+						.fontWeight(.bold)
+					
+					Spacer()
+					Text("Score")
+						.fontWeight(.bold)
+				}
+				.padding(.vertical, 8)
+				Divider()
+				
+				let keptSubmission = quiz.submissions.max {
+					a, b in a.keptScore > b.keptScore
+				}
+				
+				
+				
+				
+				// Data Rows
+				ForEach(quiz.submissions) { submission in
+					HStack {
+						Text(String(submission.attempt ?? 0))
+						if submission == keptSubmission {
+							Text("(Kept)")
+								.font(.footnote)
+						}
+						Spacer()
+						Text(submission.score)
+					}
+					.padding(.vertical, 4)
+				}
+			}
+			.listStyle(PlainListStyle())
+			.frame(maxHeight: 300) // Adjust as needed
+			.padding(.horizontal)
         }
+		
     }
         
     var body: some View {

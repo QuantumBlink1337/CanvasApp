@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Submittable :  Codable, Identifiable {
+protocol Submittable :  Codable, Identifiable, Equatable {
     var id: Int {get set} // ID of the object
     var userID: Int { get set } // User ID that the submission belongs to
     var assignableID: Int {get set}// ID of the associated Assignable instance (quiz, assignment)

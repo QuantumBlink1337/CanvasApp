@@ -28,6 +28,12 @@ struct QuizSubmission : Submittable {
     var attempt: Int?
     
     var workflowState: WorkflowState
+	
+	var keptScore: Float // each quiz submission stores whatever the highest quiz result was
+	
+	var isKept: Bool {
+		keptScore == score
+	}
     
     private enum CodingKeys : String, CodingKey {
         case id
@@ -36,6 +42,7 @@ struct QuizSubmission : Submittable {
         case score
         case attempt
         case workflowState = "workflow_state"
+		case keptScore = "kept_score"
     }
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -46,6 +53,17 @@ struct QuizSubmission : Submittable {
         self.attempt = try container.decodeIfPresent(Int.self, forKey: .attempt)
         let workflowState = try container.decode(String.self, forKey: .workflowState)
         self.workflowState = WorkflowState(rawValue: workflowState)! // i'd rather nuke program execution if somehow this fails
+		self.keptScore = try container.decode(Float.self, forKey: .keptScore)
     }
+	func encode(to encoder: any Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(self.id, forKey: .id)
+		try container.encode(self.userID, forKey: .userID)
+		try container.encode(self.assignableID, forKey: .assignableID)
+		try container.encodeIfPresent(self.score, forKey: .score)
+		try container.encodeIfPresent(self.attempt, forKey: .attempt)
+		try container.encode(self.workflowState, forKey: .workflowState)
+		try container.encode(self.keptScore, forKey: .keptScore)
+	}
     
 }
