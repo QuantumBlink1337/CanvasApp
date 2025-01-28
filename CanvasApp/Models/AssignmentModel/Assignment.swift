@@ -142,6 +142,7 @@ struct Assignment : Assignable {
         try container.encodeIfPresent(pointsPossible, forKey: .pointsPossible)
         try container.encodeIfPresent(scoreStatistic, forKey: .scoreStatistic)
         try container.encodeIfPresent(currentSubmission, forKey: .currentSubmission)
+		try container.encodeIfPresent(quizID, forKey: .quizID)
         try container.encodeIfPresent(quiz, forKey: .quiz)
         
         // Encode arrays
