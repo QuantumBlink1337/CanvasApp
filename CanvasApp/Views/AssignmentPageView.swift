@@ -26,6 +26,8 @@ struct AssignmentPageView : View {
 	@State private var newQuizSubmission: QuizSubmission?
 	
 	@State private var loadingNewQuizSubmission: Bool = false
+	
+	@State private var isShowingAttempts: Bool = false
     
 	init(courseWrapper: CourseWrapper, assignment: Assignment, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
@@ -214,6 +216,23 @@ struct AssignmentPageView : View {
 		
         VStack {
 			QuizSessionStartButton(assignment: assignment, color: color, navigateToQuiz: $navigateToQuizSession, newQuizSubmission: $newQuizSubmission, loadingNewSubmission: $loadingNewQuizSubmission)
+			Button(action: {isShowingAttempts.toggle()}, label: {
+				ZStack {
+					RoundedRectangle(cornerRadius: 10)
+						.frame(width: 200, height: 40)
+						.foregroundStyle(color)
+					Text("Attempts")
+						.foregroundStyle(.white)
+						.multilineTextAlignment(.leading)
+						.lineLimit(2)
+						.font(.subheadline)
+						.padding(.horizontal)
+					
+				}
+			})
+			.padding(.horizontal)
+        }
+		.sheet(isPresented: $isShowingAttempts, content: {
 			VStack {
 				// Header Row
 				HStack {
@@ -232,6 +251,7 @@ struct AssignmentPageView : View {
 				
 				
 				// Data Rows
+				
 				ForEach(quiz.submissions, id: \.attempt) { submission in
 					HStack {
 						Text(String(submission.attempt ?? 0))
@@ -244,11 +264,26 @@ struct AssignmentPageView : View {
 					}
 					.padding(.vertical, 4)
 				}
+				Spacer()
+				Button(action: { isShowingAttempts.toggle()}, label: {
+					ZStack {
+						RoundedRectangle(cornerRadius: 10)
+							.frame(width: 200, height: 40)
+							.foregroundStyle(color)
+						Text("Dismiss")
+							.foregroundStyle(.white)
+							.multilineTextAlignment(.leading)
+							.lineLimit(2)
+							.font(.subheadline)
+							.padding(.horizontal)
+						
+					}
+				})
+				
 			}
-			.listStyle(PlainListStyle())
-			.frame(maxHeight: 300) // Adjust as needed
 			.padding(.horizontal)
-        }
+
+		})
 		
     }
         
