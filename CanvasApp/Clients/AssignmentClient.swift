@@ -144,10 +144,11 @@ struct AssignmentClient {
 			throw NetworkError.invalidResponse
 		}
 		do {
-			let quizSubmission = try decoder.decode(QuizSubmission.self, from: data)
-			return quizSubmission
+			let quizSubmission = (try decoder.decode([String : [QuizSubmission]].self, from: data)).values.first?.first
+			return quizSubmission!
 		}
 		catch {
+			print("Decoding error: \(error)")
 			throw NetworkError.badDecode
 		}
 		
