@@ -115,6 +115,45 @@ struct AssignmentClient {
                 throw NetworkError.badDecode
             }
     }
+	
+	/// Create the Quiz Submission (start a quiz taking session)
+	/// Start taking a Quiz by creating a QuizSubmission which you can use to answer questions and submit your answers.
+	/// This is a POST endpoint
+	/// https://canvas.instructure.com/doc/api/quiz_submissions.html#method.quizzes/quiz_submissions_api.create
+	/// This endpoint will return a new QuizSubmission object when it's successful.
+	///
+	/// - Parameter assignment: An Assignment object. It needs to have a valid Quiz object associated with it.
+	func createQuizSubmission(from assignment: Assignment) async throws -> QuizSubmission {
+		if assignment.quiz == nil {
+			print("The assignment given does not have a valid Quiz associated with it")
+			throw DataError.missingData
+		}
+		guard let url = URL(string: "\(baseURL)/courses/\(assignment.courseID)/quizzes/\(assignment.quizID!)/submissions") else {
+			throw NetworkError.badURL
+		}
+		var request = URLRequest(url:url)
+		request.httpMethod = "POST"
+		request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
+		
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		let (data, response) = try await URLSession.shared.data(for: request)
+		guard let httpResponse = response as? HTTPURLResponse,
+			  httpResponse.statusCode == 200 
+		else {
+			throw NetworkError.invalidResponse
+		}
+		do {
+			let quizSubmission = try decoder.decode(QuizSubmission.self, from: data)
+			return quizSubmission
+		}
+		catch {
+			throw NetworkError.badDecode
+		}
+		
+		
+		
+	}
 
     
 }

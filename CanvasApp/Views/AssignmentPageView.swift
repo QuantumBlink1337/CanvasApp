@@ -11,7 +11,6 @@ import SwiftUI
 struct AssignmentPageView : View {
     var courseWrapper: CourseWrapper
     var assignment : Assignment
-    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     let color: Color
@@ -23,8 +22,12 @@ struct AssignmentPageView : View {
     @Binding private var navigationPath: NavigationPath
 	
 	@State private var navigateToQuizSession = false
+	
+	@State private var newQuizSubmission: QuizSubmission?
+	
+	@State private var loadingNewQuizSubmission: Bool = false
     
-    init(courseWrapper: CourseWrapper, assignment: Assignment, navigationPath: Binding<NavigationPath>) {
+	init(courseWrapper: CourseWrapper, assignment: Assignment, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
         self.assignment = assignment
         self.color = HexToColor(courseWrapper.course.color) ?? .black
@@ -124,23 +127,29 @@ struct AssignmentPageView : View {
         .padding(.leading)
     }
 	
-	private struct QuizSessionStart : View {
+	private struct QuizSessionStartButton : View {
 		var buttonText: String
-		var task: () -> Void
+		var assignment: Assignment
 		var quiz: Quiz
 		var buttonAllowed: Bool
 		var color: Color
-		@Binding var navigateToQuiz: Bool
+		let assignmentClient = AssignmentClient()
+		var resumeQuiz = false
 		
-		init(quiz: Quiz, color: Color, navigateToQuiz: Binding<Bool>) {
-			self.quiz = quiz
-			self.task = {
-				print("test")
-			}
+		
+		@Binding var loadingNewSubmission: Bool
+		@Binding var navigateToQuiz: Bool
+		@Binding var newQuizSubmission: QuizSubmission?
+		
+		init(assignment: Assignment, color: Color, navigateToQuiz: Binding<Bool>, newQuizSubmission: Binding<QuizSubmission?>, loadingNewSubmission: Binding<Bool>) {
+			self.assignment = assignment
+			self.quiz = assignment.quiz!
 			self.buttonText = ""
 			self.buttonAllowed = false
 			self.color = color
+			self._loadingNewSubmission = loadingNewSubmission
 			self._navigateToQuiz = navigateToQuiz
+			self._newQuizSubmission = newQuizSubmission
 			
 			
 			if quiz.submissions.allSatisfy({
@@ -149,11 +158,13 @@ struct AssignmentPageView : View {
 				if quiz.allowedAttempts > quiz.submissions.count || quiz.allowedAttempts == -1{
 					self.buttonAllowed = true
 					self.buttonText = "Start a New Quiz Session"
+					
 				}
 			}
 			if quiz.submissions.count == 1 && quiz.submissions.first?.workflowState == WorkflowState.Untaken {
 				self.buttonAllowed = true
 				self.buttonText = "Resume Quiz Session"
+				self.resumeQuiz = true
 				
 			}
 		}
@@ -161,7 +172,24 @@ struct AssignmentPageView : View {
 		var body : some View {
 			if (buttonAllowed) {
 				Button(action: {
-					navigateToQuiz = true
+					if (!resumeQuiz) {
+						Task {
+							do {
+								loadingNewSubmission = true
+								newQuizSubmission = try await assignmentClient.createQuizSubmission(from: assignment)
+								navigateToQuiz = true
+								loadingNewSubmission = false
+							}
+							catch {
+								print("Unable to start quiz submission")
+								loadingNewSubmission = false
+							}
+						}
+					}
+					else {
+						newQuizSubmission = quiz.submissions.first
+						navigateToQuiz = true
+					}
 				}, label: {
 					ZStack {
 						RoundedRectangle(cornerRadius: 10)
@@ -185,7 +213,7 @@ struct AssignmentPageView : View {
 
 		
         VStack {
-			QuizSessionStart(quiz: quiz, color: color, navigateToQuiz: $navigateToQuizSession)
+			QuizSessionStartButton(assignment: assignment, color: color, navigateToQuiz: $navigateToQuizSession, newQuizSubmission: $newQuizSubmission, loadingNewSubmission: $loadingNewQuizSubmission)
 			VStack {
 				// Header Row
 				HStack {
@@ -225,36 +253,46 @@ struct AssignmentPageView : View {
     }
         
     var body: some View {
-        VStack {
-            HStack {
-                buildHeader()
-                Spacer()
-            }
-            Divider()
-            buildAttemptView()
-                .padding(.top, 10)
-                .padding(.leading, 10)
-                .padding(.trailing, 10)
-            Divider()
-            HStack {
-                buildDueAndSubType()
-                    .padding(.top, 20)
-                Spacer()
-            }
-            
-            Divider()
-            preparePageDisplay(page: assignment)
-                .padding(.top)
-                .padding(.horizontal)
-            Divider()
-            if (assignment.quizID != nil) {
-                buildQuizInformation(for: assignment)
-					.padding(.top)
-            }
-            
-        }
+		VStack {
+			if loadingNewQuizSubmission {
+				ProgressView()
+			}
+			else {
+				VStack {
+					HStack {
+						buildHeader()
+						Spacer()
+					}
+					Divider()
+					buildAttemptView()
+						.padding(.top, 10)
+						.padding(.leading, 10)
+						.padding(.trailing, 10)
+					Divider()
+					HStack {
+						buildDueAndSubType()
+							.padding(.top, 20)
+						Spacer()
+					}
+					
+					Divider()
+					preparePageDisplay(page: assignment)
+						.padding(.top)
+						.padding(.horizontal)
+					Divider()
+					if (assignment.quizID != nil) {
+						buildQuizInformation(for: assignment)
+							.padding(.top)
+					}
+					
+				}
+
+			}
+		}
+		
+		
 		.navigationDestination(isPresented: $navigateToQuizSession) {
-			QuizQuestionView()
+			QuizQuestionView(courseWrapper: courseWrapper, quiz: assignment.quiz!, quizSubmission: (newQuizSubmission ?? assignment.quiz?.submissions.first)!)
 		}
         .overlay {
             if showMenu {
