@@ -172,7 +172,6 @@ struct AssignmentClient {
 			throw NetworkError.invalidResponse
 		}
 		do {
-			let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
 			let questions = (try decoder.decode([String : [QuizSubmissionQuestion]].self, from: data)).values.first ?? []
 			return questions
 		}

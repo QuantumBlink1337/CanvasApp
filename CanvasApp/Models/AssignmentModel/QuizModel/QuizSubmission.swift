@@ -29,7 +29,7 @@ struct QuizSubmission : Submittable {
     
     var workflowState: WorkflowState
 	
-	var keptScore: Float // each quiz submission stores whatever the highest quiz result was
+	var keptScore: Float? // each quiz submission stores whatever the highest quiz result was
 	
 	var validationToken: String? // if the submission was created via the app then we get a validation token to use in processing quiz taking data
 	
@@ -56,7 +56,7 @@ struct QuizSubmission : Submittable {
         self.attempt = try container.decodeIfPresent(Int.self, forKey: .attempt)
         let workflowState = try container.decode(String.self, forKey: .workflowState)
         self.workflowState = WorkflowState(rawValue: workflowState)! // i'd rather nuke program execution if somehow this fails
-		self.keptScore = try container.decode(Float.self, forKey: .keptScore)
+		self.keptScore = try container.decodeIfPresent(Float.self, forKey: .keptScore)
 		
 		self.validationToken = try container.decodeIfPresent(String.self, forKey: .validationToken)
     }

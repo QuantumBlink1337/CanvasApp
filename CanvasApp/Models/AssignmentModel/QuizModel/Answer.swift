@@ -11,7 +11,7 @@ import Foundation
 struct Answer : Codable, Identifiable, Equatable {
 	var id: Int
 	var text: String
-	var html: String
+	var html: String?
 	var attributedText: AttributedString
 	enum CodingKeys : String, CodingKey {
 		case id
@@ -24,8 +24,8 @@ struct Answer : Codable, Identifiable, Equatable {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self.id = try container.decode(Int.self, forKey: .id)
 		self.text = try container.decode(String.self, forKey: .text)
-		self.html = try container.decode(String.self, forKey: .html)
-		self.attributedText = HTMLRenderer.makeAttributedString(from: self.html)
+		self.html = try container.decodeIfPresent(String.self, forKey: .html)
+		self.attributedText = HTMLRenderer.makeAttributedString(from: self.html ?? "")
 	}
 	func encode(to encoder: any Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
