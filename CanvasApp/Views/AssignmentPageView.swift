@@ -344,7 +344,7 @@ struct AssignmentPageView : View {
 		
 		
 		.navigationDestination(isPresented: $navigateToQuizSession) {
-			QuizQuestionView(courseWrapper: courseWrapper, quiz: assignment.quiz!, quizSubmission: (newQuizSubmission ?? assignment.quiz?.submissions.first)!, quizQuestions: quizQuestions)
+			QuizQuestionView(courseWrapper: courseWrapper, assignment: assignment, quizSubmission: (newQuizSubmission ?? assignment.quiz?.submissions.first)!, quizQuestions: quizQuestions, navigationPath: $navigationPath)
 		}
         .overlay {
             if showMenu {

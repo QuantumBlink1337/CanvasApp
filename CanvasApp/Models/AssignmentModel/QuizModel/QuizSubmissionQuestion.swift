@@ -7,6 +7,23 @@
 
 import Foundation
 
+enum QuizQuestionTypes : String, CaseIterable, Hashable, Codable{
+	case CalculatedQuestion = "calculated_question"
+	case EssayQuestion = "essay_question"
+	case FileUploadQuestion = "file_upload_question"
+	case FillInMultipleBlanksQuestion = "fill_in_multiple_blanks_question"
+	case MatchingQuestion = "matching_question"
+	case MultipleAnswersQuestion = "multiple_answers_question"
+	case MultipleChoiceQuestion = "multiple_choice_question"
+	case MultipleDropdownsQuestion = "multiple_dropdowns_question"
+	case NumericalQuestion = "numerical_question"
+	case ShortAnswerQuestion = "short_answer_question"
+	case TextOnlyQuestion = "text_only_question"
+	case TrueFalseQuestion = "true_false_question"
+}
+
+
+
 
 struct QuizSubmissionQuestion : Codable, Identifiable, Equatable {
 	let id: Int
@@ -15,7 +32,7 @@ struct QuizSubmissionQuestion : Codable, Identifiable, Equatable {
 	let assessmentQuestionID: Int
 	let position: Int
 	let questionName: String
-	let questionType: String
+	let questionType: QuizQuestionTypes
 	let questionText: String
 	let attributedText: AttributedString
 	let answers: [Answer]
@@ -43,7 +60,8 @@ struct QuizSubmissionQuestion : Codable, Identifiable, Equatable {
 		self.assessmentQuestionID = try container.decode(Int.self, forKey: .assessmentQuestionID)
 		self.position = try container.decode(Int.self, forKey: .position)
 		self.questionName = try container.decode(String.self, forKey: .questionName)
-		self.questionType = try container.decode(String.self, forKey: .questionType)
+		let type = try container.decode(String.self, forKey: .questionType)
+		self.questionType = QuizQuestionTypes(rawValue: type)!
 		self.questionText = try container.decode(String.self, forKey: .questionText)
 		
 		if let attributedTextHTML = try container.decodeIfPresent(String.self, forKey: .attributedText) {
