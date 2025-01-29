@@ -20,7 +20,6 @@ struct QuizSubmissionQuestion : Codable, Identifiable, Equatable {
 	let attributedText: AttributedString
 	let answers: [Answer]
 	let flagged: Bool
-	let correct: Bool
 	
 	enum CodingKeys: String, CodingKey {
 		case id
@@ -34,7 +33,6 @@ struct QuizSubmissionQuestion : Codable, Identifiable, Equatable {
 		case attributedText
 		case answers
 		case flagged
-		case correct
 	}
 	
 	init(from decoder: any Decoder) throws {
@@ -47,25 +45,15 @@ struct QuizSubmissionQuestion : Codable, Identifiable, Equatable {
 		self.questionName = try container.decode(String.self, forKey: .questionName)
 		self.questionType = try container.decode(String.self, forKey: .questionType)
 		self.questionText = try container.decode(String.self, forKey: .questionText)
-		self.attributedText = HTMLRenderer.makeAttributedString(from: self.questionText)
+		
+		if let attributedTextHTML = try container.decodeIfPresent(String.self, forKey: .attributedText) {
+			self.attributedText = HTMLRenderer.makeAttributedString(from: attributedTextHTML)
+		} else {
+			// Derive `attributedText` from `questionText` if not present in JSON
+			self.attributedText = HTMLRenderer.makeAttributedString(from: self.questionText)
+		}
 		self.answers = try container.decode([Answer].self, forKey: .answers)
 		self.flagged = try container.decode(Bool.self, forKey: .flagged)
-		self.correct = try container.decode(Bool.self, forKey: .correct)
-	}
-	func encode(to encoder: any Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
-		try container.encode(self.id, forKey: .id)
-		try container.encode(self.quizID, forKey: .quizID)
-		try container.encodeIfPresent(self.quizGroupID, forKey: .quizGroupID)
-		try container.encode(self.assessmentQuestionID, forKey: .assessmentQuestionID)
-		try container.encode(self.position, forKey: .position)
-		try container.encode(self.questionName, forKey: .questionName)
-		try container.encode(self.questionType, forKey: .questionType)
-		try container.encode(self.questionText, forKey: .questionText)
-		try container.encode(self.attributedText, forKey: .attributedText)
-		try container.encode(self.answers, forKey: .answers)
-		try container.encode(self.flagged, forKey: .flagged)
-		try container.encode(self.correct, forKey: .correct)
 	}
 	
 	

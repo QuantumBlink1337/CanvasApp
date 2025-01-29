@@ -28,6 +28,8 @@ struct AssignmentPageView : View {
 	@State private var loadingNewQuizSubmission: Bool = false
 	
 	@State private var isShowingAttempts: Bool = false
+	
+	@State private var quizQuestions: [QuizSubmissionQuestion] = []
     
 	init(courseWrapper: CourseWrapper, assignment: Assignment, navigationPath: Binding<NavigationPath>) {
         self.courseWrapper = courseWrapper
@@ -142,8 +144,9 @@ struct AssignmentPageView : View {
 		@Binding var loadingNewSubmission: Bool
 		@Binding var navigateToQuiz: Bool
 		@Binding var newQuizSubmission: QuizSubmission?
+		@Binding var quizQuestions: [QuizSubmissionQuestion]
 		
-		init(assignment: Assignment, color: Color, navigateToQuiz: Binding<Bool>, newQuizSubmission: Binding<QuizSubmission?>, loadingNewSubmission: Binding<Bool>) {
+		init(assignment: Assignment, color: Color, navigateToQuiz: Binding<Bool>, newQuizSubmission: Binding<QuizSubmission?>, loadingNewSubmission: Binding<Bool>, quizQuestions: Binding<[QuizSubmissionQuestion]>) {
 			self.assignment = assignment
 			self.quiz = assignment.quiz!
 			self.buttonText = ""
@@ -152,6 +155,7 @@ struct AssignmentPageView : View {
 			self._loadingNewSubmission = loadingNewSubmission
 			self._navigateToQuiz = navigateToQuiz
 			self._newQuizSubmission = newQuizSubmission
+			self._quizQuestions = quizQuestions
 			
 			
 			if quiz.submissions.allSatisfy({
@@ -179,6 +183,7 @@ struct AssignmentPageView : View {
 							do {
 								loadingNewSubmission = true
 								newQuizSubmission = try await assignmentClient.createQuizSubmission(from: assignment)
+								quizQuestions = try await assignmentClient.retrieveQuizSubmissionQuestions(from: newQuizSubmission!)
 								navigateToQuiz = true
 								loadingNewSubmission = false
 							}
@@ -189,8 +194,20 @@ struct AssignmentPageView : View {
 						}
 					}
 					else {
-						newQuizSubmission = quiz.submissions.first
-						navigateToQuiz = true
+						Task {
+							do {
+								loadingNewSubmission = true
+								newQuizSubmission = quiz.submissions.first(where: {$0.workflowState == WorkflowState.Untaken})
+								quizQuestions = try await assignmentClient.retrieveQuizSubmissionQuestions(from: newQuizSubmission!)
+								navigateToQuiz = true
+								loadingNewSubmission = false
+							}
+							catch {
+								print("Unable to start quiz submission")
+								loadingNewSubmission = false
+							}
+						}
+						
 					}
 				}, label: {
 					ZStack {
@@ -215,7 +232,7 @@ struct AssignmentPageView : View {
 
 		
         VStack {
-			QuizSessionStartButton(assignment: assignment, color: color, navigateToQuiz: $navigateToQuizSession, newQuizSubmission: $newQuizSubmission, loadingNewSubmission: $loadingNewQuizSubmission)
+			QuizSessionStartButton(assignment: assignment, color: color, navigateToQuiz: $navigateToQuizSession, newQuizSubmission: $newQuizSubmission, loadingNewSubmission: $loadingNewQuizSubmission, quizQuestions: $quizQuestions)
 			Button(action: {isShowingAttempts.toggle()}, label: {
 				ZStack {
 					RoundedRectangle(cornerRadius: 10)
@@ -327,7 +344,7 @@ struct AssignmentPageView : View {
 		
 		
 		.navigationDestination(isPresented: $navigateToQuizSession) {
-			QuizQuestionView(courseWrapper: courseWrapper, quiz: assignment.quiz!, quizSubmission: (newQuizSubmission ?? assignment.quiz?.submissions.first)!)
+			QuizQuestionView(courseWrapper: courseWrapper, quiz: assignment.quiz!, quizSubmission: (newQuizSubmission ?? assignment.quiz?.submissions.first)!, quizQuestions: quizQuestions)
 		}
         .overlay {
             if showMenu {

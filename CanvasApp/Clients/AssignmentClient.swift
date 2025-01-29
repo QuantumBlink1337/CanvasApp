@@ -151,7 +151,34 @@ struct AssignmentClient {
 			print("Decoding error: \(error)")
 			throw NetworkError.badDecode
 		}
+	}
+	func retrieveQuizSubmissionQuestions(from quizSubmission: QuizSubmission) async throws -> [QuizSubmissionQuestion] {
+		if quizSubmission.workflowState != WorkflowState.Untaken {
+			print("The quiz submission given isn't untaken yet.")
+			throw DataError.missingData
+		}
+		guard let url = URL(string: "\(baseURL)/quiz_submissions/\(quizSubmission.id)/questions") else {
+			throw NetworkError.badURL
+		}
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		var request = URLRequest(url: url)
+		request.addValue("Bearer " + APIToken, forHTTPHeaderField: "Authorization")
+		let (data, response) = try await URLSession.shared.data(for: request)
 		
+		guard let httpResponse = response as? HTTPURLResponse,
+			  httpResponse.statusCode == 200
+		else {
+			throw NetworkError.invalidResponse
+		}
+		do {
+			let questions = (try decoder.decode([String : [QuizSubmissionQuestion]].self, from: data)).values.first ?? []
+			return questions
+		}
+		catch {
+			print("Decoding error: \(error)")
+			throw NetworkError.badDecode
+		}
 		
 		
 	}

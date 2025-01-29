@@ -28,7 +28,7 @@ struct Quiz : Assignable {
     var allowedAttempts: Int
     var attributedText: AttributedString?
     var submissions: [QuizSubmission] = []
-
+	
     
     
     private enum CodingKeys : String, CodingKey {

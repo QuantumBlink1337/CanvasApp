@@ -12,9 +12,10 @@ struct QuizQuestionView: View {
 	var courseWrapper: CourseWrapper
 	var quiz: Quiz
 	var quizSubmission: QuizSubmission
+	var quizQuestions: [QuizSubmissionQuestion]
 	
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+		Text("\(quizQuestions.count)")
     }
 }
 
