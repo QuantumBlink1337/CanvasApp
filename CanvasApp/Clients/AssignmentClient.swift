@@ -182,6 +182,95 @@ struct AssignmentClient {
 		
 		
 	}
-
+//	func answerQuizQuestion(from quiz: Quiz, quizQuestion: QuizSubmissionQuestion) async throws {
+//		
+//	}
     
 }
+
+
+/// Represents different formats an answer can take when submitting to the API
+enum AnswerValue: Codable {
+	case text(String)            // Essay, Short Answer
+	case number(Double)          // Numerical Questions
+	case multipleChoice(Int)     // Multiple Choice (Single Answer)
+	case multipleAnswers([Int])  // Multiple Answers (Array of Answer IDs)
+	case fileUpload(URL)         // File Upload (URL)
+	case matchingPairs([MatchingPair]) // Matching Question (Array of Answer-Match ID pairs)
+	
+	init(from decoder: Decoder) throws {
+		let container = try decoder.singleValueContainer()
+		
+		// Try decoding in different formats based on possible answer types
+		if let number = try? container.decode(Double.self) {
+			self = .number(number)
+		} else if let text = try? container.decode(String.self) {
+			self = .text(text)
+		} else if let multipleChoiceID = try? container.decode(Int.self) {
+			self = .multipleChoice(multipleChoiceID)
+		} else if let multipleAnswersIDs = try? container.decode([Int].self) {
+			self = .multipleAnswers(multipleAnswersIDs)
+		} else if let matchingPairs = try? container.decode([MatchingPair].self) {
+			self = .matchingPairs(matchingPairs)
+		} else if let fileURL = try? container.decode(URL.self) {
+			self = .fileUpload(fileURL)
+		} else {
+			throw DecodingError.typeMismatch(
+				AnswerValue.self,
+				DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Unsupported answer type")
+			)
+		}
+	}
+	
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.singleValueContainer()
+		switch self {
+			case .text(let value):
+				try container.encode(value)
+			case .number(let value):
+				try container.encode(value)
+			case .multipleChoice(let value):
+				try container.encode(value)
+			case .multipleAnswers(let values):
+				try container.encode(values)
+			case .matchingPairs(let pairs):
+				try container.encode(pairs)
+			case .fileUpload(let url):
+				try container.encode(url.absoluteString)
+		}
+	}
+}
+/// Represents a matching pair for matching questions
+struct MatchingPair: Codable {
+	let answerID: Int
+	let matchID: Int
+	
+	enum CodingKeys: String, CodingKey {
+		case answerID = "answer_id"
+		case matchID = "match_id"
+	}
+}
+struct SubmittedAnswer: Codable {
+	var id: Int
+	var answer: AnswerValue
+	
+	enum CodingKeys: String, CodingKey {
+		case id
+		case answer
+	}
+}
+
+struct QuizSubmissionRequest: Codable {
+	var attempt: Int
+	var validationToken: String
+	var accessCode: String? // Nullable
+	var quizQuestions: [SubmittedAnswer]
+	
+	enum CodingKeys: String, CodingKey {
+		case attempt
+		case validationToken = "validation_token"
+		case accessCode = "access_code"
+		case quizQuestions = "quiz_questions"
+	}
+}
+
