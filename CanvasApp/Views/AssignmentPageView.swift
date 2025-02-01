@@ -263,7 +263,7 @@ struct AssignmentPageView : View {
 				.padding(.vertical, 8)
 				
 				let keptSubmission = quiz.submissions.max {
-					a, b in a.keptScore < b.keptScore
+					a, b in a.keptScore ?? 0 < b.keptScore ?? 0
 				}
 				
 				
@@ -344,7 +344,7 @@ struct AssignmentPageView : View {
 		
 		
 		.navigationDestination(isPresented: $navigateToQuizSession) {
-			QuizQuestionView(courseWrapper: courseWrapper, assignment: assignment, quizSubmission: (newQuizSubmission ?? assignment.quiz?.submissions.first)!, quizQuestions: quizQuestions, navigationPath: $navigationPath)
+			QuizQuestionView(courseWrapper: courseWrapper, assignment: assignment, quizSubmission: newQuizSubmission, quizQuestions: quizQuestions, navigationPath: $navigationPath)
 		}
         .overlay {
             if showMenu {
