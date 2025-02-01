@@ -76,3 +76,29 @@ struct QuizSubmissionQuestion : Codable, Identifiable, Equatable {
 	
 	
 }
+extension QuizSubmissionQuestion {
+	init(
+		id: Int,
+		quizID: Int,
+		quizGroupID: Int? = nil,
+		assessmentQuestionID: Int,
+		position: Int,
+		questionName: String,
+		questionType: QuizQuestionTypes,
+		questionText: String,
+		answers: [Answer] = [],
+		flagged: Bool = false
+	) {
+		self.id = id
+		self.quizID = quizID
+		self.quizGroupID = quizGroupID
+		self.assessmentQuestionID = assessmentQuestionID
+		self.position = position
+		self.questionName = questionName
+		self.questionType = questionType
+		self.questionText = questionText
+		self.attributedText = HTMLRenderer.makeAttributedString(from: questionText) // Generate attributedText from questionText
+		self.answers = answers
+		self.flagged = flagged
+	}
+}

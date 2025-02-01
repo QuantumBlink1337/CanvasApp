@@ -72,3 +72,24 @@ struct QuizSubmission : Submittable {
 	}
     
 }
+extension QuizSubmission {
+	init(
+		id: Int,
+		userID: Int,
+		assignableID: Int,
+		score: Float? = nil,
+		attempt: Int? = nil,
+		workflowState: WorkflowState = .Untaken,
+		keptScore: Float? = nil,
+		validationToken: String? = nil
+	) {
+		self.id = id
+		self.userID = userID
+		self.assignableID = assignableID
+		self.score = score
+		self.attempt = attempt
+		self.workflowState = workflowState
+		self.keptScore = keptScore
+		self.validationToken = validationToken
+	}
+}

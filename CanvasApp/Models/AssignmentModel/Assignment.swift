@@ -165,3 +165,31 @@ struct Assignment : Assignable {
         hasher.combine(courseID)
     }
 }
+
+extension Assignment {
+	init(
+		id: Int,
+		title: String,
+		dueAt: Date? = nil,
+		body: String? = nil,
+		pointsPossible: Float? = nil,
+		quiz: Quiz
+	) {
+		self.id = id
+		self.title = title
+		self.dueAt = dueAt
+		self.body = body
+		self.pointsPossible = pointsPossible
+		self.quizID = quiz.id
+		self.quiz = quiz
+		self.createdAt = dueAt ?? Date()
+		self.updatedAt = dueAt ?? Date()
+		self.courseID = id
+		self.submissionTypes = []
+	}
+}
+
+
+
+
+

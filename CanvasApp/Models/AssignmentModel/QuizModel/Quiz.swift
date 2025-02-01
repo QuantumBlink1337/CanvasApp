@@ -79,3 +79,22 @@ struct Quiz : Assignable {
 
 
 
+extension Quiz {
+	init(
+		id: Int,
+		title: String,
+		dueAt: Date? = nil,
+		lockedAt: Date? = nil,
+		allowedAttempts: Int = 1,
+		attributedText: AttributedString? = nil,
+		submissions: [QuizSubmission] = []
+	) {
+		self.id = id
+		self.title = title
+		self.dueAt = dueAt
+		self.lockedAt = lockedAt
+		self.allowedAttempts = allowedAttempts
+		self.attributedText = attributedText
+		self.submissions = submissions
+	}
+}

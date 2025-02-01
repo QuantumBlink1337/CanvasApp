@@ -20,6 +20,8 @@ struct Answer : Codable, Identifiable, Equatable {
 		case attributedText
 	}
 	
+	
+	
 	init(from decoder: any Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self.id = try container.decode(Int.self, forKey: .id)
@@ -35,4 +37,14 @@ struct Answer : Codable, Identifiable, Equatable {
 		try container.encode(self.attributedText, forKey: .attributedText)
 	}
 	
+}
+
+
+extension Answer {
+	init(id: Int, text: String, html: String? = nil) {
+		self.id = id
+		self.text = text
+		self.html = html
+		self.attributedText = HTMLRenderer.makeAttributedString(from: html ?? text)
+	}
 }
