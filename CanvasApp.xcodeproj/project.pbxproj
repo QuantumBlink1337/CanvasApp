@@ -10,6 +10,7 @@
 		3D08DBD72D0BAF3600CCB89E /* ScoreStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBD62D0BAF3600CCB89E /* ScoreStatistic.swift */; };
 		3D08DBD92D0D546600CCB89E /* ModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBD82D0D546600CCB89E /* ModuleView.swift */; };
 		3D08DBDB2D0E054C00CCB89E /* AnnouncementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08DBDA2D0E054C00CCB89E /* AnnouncementView.swift */; };
+		3D2D60BC2D4ED20400534F25 /* InfomaniakRichHTMLEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 3D2D60BB2D4ED20400534F25 /* InfomaniakRichHTMLEditor */; };
 		3D33EB7B2D18006D007325E0 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB7A2D18006D007325E0 /* Group.swift */; };
 		3D33EB7F2D18BB64007325E0 /* GroupPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB7E2D18BB64007325E0 /* GroupPanel.swift */; };
 		3D33EB872D1B4945007325E0 /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33EB862D1B4945007325E0 /* GroupView.swift */; };
@@ -120,6 +121,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DE41F8D2D114A83007FDEEA /* HTMLStreamer in Frameworks */,
+				3D2D60BC2D4ED20400534F25 /* InfomaniakRichHTMLEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +307,7 @@
 			name = CanvasApp;
 			packageProductDependencies = (
 				3DE41F8C2D114A83007FDEEA /* HTMLStreamer */,
+				3D2D60BB2D4ED20400534F25 /* InfomaniakRichHTMLEditor */,
 			);
 			productName = CanvasApp;
 			productReference = 3D4E2D482CF6FF9E00227AC4 /* CanvasApp.app */;
@@ -336,6 +339,7 @@
 			mainGroup = 3D4E2D3F2CF6FF9E00227AC4;
 			packageReferences = (
 				3DE41F8B2D114A83007FDEEA /* XCRemoteSwiftPackageReference "HTMLStreamer" */,
+				3D2D60BA2D4ED20400534F25 /* XCRemoteSwiftPackageReference "swift-rich-html-editor" */,
 			);
 			productRefGroup = 3D4E2D492CF6FF9E00227AC4 /* Products */;
 			projectDirPath = "";
@@ -618,6 +622,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3D2D60BA2D4ED20400534F25 /* XCRemoteSwiftPackageReference "swift-rich-html-editor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Infomaniak/swift-rich-html-editor.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.4.1;
+			};
+		};
 		3DE41F8B2D114A83007FDEEA /* XCRemoteSwiftPackageReference "HTMLStreamer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://git.shadowfacts.net/shadowfacts/HTMLStreamer.git";
@@ -629,6 +641,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3D2D60BB2D4ED20400534F25 /* InfomaniakRichHTMLEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3D2D60BA2D4ED20400534F25 /* XCRemoteSwiftPackageReference "swift-rich-html-editor" */;
+			productName = InfomaniakRichHTMLEditor;
+		};
 		3DE41F8C2D114A83007FDEEA /* HTMLStreamer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3DE41F8B2D114A83007FDEEA /* XCRemoteSwiftPackageReference "HTMLStreamer" */;
