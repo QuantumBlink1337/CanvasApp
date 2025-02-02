@@ -8,23 +8,30 @@
 import SwiftUI
 import Combine
 
+import InfomaniakRichHTMLEditor
+
 
 		
 struct UserAnswer: Identifiable, Equatable {
 	let id: Int  // Corresponds to QuizSubmissionQuestion.id
-	var text: String  // For essay, short answer, etc.
+	var text: [String]  // For essay, short answer, etc.
 	var selectedOptionIDs: Set<Int>  // Supports multiple answers
 	var fileURL: URL?  // For file uploads
 	
-	var attributedText: AttributedString {
-		if !text.isEmpty {
-			return HTMLRenderer.makeAttributedString(from: text)
-		} else {
-			return AttributedString("")
+	var attributedText: [AttributedString] {
+		var at: [AttributedString] = []
+		for t in text {
+			if !t.isEmpty {
+				at.append(HTMLRenderer.makeAttributedString(from: t))
+			}
+			else {
+				at.append(AttributedString(""))
+			}
 		}
+		return at
 	}
 	
-	init(id: Int, text: String = "", selectedOptionIDs: Set<Int> = [], fileURL: URL? = nil) {
+	init(id: Int, text: [String] = [], selectedOptionIDs: Set<Int> = [], fileURL: URL? = nil) {
 		self.id = id
 		self.text = text
 		self.selectedOptionIDs = selectedOptionIDs
@@ -71,7 +78,10 @@ struct QuizQuestionView: View {
 		
 		var initialUserAnswers: [Int : UserAnswer] = [:]
 		for question in quizQuestions {
-			initialUserAnswers[question.id] = UserAnswer(id: question.id)
+			let newAnswer = UserAnswer(id: question.id, text: Array(repeating: "", count: max(1, question.answers.count)))
+			
+			
+			initialUserAnswers[question.id] = newAnswer
 		}
 		_userAnswers = State(initialValue: initialUserAnswers)
 	
@@ -84,43 +94,77 @@ struct QuizQuestionView: View {
 	}
 
 	
-	
+	@ViewBuilder
+	func buildQuestionHeader(question: QuizSubmissionQuestion, deferText: Bool = false) -> some View {
+		VStack(alignment: .leading) {
+			HStack {
+				Text("\(question.questionName)")
+					.font(.title2)
+					.bold()
+					.foregroundStyle(color)
+				Spacer()
+				VStack {
+					Image(systemName: "flag")
+						.foregroundStyle(color)
+				}.contentShape(Circle())
+					.onTapGesture {
+						print("Flagged")
+					}
+				
+				
+			}
+			if (!deferText) {
+				Text("\(question.attributedText)")
+					.font(.body)
+				Divider()
+			}
+			
+
+		}
+		
+		.frame(width: 340)
+	}
 	
 	@ViewBuilder
 	func buildQuestionList() -> some View {
 		List(quizQuestions) { question in
-			VStack(alignment: .leading) {
-				HStack {
-					Text("\(question.questionName)")
-						.font(.title2)
-						.bold()
-						.foregroundStyle(color)
-					Spacer()
-					VStack {
-						Image(systemName: "flag")
-							.foregroundStyle(color)
-					}.contentShape(Circle())
-						.onTapGesture {
-							print("Flagged")
-						}
-					
-						
+			let userAnswer = binding(for: question.id)
+			VStack {
+				switch question.questionType {
+					case .MultipleChoiceQuestion:
+						buildQuestionHeader(question: question, deferText: false)
+						MultipleChoiceQuestionView(question: question, userAnswer: userAnswer, color: color)
+					case .TrueFalseQuestion:
+						buildQuestionHeader(question: question, deferText: false)
+						MultipleChoiceQuestionView(question: question, userAnswer: userAnswer, color: color)
+					case .MultipleAnswersQuestion:
+						buildQuestionHeader(question: question, deferText: false)
+						MultipleAnswersQuestionView(question: question, userAnswer: userAnswer, color: color)
+					case .TextOnlyQuestion:
+						buildQuestionHeader(question: question, deferText: false)
+						EmptyView()
+					case .ShortAnswerQuestion:
+						buildQuestionHeader(question: question, deferText: false)
+						TextQuestionView(question: question, userAnswer: userAnswer, color: color)
+					case .CalculatedQuestion:
+						buildQuestionHeader(question: question, deferText: false)
+						TextQuestionView(question: question, userAnswer: userAnswer, color: color)
+					case .EssayQuestion:
+						buildQuestionHeader(question: question, deferText: false)
+						LongTextQuestionView(question: question, userAnswer: userAnswer, color: color)
+					default:
+						buildQuestionHeader(question: question, deferText: true)
+						Text("Not implemented")
 				}
-				Text("\(question.attributedText)")
-					.font(.body)
-				Divider()
-				SingularQuestionView(question: question, userAnswer: binding(for: question.id), color: color)
+
 			}
 			.overlay {
 				RoundedRectangle(cornerRadius: 10)
 					.inset(by: -6)
 					.strokeBorder(color, lineWidth: 2)
-
-					
+				
+				
 			}
-			.frame(width: 340)
-//			Divider()
-//				.padding(.all, -5)
 		}
 		.scrollContentBackground(.hidden)
 	}
@@ -216,22 +260,7 @@ struct SingularQuestionView: View {
 	
 	var body: some View {
 		VStack {
-			switch question.questionType {
-				case .MultipleChoiceQuestion:
-					MultipleChoiceQuestionView(question: question, userAnswer: $userAnswer, color: color)
-				case .TrueFalseQuestion:
-					MultipleChoiceQuestionView(question: question, userAnswer: $userAnswer, color: color)
-				case .MultipleAnswersQuestion:
-					MultipleAnswersQuestionView(question: question, userAnswer: $userAnswer, color: color)
-				case .TextOnlyQuestion:
-					EmptyView()
-				case .ShortAnswerQuestion:
-					TextQuestionView(question: question, userAnswer: $userAnswer, color: color)
-				case .CalculatedQuestion:
-					TextQuestionView(question: question, userAnswer: $userAnswer, color: color)
-				default:
-					Text("Not implemented")
-			}
+			
 		}
 	}
 }
@@ -241,10 +270,20 @@ struct TextQuestionView: View {
 	let color: Color
 	var body: some View {
 		VStack {
-			TextField("Answer", text: $userAnswer.text)
-			Text(userAnswer.text)
+			TextField("Answer", text: $userAnswer.text.first!)
 		}
 		
+	}
+}
+struct LongTextQuestionView: View {
+	let question: QuizSubmissionQuestion
+	@Binding var userAnswer: UserAnswer
+	let color: Color
+	@StateObject private var textAttributes = TextAttributes()
+	var body: some View {
+		RichHTMLEditor(html: $userAnswer.text[0], textAttributes: textAttributes)
+			.padding(.bottom)
+			.editorScrollable(true)
 	}
 }
 struct MultipleChoiceQuestionView: View {
@@ -269,7 +308,7 @@ struct MultipleChoiceQuestionView: View {
 			.contentShape(Rectangle())  // entire row is tappable
 			.onTapGesture {
 				userAnswer.selectedOptionIDs = [answer.id]
-				userAnswer.text = ""
+				userAnswer.text[0] = ""
 				userAnswer.fileURL = nil
 			}
 			.padding(.vertical, 1)
