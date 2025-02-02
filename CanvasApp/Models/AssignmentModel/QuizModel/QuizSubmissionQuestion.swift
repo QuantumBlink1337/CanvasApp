@@ -70,7 +70,7 @@ struct QuizSubmissionQuestion : Codable, Identifiable, Equatable {
 			// Derive `attributedText` from `questionText` if not present in JSON
 			self.attributedText = HTMLRenderer.makeAttributedString(from: self.questionText)
 		}
-		self.answers = try container.decode([Answer].self, forKey: .answers)
+		self.answers = try container.decodeIfPresent([Answer].self, forKey: .answers) ?? []
 		self.flagged = try container.decode(Bool.self, forKey: .flagged)
 	}
 	
